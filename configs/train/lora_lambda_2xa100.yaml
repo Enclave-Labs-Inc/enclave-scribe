@@ -1,0 +1,67 @@
+# EnclaveScribe — Competitive LoRA, Lambda Labs 2x A100 80GB
+#
+# Cost     : $3.98/hr fixed (2x $1.99, no spot risk)
+# Hardware : 2x A100 80GB SXM4
+# Time     : 300K samples, 3 epochs → ~18-22 hrs → ~$72-88
+# Quality  : Identical bf16 + Flash Attn 2 + LoRA r=128
+#            Same quality as single A100 — just 2x faster for the same price
+#
+# Budget breakdown with $500:
+#   Run 1 — validate (80K samples, ~5 hrs)      ~$20
+#   Run 2 — full training (300K, 3 epochs)      ~$80
+#   Runs 3-5 — tune & retrain (3x)              ~$240
+#   Buffer                                       ~$160
+#   Total                                        ~$340
+#
+# Launch:
+#   torchrun --nproc_per_node=2 scripts/train.py \
+#     --config configs/train/lora_lambda_2xa100.yaml
+
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+  flash_attn: true
+
+lora:
+  r: 128
+  alpha: 256
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/lora_lambda_2xa100
+  num_train_epochs: 3
+  per_device_train_batch_size: 4      # 4 per GPU × 2 GPUs = 8 per step
+  gradient_accumulation_steps: 4      # effective batch = 32
+  learning_rate: 1.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  bf16: true
+  tf32: true
+  gradient_checkpointing: false
+  optim: adamw_torch_fused
+  logging_steps: 10
+  save_steps: 300
+  eval_strategy: steps
+  eval_steps: 300
+  save_total_limit: 5
+  dataloader_num_workers: 4
+  dataloader_pin_memory: true
+  ddp_find_unused_parameters: false
+  report_to: none

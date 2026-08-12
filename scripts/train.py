@@ -1,5 +1,13 @@
-"""Launch fine-tuning from a YAML config."""
+"""Launch fine-tuning from a YAML config.
+
+Single GPU:
+    python scripts/train.py --config configs/train/lora_lambda_2xa100.yaml
+
+Multi GPU (e.g. 2x A100):
+    torchrun --nproc_per_node=2 scripts/train.py --config configs/train/lora_lambda_2xa100.yaml
+"""
 import argparse
+import os
 
 import yaml
 
@@ -11,6 +19,13 @@ def main():
 
     with open(args.config) as f:
         config = yaml.safe_load(f)
+
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+    if local_rank == 0:
+        n_gpus = int(os.environ.get("WORLD_SIZE", 1))
+        bs = config["training_args"]["per_device_train_batch_size"]
+        ga = config["training_args"]["gradient_accumulation_steps"]
+        print(f"GPUs: {n_gpus} | per-device batch: {bs} | grad accum: {ga} | effective batch: {bs * ga * n_gpus}")
 
     from scribe.model.vlm import Qwen2VLModel
     from scribe.train.trainer import train
