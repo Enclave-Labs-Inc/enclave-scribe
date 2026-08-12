@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "enclave-scribe"
+version = "0.1.0"
+description = "Document intelligence and OCR by Enclave Labs"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.1.0",
+    "torchvision>=0.16.0",
+    "transformers>=4.45.0",
+    "Pillow>=10.0.0",
+    "pymupdf>=1.24.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.0.0",
+    "einops>=0.8.0",
+    "PyYAML>=6.0",
+    "requests>=2.31.0",
+    "tqdm>=4.66.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+train = [
+    "peft>=0.12.0",
+    "accelerate>=0.33.0",
+    "bitsandbytes>=0.43.0",
+    "datasets>=2.20.0",
+]
+eval = [
+    "numpy>=1.26.0",
+    "pandas>=2.0.0",
+    "editdistance>=0.8.1",
+]
+
+[tool.setuptools.packages.find]
+include = ["scribe*", "api*"]
