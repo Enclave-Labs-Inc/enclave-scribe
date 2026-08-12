@@ -1,0 +1,47 @@
+# Target: Lambda Labs 1x A10G 24GB — $0.60/hr  ← MOST BUDGET FRIENDLY
+# QLoRA (4-bit) — fits Qwen2.5-VL-7B in ~14 GB VRAM
+# ~150K samples, 3 epochs → ~40-50 hrs → ~$24-30 total
+#
+# Ideal if you want to stretch $500 across many experiments
+
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+  quantize: 4                          # 4-bit required on 24 GB
+
+lora:
+  r: 32                               # smaller r to fit in 24 GB
+  alpha: 64
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."
+max_length: 2048                       # reduced to fit 24 GB
+augment: true
+
+training_args:
+  output_dir: outputs/qlora_a10g
+  num_train_epochs: 3
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16     # effective batch = 16
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  bf16: true
+  gradient_checkpointing: true
+  optim: paged_adamw_8bit
+  logging_steps: 20
+  save_steps: 300
+  eval_strategy: steps
+  eval_steps: 300
+  save_total_limit: 5
+  dataloader_num_workers: 2
+  report_to: none

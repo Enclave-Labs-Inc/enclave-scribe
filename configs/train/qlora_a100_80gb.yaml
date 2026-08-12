@@ -1,0 +1,50 @@
+# Target: Lambda Labs 1x A100 80GB — $1.99/hr  ← RECOMMENDED FOR $500 BUDGET
+# QLoRA (4-bit) — trains Qwen2.5-VL-7B in ~12 GB VRAM, leaving 68 GB free
+# ~150K samples, 3 epochs → ~15-20 hrs → ~$30-40 total
+#
+# Sign up: https://lambdalabs.com/service/gpu-cloud
+# Launch:  1x A100 80GB SXM4 instance, SSH in, run:
+#   pip install -e ".[train]"
+#   python scripts/train.py --config configs/train/qlora_a100_80gb.yaml
+
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+  quantize: 4                          # 4-bit QLoRA — halves VRAM vs bf16
+
+lora:
+  r: 64
+  alpha: 128
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/qlora_a100
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8      # effective batch = 16
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  bf16: true
+  gradient_checkpointing: true
+  optim: paged_adamw_8bit             # 8-bit optimizer — saves ~4 GB more
+  logging_steps: 10
+  save_steps: 200                     # save often — instance can be interrupted
+  eval_strategy: steps
+  eval_steps: 200
+  save_total_limit: 5
+  dataloader_num_workers: 4
+  report_to: none

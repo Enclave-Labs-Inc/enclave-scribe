@@ -1,4 +1,4 @@
-from peft import LoraConfig, TaskType, get_peft_model
+from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
 
 
 def build_lora_config(
@@ -17,7 +17,10 @@ def build_lora_config(
     )
 
 
-def apply_lora(model, config: LoraConfig):
+def apply_lora(model, config: LoraConfig, qlora: bool = False):
+    """Apply LoRA adapters. Set qlora=True when model was loaded in 4/8-bit."""
+    if qlora:
+        model = prepare_model_for_kbit_training(model)
     model = get_peft_model(model, config)
     model.print_trainable_parameters()
     return model
