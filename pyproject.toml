@@ -31,7 +31,10 @@ train = [
     "peft>=0.12.0",
     "accelerate>=0.33.0",
     "datasets>=2.20.0",
+    "trl>=0.12.0",                   # SFTTrainer used by Unsloth
     "flash-attn>=2.6.0",             # required for competitive quality on long sequences
+    # unsloth: installed separately on the GPU instance (CUDA-version-specific)
+    # pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
 ]
 eval = [
     "numpy>=1.26.0",

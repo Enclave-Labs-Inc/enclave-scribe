@@ -49,3 +49,5 @@ results/
 # Environment
 .env
 *.env
+.aws_instance.json
+*.pem

@@ -1,0 +1,47 @@
+# EnclaveScribe — Unsloth LoRA on AWS
+#
+# Recommended instance: g5.12xlarge SPOT (4x A10G 24GB = 96GB total)
+#   Cost: ~$1.70/hr spot
+#   Time: ~10 hrs with Unsloth (vs ~20 hrs HF) → ~$17 per run
+#   Quota: easier to get than p4d, available in most regions
+#
+# Alternative: p4d.24xlarge SPOT (8x A100 40GB = 320GB total)
+#   Cost: ~$11/hr spot → ~$55 per run with Unsloth
+#
+# Launch:
+#   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/unsloth_aws.yaml
+#   (use --nproc_per_node=8 for p4d.24xlarge)
+
+use_unsloth: true
+
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+
+lora:
+  r: 128
+  alpha: 256
+  dropout: 0
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/unsloth
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4      # effective batch = 32 on 4 GPUs
+  learning_rate: 2.0e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  logging_steps: 10
+  save_steps: 300
+  eval_steps: 300
+  save_total_limit: 5
+  dataloader_num_workers: 4
