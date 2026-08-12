@@ -15,14 +15,16 @@ def main():
     from scribe.model.vlm import Qwen2VLModel
     from scribe.train.trainer import train
 
-    quantize = config["model"].get("quantize")  # 4 = QLoRA, None = bf16 LoRA
     model_obj = Qwen2VLModel()
-    model_obj.load(config["model"]["path"], quantize=quantize)
+    model_obj.load(
+        config["model"]["path"],
+        flash_attn=config["model"].get("flash_attn", True),
+    )
 
     if config.get("lora"):
         from scribe.train.lora import apply_lora, build_lora_config
         lora_cfg = build_lora_config(**config["lora"])
-        model_obj.model = apply_lora(model_obj.model, lora_cfg, qlora=quantize is not None)
+        model_obj.model = apply_lora(model_obj.model, lora_cfg)
 
     train(model_obj.model, model_obj.processor, config)
 

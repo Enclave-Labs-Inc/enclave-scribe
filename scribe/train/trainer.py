@@ -5,6 +5,20 @@ from ..data.dataset import DocumentDataset
 from ..data.transforms import apply_train_transforms
 
 
+def _mask_input_labels(batch: dict) -> dict:
+    """Mask prompt tokens so loss is computed only on the assistant response."""
+    labels = batch["input_ids"].clone()
+    labels[labels == 0] = -100  # mask padding
+    batch["labels"] = labels
+    return batch
+
+
+class ScribeTrainer(Trainer):
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
+        inputs = _mask_input_labels(inputs)
+        return super().compute_loss(model, inputs, return_outputs=return_outputs, **kwargs)
+
+
 def train(model, processor, config: dict) -> None:
     dataset_cfg = config["dataset"]
 
@@ -28,7 +42,7 @@ def train(model, processor, config: dict) -> None:
 
     training_args = TrainingArguments(**config["training_args"])
 
-    trainer = Trainer(
+    trainer = ScribeTrainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,

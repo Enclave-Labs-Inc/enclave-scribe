@@ -1,21 +1,8 @@
 import torch
 from PIL import Image
-from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2VLForConditionalGeneration
+from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
 
 from .base import BaseModel
-
-
-def _bnb_config(bits: int = 4) -> BitsAndBytesConfig:
-    if bits == 4:
-        return BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_compute_dtype=torch.bfloat16,
-        )
-    if bits == 8:
-        return BitsAndBytesConfig(load_in_8bit=True)
-    raise ValueError(f"Unsupported quantization bits: {bits}. Use 4 or 8.")
 
 
 class Qwen2VLModel(BaseModel):
@@ -26,18 +13,19 @@ class Qwen2VLModel(BaseModel):
     def load(
         self,
         model_path: str = "Qwen/Qwen2.5-VL-7B-Instruct",
-        quantize: int | None = None,   # 4 → QLoRA, 8 → int8, None → bf16
+        flash_attn: bool = True,
         **kwargs,
     ) -> None:
         self.processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
-        load_kwargs = dict(device_map="auto", **kwargs)
-        if quantize:
-            load_kwargs["quantization_config"] = _bnb_config(quantize)
-        else:
-            load_kwargs["torch_dtype"] = torch.bfloat16
+
+        attn_impl = "flash_attention_2" if flash_attn else "eager"
 
         self.model = Qwen2VLForConditionalGeneration.from_pretrained(
-            model_path, **load_kwargs
+            model_path,
+            torch_dtype=torch.bfloat16,
+            attn_implementation=attn_impl,
+            device_map="auto",
+            **kwargs,
         ).eval()
 
     def _build_messages(self, image: Image.Image, prompt: str) -> list[dict]:
