@@ -3,7 +3,7 @@ import os
 
 import requests
 
-from ..data.pdf import pdf_to_images
+from ..data.convert import to_images
 from ..utils.image import encode_image_b64
 
 _DEFAULT_URL = "http://127.0.0.1:10000"
@@ -61,5 +61,6 @@ def infer_image(
     return "".join(chunks)
 
 
-def infer_pdf(pdf_path: str, dpi: int = 300, **kwargs) -> list[str]:
-    return [infer_image(page, **kwargs) for page in pdf_to_images(pdf_path, dpi=dpi)]
+def infer_document(file_path: str, dpi: int = 300, **kwargs) -> list[str]:
+    """Run OCR on any supported document type (image, PDF, PPT, DOCX) via the SGLang server."""
+    return [infer_image(page, **kwargs) for page in to_images(file_path, dpi=dpi)]
