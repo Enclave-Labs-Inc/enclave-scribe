@@ -1,0 +1,36 @@
+# Target: p5.48xlarge — 8x H100 80 GB (640 GB total)
+# Full fine-tune — fastest available, best for final production training
+# Use spot instances: saves ~65% cost (~$35/hr vs $98.32/hr)
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/full_p5
+  num_train_epochs: 2
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 2      # effective batch = 64
+  learning_rate: 5.0e-5
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  bf16: true
+  gradient_checkpointing: false       # H100 has enough VRAM
+  logging_steps: 10
+  save_steps: 500
+  eval_strategy: steps
+  eval_steps: 500
+  save_total_limit: 2
+  dataloader_num_workers: 8
+  report_to: none
+  ddp_find_unused_parameters: false
+  fsdp: "full_shard auto_wrap"
+  fsdp_config:
+    fsdp_transformer_layer_cls_to_wrap: "Qwen2VLDecoderLayer"
