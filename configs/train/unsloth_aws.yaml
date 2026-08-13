@@ -1,9 +1,9 @@
 # EnclaveScribe — Unsloth LoRA on AWS
 #
 # Recommended instance: g5.12xlarge SPOT (4x A10G 24GB = 96GB total)
-#   Cost: ~$1.70/hr spot
-#   Time: ~10 hrs with Unsloth (vs ~20 hrs HF) → ~$17 per run
-#   Quota: easier to get than p4d, available in most regions
+#   Cost: ~$3.15/hr spot (us-east-1c, Aug 2026)
+#   Time: ~10 hrs with Unsloth → ~$32 per run
+#   Quota: request "All G and VT Spot Instance Requests" >= 48 vCPUs
 #
 # Alternative: p4d.24xlarge SPOT (8x A100 40GB = 320GB total)
 #   Cost: ~$11/hr spot → ~$55 per run with Unsloth

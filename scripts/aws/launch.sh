@@ -12,14 +12,15 @@
 set -euo pipefail
 
 # ── Config ───────────────────────────────────────────────────────────────────
-INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB, ~$1.70/hr spot
+INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB
 REGION="${REGION:-us-east-1}"
+AZ="${AZ:-us-east-1c}"                         # cheapest AZ as of Aug 2026 (~$3.15/hr)
 KEY_NAME="${KEY_NAME:-enclave-scribe-key}"
 SG_NAME="${SG_NAME:-enclave-scribe-sg}"
-SPOT_PRICE="${SPOT_PRICE:-3.00}"               # max bid (on-demand ~$5.67, spot ~$1.70)
+SPOT_PRICE="${SPOT_PRICE:-4.00}"               # max bid — on-demand $5.67, spot ~$3.15
 VOLUME_SIZE="${VOLUME_SIZE:-500}"              # GB — model + data + checkpoints
-# Deep Learning AMI (Ubuntu 22.04) with CUDA 12.1 — update if region changes
-AMI_ID="${AMI_ID:-ami-0cf43e1c9a2fe3f27}"     # us-east-1 DL AMI, adjust per region
+# Deep Learning AMI — Ubuntu 22.04, CUDA 12.1, us-east-1
+AMI_ID="${AMI_ID:-ami-0cf43e1c9a2fe3f27}"
 
 echo "=== EnclaveScribe AWS Launcher ==="
 echo "Instance : $INSTANCE_TYPE"
@@ -79,6 +80,7 @@ LAUNCH_SPEC=$(cat <<EOF
   "InstanceType": "$INSTANCE_TYPE",
   "KeyName": "$KEY_NAME",
   "SecurityGroupIds": ["$SG_ID"],
+  "Placement": {"AvailabilityZone": "$AZ"},
   "BlockDeviceMappings": [
     {
       "DeviceName": "/dev/sda1",
