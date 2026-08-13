@@ -43,6 +43,12 @@ eval = [
     "jiwer>=3.0.0",
     "nltk>=3.8.0",                   # BLEU scoring
 ]
+vllm = [
+    "vllm>=0.6.0",
+]
+sglang = [
+    "sglang[all]>=0.3.0",
+]
 
 [tool.setuptools.packages.find]
 include = ["scribe*", "api*"]

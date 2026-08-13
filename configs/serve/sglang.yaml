@@ -1,0 +1,8 @@
+backend: sglang
+model: outputs/enclave-scribe-v1   # override with your fine-tuned checkpoint
+host: 0.0.0.0
+api_port: 8080
+backend_port: 10000
+mem_fraction_static: 0.80
+max_model_len: 32768
+timeout: 300
