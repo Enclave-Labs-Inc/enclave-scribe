@@ -1,31 +1,29 @@
 #!/usr/bin/env bash
-# Launch an AWS EC2 Spot instance for EnclaveScribe training.
+# Launch an AWS EC2 On-Demand instance for EnclaveScribe training.
 #
 # Usage:
 #   bash scripts/aws/launch.sh
 #
 # Prerequisites:
 #   aws configure  (run once — sets Access Key ID, Secret Key, region)
-#   Check g5.12xlarge spot quota: AWS Console → Service Quotas → EC2
-#     → "Running On-Demand G and VT instances" → request increase to 48+
+#   Quota: "Running On-Demand G and VT instances" >= 48 vCPUs (g5.12xlarge uses 48)
 
 set -euo pipefail
 
 # ── Config ───────────────────────────────────────────────────────────────────
-INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB
+INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB, ~$5.67/hr on-demand
 REGION="${REGION:-us-east-1}"
-AZ="${AZ:-us-east-1c}"                         # cheapest AZ as of Aug 2026 (~$3.15/hr)
+AZ="${AZ:-us-east-1c}"
 KEY_NAME="${KEY_NAME:-enclave-scribe-key}"
 SG_NAME="${SG_NAME:-enclave-scribe-sg}"
-SPOT_PRICE="${SPOT_PRICE:-4.00}"               # max bid — on-demand $5.67, spot ~$3.15
 VOLUME_SIZE="${VOLUME_SIZE:-500}"              # GB — model + data + checkpoints
-# Deep Learning AMI — Ubuntu 22.04, CUDA 12.1, us-east-1
-AMI_ID="${AMI_ID:-ami-0cf43e1c9a2fe3f27}"
+# Deep Learning OSS Nvidia Driver AMI — PyTorch 2.7, Ubuntu 22.04, us-east-1
+AMI_ID="${AMI_ID:-ami-012ba162b9cd2729c}"
 
 echo "=== EnclaveScribe AWS Launcher ==="
-echo "Instance : $INSTANCE_TYPE"
-echo "Region   : $REGION"
-echo "Spot max : \$$SPOT_PRICE/hr"
+echo "Instance : $INSTANCE_TYPE (on-demand, ~\$5.67/hr)"
+echo "Region   : $REGION / $AZ"
+echo "AMI      : $AMI_ID"
 echo ""
 
 # ── Key pair ─────────────────────────────────────────────────────────────────
@@ -41,7 +39,7 @@ if ! aws ec2 describe-key-pairs --key-names "$KEY_NAME" --region "$REGION" &>/de
 else
     echo "Key pair exists: $KEY_NAME"
     if [ ! -f "${KEY_NAME}.pem" ]; then
-        echo "WARNING: ${KEY_NAME}.pem not found locally. SSH will fail."
+        echo "WARNING: ${KEY_NAME}.pem not found locally — SSH will fail."
         echo "         Delete the key pair in AWS console and rerun to regenerate."
     fi
 fi
@@ -70,66 +68,28 @@ else
     echo "Security group exists: $SG_ID"
 fi
 
-# ── Spot instance ────────────────────────────────────────────────────────────
+# ── On-demand instance ───────────────────────────────────────────────────────
 echo ""
-echo "Requesting spot instance..."
+echo "Launching on-demand instance..."
 
-LAUNCH_SPEC=$(cat <<EOF
-{
-  "ImageId": "$AMI_ID",
-  "InstanceType": "$INSTANCE_TYPE",
-  "KeyName": "$KEY_NAME",
-  "SecurityGroupIds": ["$SG_ID"],
-  "Placement": {"AvailabilityZone": "$AZ"},
-  "BlockDeviceMappings": [
-    {
-      "DeviceName": "/dev/sda1",
-      "Ebs": {"VolumeSize": $VOLUME_SIZE, "VolumeType": "gp3", "DeleteOnTermination": true}
-    }
-  ],
-  "UserData": "$(base64 < scripts/aws/setup_instance.sh)"
-}
-EOF
-)
+USERDATA_B64=$(base64 < scripts/aws/setup_instance.sh)
 
-REQUEST_ID=$(aws ec2 request-spot-instances \
-    --spot-price "$SPOT_PRICE" \
-    --instance-count 1 \
-    --type "one-time" \
-    --launch-specification "$LAUNCH_SPEC" \
+INSTANCE_ID=$(aws ec2 run-instances \
+    --image-id "$AMI_ID" \
+    --instance-type "$INSTANCE_TYPE" \
+    --key-name "$KEY_NAME" \
+    --security-group-ids "$SG_ID" \
+    --placement "AvailabilityZone=$AZ" \
+    --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
+    --user-data "$USERDATA_B64" \
+    --count 1 \
     --region "$REGION" \
-    --query "SpotInstanceRequests[0].SpotInstanceRequestId" \
+    --query "Instances[0].InstanceId" \
     --output text)
 
-echo "Spot request ID: $REQUEST_ID"
-echo "Waiting for instance..."
+echo "Instance ID: $INSTANCE_ID"
+echo "Waiting for instance to be running..."
 
-for i in $(seq 1 40); do
-    sleep 15
-    INSTANCE_ID=$(aws ec2 describe-spot-instance-requests \
-        --spot-instance-request-ids "$REQUEST_ID" \
-        --region "$REGION" \
-        --query "SpotInstanceRequests[0].InstanceId" \
-        --output text 2>/dev/null || echo "")
-
-    STATUS=$(aws ec2 describe-spot-instance-requests \
-        --spot-instance-request-ids "$REQUEST_ID" \
-        --region "$REGION" \
-        --query "SpotInstanceRequests[0].Status.Code" \
-        --output text 2>/dev/null || echo "pending")
-
-    echo "  [$i] Status: $STATUS | Instance: ${INSTANCE_ID:-pending}"
-
-    if [ "$STATUS" = "fulfilled" ] && [ -n "$INSTANCE_ID" ] && [ "$INSTANCE_ID" != "None" ]; then
-        break
-    fi
-    if [ "$STATUS" = "capacity-not-available" ] || [ "$STATUS" = "price-too-low" ]; then
-        echo "ERROR: Spot not available ($STATUS). Try raising SPOT_PRICE or changing INSTANCE_TYPE."
-        exit 1
-    fi
-done
-
-# Wait for instance to be running
 aws ec2 wait instance-running --instance-ids "$INSTANCE_ID" --region "$REGION"
 
 PUBLIC_IP=$(aws ec2 describe-instances \
@@ -146,14 +106,19 @@ echo ""
 echo "SSH command:"
 echo "  ssh -i ${KEY_NAME}.pem ubuntu@$PUBLIC_IP"
 echo ""
-echo "Setup runs automatically via UserData (~10 min). Then:"
+echo "UserData setup runs automatically (~10-15 min: installs deps, starts training)."
+echo "Once SSH is available:"
 echo "  ssh -i ${KEY_NAME}.pem ubuntu@$PUBLIC_IP"
 echo "  tmux attach -t training"
 echo ""
-echo "To terminate when done:"
+echo "Monitor setup progress:"
+echo "  tail -f ~/setup.log"
+echo ""
+echo "IMPORTANT — terminate when done to stop billing:"
 echo "  aws ec2 terminate-instances --instance-ids $INSTANCE_ID --region $REGION"
 
-# Save instance info
-echo "{\"instance_id\": \"$INSTANCE_ID\", \"public_ip\": \"$PUBLIC_IP\", \"request_id\": \"$REQUEST_ID\"}" \
+# Save instance info for later
+echo "{\"instance_id\": \"$INSTANCE_ID\", \"public_ip\": \"$PUBLIC_IP\"}" \
     > .aws_instance.json
+echo ""
 echo "Instance info saved → .aws_instance.json"
