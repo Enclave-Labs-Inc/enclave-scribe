@@ -23,6 +23,8 @@ def _parse_ground_truth(gt_str: str) -> str:
     parse = gt.get("gt_parse", {})
 
     for item in parse.get("menu", []):
+        if not isinstance(item, dict):
+            continue
         parts = [item.get("nm", ""), item.get("cnt", ""), item.get("price", "")]
         row = "  ".join(p for p in parts if p)
         if row:
