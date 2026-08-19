@@ -60,3 +60,12 @@ tmux send-keys -t training "echo '=== Training started ===' && torchrun --nproc_
 
 echo "Pipeline running in tmux session 'training'."
 echo "Connect with: ssh -i KEY.pem ubuntu@IP then: tmux attach -t training"
+
+# ── S3 checkpoint sync (runs in background, every 10 min) ────────────────────
+if [ -n "${S3_CHECKPOINT_BUCKET:-}" ]; then
+    tmux new-window -t training -n sync
+    tmux send-keys -t training:sync \
+        "while true; do aws s3 sync $REPO_DIR/outputs s3://$S3_CHECKPOINT_BUCKET/outputs --quiet; sleep 600; done" \
+        Enter
+    echo "Checkpoint sync → s3://$S3_CHECKPOINT_BUCKET/outputs every 10 min"
+fi
