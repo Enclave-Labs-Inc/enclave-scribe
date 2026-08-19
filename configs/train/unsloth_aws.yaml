@@ -45,3 +45,5 @@ training_args:
   eval_steps: 300
   save_total_limit: 5
   dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter1"

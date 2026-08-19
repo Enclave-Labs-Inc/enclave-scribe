@@ -100,7 +100,7 @@ def main() -> None:
     print(f"Starting FastAPI gateway on {args.host}:{args.api_port} (backend={args.backend})")
     try:
         uvicorn.run(
-            "api.main:app",
+            "api.server:app",
             host=args.host,
             port=args.api_port,
             log_level="info",

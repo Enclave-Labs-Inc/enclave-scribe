@@ -7,6 +7,10 @@
 # Prerequisites:
 #   aws configure  (run once — sets Access Key ID, Secret Key, region)
 #   Quota: "Running On-Demand G and VT instances" >= 48 vCPUs (g5.12xlarge uses 48)
+#
+# Optional env vars (injected into the instance at launch):
+#   HF_TOKEN=hf_xxx       — HuggingFace token for gated models
+#   WANDB_API_KEY=xxx      — W&B key for live training dashboard (wandb.ai)
 
 set -euo pipefail
 
@@ -72,7 +76,13 @@ fi
 echo ""
 echo "Launching on-demand instance..."
 
-USERDATA_B64=$(base64 < scripts/aws/setup_instance.sh)
+# Inject secrets as env vars at the top of the UserData script
+SECRETS_BLOCK="#!/usr/bin/env bash"
+[ -n "${HF_TOKEN:-}" ]       && SECRETS_BLOCK+=$'\n'"export HF_TOKEN=${HF_TOKEN}"
+[ -n "${WANDB_API_KEY:-}" ]  && SECRETS_BLOCK+=$'\n'"export WANDB_API_KEY=${WANDB_API_KEY}"
+SETUP_SCRIPT=$(tail -n +1 scripts/aws/setup_instance.sh | sed '1s|^#!/usr/bin/env bash||')
+COMBINED=$(printf '%s\n%s' "$SECRETS_BLOCK" "$SETUP_SCRIPT")
+USERDATA_B64=$(echo "$COMBINED" | base64)
 
 INSTANCE_ID=$(aws ec2 run-instances \
     --image-id "$AMI_ID" \
