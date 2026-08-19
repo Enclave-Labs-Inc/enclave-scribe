@@ -29,8 +29,8 @@ log/
 *.log
 
 # Data (raw images and processed datasets — too large for git)
-data/
-datasets/
+/data/
+/datasets/
 
 # Results (JSON files from eval runs — keep summary, not per-sample)
 results/
