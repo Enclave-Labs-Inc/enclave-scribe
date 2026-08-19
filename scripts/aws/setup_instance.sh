@@ -11,6 +11,15 @@ exec > >(tee -a "$LOG") 2>&1
 echo "=== EnclaveScribe Instance Setup ==="
 date
 
+# ── Wait for cloud-init's unattended-upgrades to release the dpkg lock ────────
+echo "Waiting for dpkg lock to be released..."
+while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1 \
+   || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 \
+   || fuser /var/lib/dpkg/lock >/dev/null 2>&1; do
+    sleep 10
+done
+echo "Lock released, proceeding."
+
 # ── System deps ───────────────────────────────────────────────────────────────
 apt-get update -qq
 apt-get install -y -qq git tmux htop libreoffice-common libreoffice-writer \
