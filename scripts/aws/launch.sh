@@ -17,7 +17,7 @@ set -euo pipefail
 # ── Config ───────────────────────────────────────────────────────────────────
 INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB, ~$5.67/hr on-demand
 REGION="${REGION:-us-east-1}"
-AZ="${AZ:-us-east-1c}"
+AZ="${AZ:-}"   # leave empty to let AWS pick the AZ with available capacity
 KEY_NAME="${KEY_NAME:-enclave-scribe-key}"
 SG_NAME="${SG_NAME:-enclave-scribe-sg}"
 VOLUME_SIZE="${VOLUME_SIZE:-500}"              # GB — model + data + checkpoints
@@ -26,7 +26,7 @@ AMI_ID="${AMI_ID:-ami-012ba162b9cd2729c}"
 
 echo "=== EnclaveScribe AWS Launcher ==="
 echo "Instance : $INSTANCE_TYPE (on-demand, ~\$5.67/hr)"
-echo "Region   : $REGION / $AZ"
+echo "Region   : $REGION / ${AZ:-auto}"
 echo "AMI      : $AMI_ID"
 echo ""
 
@@ -84,12 +84,15 @@ SETUP_SCRIPT=$(tail -n +1 scripts/aws/setup_instance.sh | sed '1s|^#!/usr/bin/en
 COMBINED=$(printf '%s\n%s' "$SECRETS_BLOCK" "$SETUP_SCRIPT")
 USERDATA_B64=$(echo "$COMBINED" | base64)
 
+PLACEMENT_ARG=()
+[ -n "$AZ" ] && PLACEMENT_ARG=(--placement "AvailabilityZone=$AZ")
+
 INSTANCE_ID=$(aws ec2 run-instances \
     --image-id "$AMI_ID" \
     --instance-type "$INSTANCE_TYPE" \
     --key-name "$KEY_NAME" \
     --security-group-ids "$SG_ID" \
-    --placement "AvailabilityZone=$AZ" \
+    "${PLACEMENT_ARG[@]}" \
     --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
     --user-data "$USERDATA_B64" \
     --count 1 \
