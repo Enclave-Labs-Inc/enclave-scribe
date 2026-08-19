@@ -13,52 +13,64 @@
 #   ─────────────────────────────────
 #   Total     ~300K samples   ~150 GB
 
-set -e
+# NB: no `set -e` — we want to continue if one dataset fails (broken URL,
+# missing file, etc.). merge.py uses whatever .jsonl files exist.
 
 RAW_DIR=${RAW_DIR:-data/raw}
 INTERIM_DIR=${INTERIM_DIR:-data/interim}
 PROCESSED_DIR=${PROCESSED_DIR:-data/processed}
+SKIP_LARGE=${SKIP_LARGE:-1}   # skip IDL (120GB) and HierText (broken URL) by default
 
 echo "=== EnclaveScribe Data Prep ==="
 echo "Raw dir      : $RAW_DIR"
 echo "Interim dir  : $INTERIM_DIR"
 echo "Processed dir: $PROCESSED_DIR"
+echo "Skip large   : $SKIP_LARGE (set SKIP_LARGE=0 to include IDL + HierText)"
 echo ""
 
 mkdir -p "$RAW_DIR" "$INTERIM_DIR" "$PROCESSED_DIR"
 
-echo "[1/7] CORD receipts..."
-python scripts/prepare/prep_cord.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/cord.jsonl"
+run_step() {
+    local name="$1"; shift
+    echo ""
+    echo "=== $name ==="
+    if "$@"; then
+        echo "$name: OK"
+    else
+        echo "$name: FAILED (skipping — pipeline continues)"
+    fi
+}
 
-echo "[2/7] FUNSD forms..."
-python scripts/prepare/prep_funsd.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/funsd.jsonl"
+run_step "[1/7] CORD receipts" python scripts/prepare/prep_cord.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/cord.jsonl"
 
-echo "[3/7] XFUND multilingual forms (7 languages)..."
-python scripts/prepare/prep_xfund.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/xfund.jsonl"
+run_step "[2/7] FUNSD forms" python scripts/prepare/prep_funsd.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/funsd.jsonl"
 
-echo "[4/7] HierText natural scene text..."
-python scripts/prepare/prep_hiertext.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/hiertext.jsonl"
+run_step "[3/7] XFUND multilingual forms" python scripts/prepare/prep_xfund.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/xfund.jsonl"
 
-echo "[5/7] TextOCR natural images..."
-python scripts/prepare/prep_textocr.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/textocr.jsonl"
+if [ "$SKIP_LARGE" = "0" ]; then
+    run_step "[4/7] HierText natural scene text" python scripts/prepare/prep_hiertext.py \
+        --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/hiertext.jsonl"
+else
+    echo ""
+    echo "[4/7] HierText: SKIPPED (broken upstream URL — set SKIP_LARGE=0 to retry)"
+fi
 
-echo "[6/7] IDL industry documents (250K sample)..."
-python scripts/prepare/prep_idl.py \
-    --raw_dir "$RAW_DIR" \
-    --out_jsonl "$INTERIM_DIR/idl.jsonl" \
-    --max_samples 250000
+run_step "[5/7] TextOCR natural images" python scripts/prepare/prep_textocr.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/textocr.jsonl"
 
-echo "[7/7] Merging all datasets..."
+if [ "$SKIP_LARGE" = "0" ]; then
+    run_step "[6/7] IDL industry documents (250K sample)" python scripts/prepare/prep_idl.py \
+        --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/idl.jsonl" --max_samples 250000
+else
+    echo ""
+    echo "[6/7] IDL: SKIPPED (~120GB download — set SKIP_LARGE=0 to include)"
+fi
+
+echo ""
+echo "=== [7/7] Merging all datasets that succeeded ==="
 python scripts/prepare/merge.py \
     --interim_dir "$INTERIM_DIR" \
     --out_dir "$PROCESSED_DIR" \
