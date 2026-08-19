@@ -9,8 +9,9 @@
 #   Quota: "All G and VT Spot Instance Requests" >= 48 vCPUs (g5.12xlarge uses 48)
 #
 # Optional env vars (injected into the instance at launch):
-#   HF_TOKEN=hf_xxx       — HuggingFace token for gated models
-#   WANDB_API_KEY=xxx      — W&B key for live training dashboard (wandb.ai)
+#   HF_TOKEN=hf_xxx            — HuggingFace token for gated models
+#   WANDB_API_KEY=xxx          — W&B key for live training dashboard (wandb.ai)
+#   S3_CHECKPOINT_BUCKET=xxx   — S3 bucket name to sync checkpoints every 10 min
 
 set -euo pipefail
 
@@ -79,8 +80,9 @@ echo "Launching spot instance..."
 
 # Inject secrets as env vars at the top of the UserData script
 SECRETS_BLOCK="#!/usr/bin/env bash"
-[ -n "${HF_TOKEN:-}" ]       && SECRETS_BLOCK+=$'\n'"export HF_TOKEN=${HF_TOKEN}"
-[ -n "${WANDB_API_KEY:-}" ]  && SECRETS_BLOCK+=$'\n'"export WANDB_API_KEY=${WANDB_API_KEY}"
+[ -n "${HF_TOKEN:-}" ]              && SECRETS_BLOCK+=$'\n'"export HF_TOKEN=${HF_TOKEN}"
+[ -n "${WANDB_API_KEY:-}" ]         && SECRETS_BLOCK+=$'\n'"export WANDB_API_KEY=${WANDB_API_KEY}"
+[ -n "${S3_CHECKPOINT_BUCKET:-}" ]  && SECRETS_BLOCK+=$'\n'"export S3_CHECKPOINT_BUCKET=${S3_CHECKPOINT_BUCKET}"
 SETUP_SCRIPT=$(tail -n +1 scripts/aws/setup_instance.sh | sed '1s|^#!/usr/bin/env bash||')
 COMBINED=$(printf '%s\n%s' "$SECRETS_BLOCK" "$SETUP_SCRIPT")
 USERDATA_B64=$(echo "$COMBINED" | base64)
@@ -95,7 +97,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --security-group-ids "$SG_ID" \
     ${PLACEMENT_ARG[@]+"${PLACEMENT_ARG[@]}"} \
     --instance-market-options "{\"MarketType\":\"spot\",\"SpotOptions\":{\"MaxPrice\":\"$SPOT_MAX_PRICE\",\"SpotInstanceType\":\"one-time\"}}" \
-    --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
+    --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":false}}]" \
     --user-data "$USERDATA_B64" \
     --count 1 \
     --region "$REGION" \
