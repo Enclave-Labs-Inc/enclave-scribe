@@ -6,7 +6,7 @@
 #
 # Prerequisites:
 #   aws configure  (run once — sets Access Key ID, Secret Key, region)
-#   Quota: "Running On-Demand G and VT instances" >= 48 vCPUs (g5.12xlarge uses 48)
+#   Quota: "All G and VT Spot Instance Requests" >= 48 vCPUs (g5.12xlarge uses 48)
 #
 # Optional env vars (injected into the instance at launch):
 #   HF_TOKEN=hf_xxx       — HuggingFace token for gated models
@@ -15,7 +15,8 @@
 set -euo pipefail
 
 # ── Config ───────────────────────────────────────────────────────────────────
-INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB, ~$5.67/hr on-demand
+INSTANCE_TYPE="${INSTANCE_TYPE:-g5.12xlarge}"   # 4x A10G 24GB, ~$3.15/hr spot
+SPOT_MAX_PRICE="${SPOT_MAX_PRICE:-4.00}"        # bid cap in USD/hr
 REGION="${REGION:-us-east-1}"
 AZ="${AZ:-}"   # leave empty to let AWS pick the AZ with available capacity
 KEY_NAME="${KEY_NAME:-enclave-scribe-key}"
@@ -25,7 +26,7 @@ VOLUME_SIZE="${VOLUME_SIZE:-500}"              # GB — model + data + checkpoin
 AMI_ID="${AMI_ID:-ami-012ba162b9cd2729c}"
 
 echo "=== EnclaveScribe AWS Launcher ==="
-echo "Instance : $INSTANCE_TYPE (on-demand, ~\$5.67/hr)"
+echo "Instance : $INSTANCE_TYPE (spot, max \$$SPOT_MAX_PRICE/hr, ~\$3.15/hr)"
 echo "Region   : $REGION / ${AZ:-auto}"
 echo "AMI      : $AMI_ID"
 echo ""
@@ -74,7 +75,7 @@ fi
 
 # ── On-demand instance ───────────────────────────────────────────────────────
 echo ""
-echo "Launching on-demand instance..."
+echo "Launching spot instance..."
 
 # Inject secrets as env vars at the top of the UserData script
 SECRETS_BLOCK="#!/usr/bin/env bash"
@@ -93,6 +94,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --key-name "$KEY_NAME" \
     --security-group-ids "$SG_ID" \
     ${PLACEMENT_ARG[@]+"${PLACEMENT_ARG[@]}"} \
+    --instance-market-options "{\"MarketType\":\"spot\",\"SpotOptions\":{\"MaxPrice\":\"$SPOT_MAX_PRICE\",\"SpotInstanceType\":\"one-time\"}}" \
     --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
     --user-data "$USERDATA_B64" \
     --count 1 \
