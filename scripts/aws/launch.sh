@@ -85,14 +85,14 @@ COMBINED=$(printf '%s\n%s' "$SECRETS_BLOCK" "$SETUP_SCRIPT")
 USERDATA_B64=$(echo "$COMBINED" | base64)
 
 PLACEMENT_ARG=()
-[ -n "$AZ" ] && PLACEMENT_ARG=(--placement "AvailabilityZone=$AZ")
+[ -n "${AZ}" ] && PLACEMENT_ARG=(--placement "AvailabilityZone=${AZ}")
 
 INSTANCE_ID=$(aws ec2 run-instances \
     --image-id "$AMI_ID" \
     --instance-type "$INSTANCE_TYPE" \
     --key-name "$KEY_NAME" \
     --security-group-ids "$SG_ID" \
-    "${PLACEMENT_ARG[@]}" \
+    ${PLACEMENT_ARG[@]+"${PLACEMENT_ARG[@]}"} \
     --block-device-mappings "[{\"DeviceName\":\"/dev/sda1\",\"Ebs\":{\"VolumeSize\":$VOLUME_SIZE,\"VolumeType\":\"gp3\",\"DeleteOnTermination\":true}}]" \
     --user-data "$USERDATA_B64" \
     --count 1 \
