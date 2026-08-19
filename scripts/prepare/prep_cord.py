@@ -13,6 +13,19 @@ from datasets import load_dataset
 from tqdm import tqdm
 
 
+def _flatten(v) -> str:
+    """CORD fields can be str, list of str, or nested — normalise to a single string."""
+    if v is None:
+        return ""
+    if isinstance(v, str):
+        return v
+    if isinstance(v, list):
+        return " ".join(_flatten(x) for x in v)
+    if isinstance(v, dict):
+        return " ".join(_flatten(x) for x in v.values())
+    return str(v)
+
+
 def _parse_ground_truth(gt_str: str) -> str:
     try:
         gt = json.loads(gt_str)
@@ -25,7 +38,7 @@ def _parse_ground_truth(gt_str: str) -> str:
     for item in parse.get("menu", []):
         if not isinstance(item, dict):
             continue
-        parts = [item.get("nm", ""), item.get("cnt", ""), item.get("price", "")]
+        parts = [_flatten(item.get("nm")), _flatten(item.get("cnt")), _flatten(item.get("price"))]
         row = "  ".join(p for p in parts if p)
         if row:
             lines.append(row)
@@ -33,20 +46,20 @@ def _parse_ground_truth(gt_str: str) -> str:
     sub = parse.get("sub_total", {})
     if isinstance(sub, dict):
         if sub.get("subtotal_price"):
-            lines.append(f"Subtotal: {sub['subtotal_price']}")
+            lines.append(f"Subtotal: {_flatten(sub['subtotal_price'])}")
         if sub.get("tax_price"):
-            lines.append(f"Tax: {sub['tax_price']}")
+            lines.append(f"Tax: {_flatten(sub['tax_price'])}")
         if sub.get("discount_price"):
-            lines.append(f"Discount: {sub['discount_price']}")
+            lines.append(f"Discount: {_flatten(sub['discount_price'])}")
 
     total = parse.get("total", {})
     if isinstance(total, dict):
         if total.get("total_price"):
-            lines.append(f"Total: {total['total_price']}")
+            lines.append(f"Total: {_flatten(total['total_price'])}")
         if total.get("cashprice"):
-            lines.append(f"Cash: {total['cashprice']}")
+            lines.append(f"Cash: {_flatten(total['cashprice'])}")
         if total.get("changeprice"):
-            lines.append(f"Change: {total['changeprice']}")
+            lines.append(f"Change: {_flatten(total['changeprice'])}")
 
     return "\n".join(lines)
 
