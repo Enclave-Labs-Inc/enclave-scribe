@@ -39,6 +39,15 @@ if [ -n "${HF_TOKEN:-}" ]; then
     huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential
 fi
 
+# ── Weights & Biases login ────────────────────────────────────────────────────
+pip install --quiet wandb
+if [ -n "${WANDB_API_KEY:-}" ]; then
+    wandb login "$WANDB_API_KEY"
+else
+    echo "WARNING: WANDB_API_KEY not set — training will log to wandb offline only."
+    wandb offline
+fi
+
 echo "=== Setup complete. Starting pipeline in tmux ==="
 date
 
