@@ -39,10 +39,10 @@ SOTA_COMPARISON = {
 }
 
 
-def _load_model(model_dir: str):
+def _load_model(base_model: str, adapter_dir: str = ""):
     from scribe.model.vlm import Qwen2VLModel
     model = Qwen2VLModel()
-    model.load(model_dir, flash_attn=True)
+    model.load(base_model, adapter_dir=adapter_dir)
     return model
 
 
@@ -82,10 +82,11 @@ def run(args):
         samples = samples[:args.limit]
 
     image_root = Path(args.image_root) if args.image_root else None
+    label = f"{args.base_model} + {args.adapter_dir}" if args.adapter_dir else args.base_model
     print(f"Evaluating {len(samples)} samples from {args.gt_jsonl}")
-    print(f"Model: {args.model_dir}\n")
+    print(f"Model: {label}\n")
 
-    model = _load_model(args.model_dir)
+    model = _load_model(args.base_model, adapter_dir=args.adapter_dir)
 
     results = []
     t0 = time.time()
@@ -125,28 +126,28 @@ def run(args):
         ["Category", "N", "NED↓", "CER↓", "WER↓", "BLEU↑", "F1↑"],
     )
 
-    # Comparison vs SOTA (overall only)
+    # Comparison vs SOTA — only meaningful on OmniDocBench
     overall = by_cat["__all__"]
     our_ned = avg("ned", overall)
     our_f1 = avg("f1", overall)
 
-    comp_rows = [("EnclaveScribe", f"{our_ned:.3f}", f"{our_f1:.3f}", "← ours")]
-    for model_name, scores in sorted(SOTA_COMPARISON.items(), key=lambda x: x[1]["ned"]):
-        delta_ned = our_ned - scores["ned"]
-        flag = "✓ better" if delta_ned < 0 else "✗ behind"
-        comp_rows.append((model_name, f"{scores['ned']:.3f}", f"{scores['f1']:.3f}", flag))
-
-    _print_table(
-        comp_rows,
-        "Comparison vs Published Models (OmniDocBench, NED lower is better)",
-        ["Model", "NED↓", "F1↑", "Status"],
-    )
+    if "omnidocbench" in args.gt_jsonl.lower():
+        comp_rows = [("EnclaveScribe", f"{our_ned:.3f}", f"{our_f1:.3f}", "← ours")]
+        for model_name, scores in sorted(SOTA_COMPARISON.items(), key=lambda x: x[1]["ned"]):
+            delta_ned = our_ned - scores["ned"]
+            flag = "✓ better" if delta_ned < 0 else "✗ behind"
+            comp_rows.append((model_name, f"{scores['ned']:.3f}", f"{scores['f1']:.3f}", flag))
+        _print_table(
+            comp_rows,
+            "Comparison vs Published Models (OmniDocBench, NED lower is better)",
+            ["Model", "NED↓", "F1↑", "Status"],
+        )
 
     # Save full results
     if args.out_json:
         Path(args.out_json).parent.mkdir(parents=True, exist_ok=True)
         payload = {
-            "model": args.model_dir,
+            "model": label,
             "benchmark": args.gt_jsonl,
             "n_samples": len(results),
             "elapsed_s": round(elapsed, 2),
@@ -163,11 +164,12 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description="EnclaveScribe evaluation")
-    parser.add_argument("--gt_jsonl",   required=True,  help="Ground truth JSONL")
-    parser.add_argument("--image_root", default="data/raw")
-    parser.add_argument("--model_dir",  default="outputs/lora_lambda_2xa100")
-    parser.add_argument("--out_json",   default="results/eval.json")
-    parser.add_argument("--limit",      type=int, default=0, help="Limit samples (0 = all)")
+    parser.add_argument("--gt_jsonl",    required=True, help="Ground truth JSONL")
+    parser.add_argument("--image_root",  default="data/raw")
+    parser.add_argument("--base_model",  default="Qwen/Qwen2.5-VL-7B-Instruct")
+    parser.add_argument("--adapter_dir", default="", help="Path to LoRA adapter (empty = base model only)")
+    parser.add_argument("--out_json",    default="results/eval.json")
+    parser.add_argument("--limit",       type=int, default=0, help="Limit samples (0 = all)")
     main_args = parser.parse_args()
     run(main_args)
 
