@@ -1,0 +1,20 @@
+# Iter-1 evaluation — fine-tuned vs base model
+#
+# Run on the same instance used for training (adapter + images live there).
+# Pull adapter from S3 if needed:
+#   aws s3 sync s3://enclave-scribe-checkpoints/outputs/iter1/ outputs/iter1/
+#
+# Fine-tuned model:
+#   python scripts/eval.py \
+#     --gt_jsonl    data/processed/val.jsonl \
+#     --image_root  data/raw \
+#     --base_model  Qwen/Qwen2.5-VL-7B-Instruct \
+#     --adapter_dir outputs/iter1 \
+#     --out_json    results/iter1_val_finetuned.json
+#
+# Base model (no adapter — for comparison):
+#   python scripts/eval.py \
+#     --gt_jsonl   data/processed/val.jsonl \
+#     --image_root data/raw \
+#     --base_model Qwen/Qwen2.5-VL-7B-Instruct \
+#     --out_json   results/iter1_val_base.json

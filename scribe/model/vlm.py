@@ -1,6 +1,6 @@
 import torch
 from PIL import Image
-from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
+from transformers import AutoModelForImageTextToText, AutoProcessor
 
 from .base import BaseModel
 
@@ -13,20 +13,35 @@ class Qwen2VLModel(BaseModel):
     def load(
         self,
         model_path: str = "Qwen/Qwen2.5-VL-7B-Instruct",
-        flash_attn: bool = True,
+        adapter_dir: str = "",
+        flash_attn: bool = False,
+        min_pixels: int = 256 * 28 * 28,
+        max_pixels: int = 640 * 28 * 28,
         **kwargs,
     ) -> None:
-        self.processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+        self.processor = AutoProcessor.from_pretrained(
+            model_path,
+            trust_remote_code=True,
+            min_pixels=min_pixels,
+            max_pixels=max_pixels,
+        )
 
-        attn_impl = "flash_attention_2" if flash_attn else "eager"
+        attn_impl = "flash_attention_2" if flash_attn else "sdpa"
 
-        self.model = Qwen2VLForConditionalGeneration.from_pretrained(
+        base = AutoModelForImageTextToText.from_pretrained(
             model_path,
             torch_dtype=torch.bfloat16,
             attn_implementation=attn_impl,
             device_map="auto",
+            trust_remote_code=True,
             **kwargs,
-        ).eval()
+        )
+
+        if adapter_dir:
+            from peft import PeftModel
+            base = PeftModel.from_pretrained(base, adapter_dir)
+
+        self.model = base.eval()
 
     def _build_messages(self, image: Image.Image, prompt: str) -> list[dict]:
         return [
