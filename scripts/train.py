@@ -64,7 +64,15 @@ def main():
 
         # For DDP: NO device_map — each rank loads a full copy onto its own GPU.
         # HF Trainer + torchrun handles placement via LOCAL_RANK.
-        processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+        # min/max_pixels cap image resolution -> caps visual tokens per image
+        # (Qwen2.5-VL default max is ~16k*28*28 which can blow up to 10k+ tokens
+        # per document scan and mismatch the 4096 max_length).
+        processor = AutoProcessor.from_pretrained(
+            model_path,
+            trust_remote_code=True,
+            min_pixels=256 * 28 * 28,      # ~200k px  -> ~256 tokens min
+            max_pixels=1280 * 28 * 28,     # ~1M px    -> ~1280 tokens max
+        )
         model = AutoModelForImageTextToText.from_pretrained(
             model_path,
             torch_dtype=torch.bfloat16,
