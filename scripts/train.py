@@ -75,6 +75,10 @@ def main():
         if config.get("lora"):
             lora_cfg = build_lora_config(**config["lora"])
             model = apply_lora(model, lora_cfg)
+            # Required for gradient_checkpointing + LoRA: without this, gradients
+            # don't flow through the frozen base model to the trainable adapters
+            # and the loss silently stays flat.
+            model.enable_input_require_grads()
         train(model, processor, config)
 
 
