@@ -52,16 +52,30 @@ def main():
         train(model, tokenizer, config)
 
     else:
-        from scribe.model.vlm import Qwen2VLModel
+        import torch
+        from transformers import AutoProcessor, AutoModelForImageTextToText
+
         from scribe.train.lora import apply_lora, build_lora_config
         from scribe.train.trainer import train
 
-        model_obj = Qwen2VLModel()
-        model_obj.load(config["model"]["path"], flash_attn=config["model"].get("flash_attn", True))
+        model_path = config["model"]["path"]
+        flash_attn = config["model"].get("flash_attn", False)
+        attn_impl = "flash_attention_2" if flash_attn else "sdpa"
+
+        # For DDP: NO device_map — each rank loads a full copy onto its own GPU.
+        # HF Trainer + torchrun handles placement via LOCAL_RANK.
+        processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
+        model = AutoModelForImageTextToText.from_pretrained(
+            model_path,
+            torch_dtype=torch.bfloat16,
+            attn_implementation=attn_impl,
+            trust_remote_code=True,
+        )
+
         if config.get("lora"):
             lora_cfg = build_lora_config(**config["lora"])
-            model_obj.model = apply_lora(model_obj.model, lora_cfg)
-        train(model_obj.model, model_obj.processor, config)
+            model = apply_lora(model, lora_cfg)
+        train(model, processor, config)
 
 
 if __name__ == "__main__":
