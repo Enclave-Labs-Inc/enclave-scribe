@@ -70,8 +70,8 @@ def main():
         processor = AutoProcessor.from_pretrained(
             model_path,
             trust_remote_code=True,
-            min_pixels=256 * 28 * 28,      # ~200k px  -> ~256 tokens min
-            max_pixels=1280 * 28 * 28,     # ~1M px    -> ~1280 tokens max
+            min_pixels=256 * 28 * 28,      # ~200k px -> ~256 tokens min
+            max_pixels=640 * 28 * 28,      # ~500k px -> ~640 tokens max (was 1280 - OOM on 22GB)
         )
         model = AutoModelForImageTextToText.from_pretrained(
             model_path,
