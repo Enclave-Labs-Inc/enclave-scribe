@@ -19,8 +19,8 @@ model:
   flash_attn: false   # flash-attn is not installed; sdpa is used automatically
 
 lora:
-  r: 128
-  alpha: 256
+  r: 32                # was 128 — OOM on 22GB A10G with r=128; 32 is enough for iter-1
+  alpha: 64            # keep alpha = 2 * r
   dropout: 0
 
 dataset:
@@ -45,6 +45,7 @@ training_args:
   gradient_checkpointing: true
   gradient_checkpointing_kwargs:
     use_reentrant: false              # required for DDP + LoRA (default true breaks gradient flow)
+  use_liger_kernel: true              # fuses lm_head + cross_entropy — avoids materialising fp32 logits (~2GB saved)
   ddp_find_unused_parameters: false   # LoRA has no unused params — avoid DDP overhead
   remove_unused_columns: false        # DocumentDataset returns dicts; Trainer must not drop keys
   logging_steps: 5
