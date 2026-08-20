@@ -12,10 +12,11 @@
 #   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/unsloth_aws.yaml
 #   (use --nproc_per_node=8 for p4d.24xlarge)
 
-use_unsloth: true
+use_unsloth: false   # true = single-GPU only (Unsloth free); false = HF Trainer + DDP on all 4 GPUs
 
 model:
   path: Qwen/Qwen2.5-VL-7B-Instruct
+  flash_attn: false   # flash-attn is not installed; sdpa is used automatically
 
 lora:
   r: 128
@@ -32,7 +33,7 @@ max_length: 4096
 augment: true
 
 training_args:
-  output_dir: outputs/unsloth
+  output_dir: outputs/iter1
   num_train_epochs: 3
   per_device_train_batch_size: 2
   gradient_accumulation_steps: 4      # effective batch = 32 on 4 GPUs
@@ -40,10 +41,13 @@ training_args:
   lr_scheduler_type: cosine
   warmup_ratio: 0.05
   weight_decay: 0.01
-  logging_steps: 10
-  save_steps: 300
-  eval_steps: 300
-  save_total_limit: 5
-  dataloader_num_workers: 8
+  bf16: true
+  gradient_checkpointing: true
+  ddp_find_unused_parameters: false   # LoRA has no unused params — avoid DDP overhead
+  logging_steps: 5
+  save_steps: 50
+  eval_steps: 50
+  save_total_limit: 3
+  dataloader_num_workers: 4
   report_to: "wandb"
   run_name: "enclave-scribe-iter1"

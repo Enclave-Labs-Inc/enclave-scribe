@@ -2,13 +2,12 @@ from transformers import Trainer, TrainingArguments
 
 from ..data.collator import DocumentCollator
 from ..data.dataset import DocumentDataset
-from ..data.transforms import apply_train_transforms
 
 
 def _mask_input_labels(batch: dict) -> dict:
-    """Mask prompt tokens so loss is computed only on the assistant response."""
+    """Mask padding tokens so loss is not computed on them."""
     labels = batch["input_ids"].clone()
-    labels[labels == 0] = -100  # mask padding
+    labels[labels == 0] = -100
     batch["labels"] = labels
     return batch
 
@@ -25,7 +24,7 @@ def train(model, processor, config: dict) -> None:
     train_dataset = DocumentDataset(
         jsonl_path=dataset_cfg["train_jsonl"],
         image_root=dataset_cfg.get("image_root", ""),
-        transforms=apply_train_transforms if config.get("augment", True) else None,
+        augment=config.get("augment", True),
     )
     val_dataset = None
     if dataset_cfg.get("val_jsonl"):
