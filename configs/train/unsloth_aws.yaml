@@ -43,7 +43,10 @@ training_args:
   weight_decay: 0.01
   bf16: true
   gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false              # required for DDP + LoRA (default true breaks gradient flow)
   ddp_find_unused_parameters: false   # LoRA has no unused params — avoid DDP overhead
+  remove_unused_columns: false        # DocumentDataset returns dicts; Trainer must not drop keys
   logging_steps: 5
   save_steps: 50
   eval_steps: 50
