@@ -52,7 +52,8 @@ run_step "[2/7] FUNSD forms" python scripts/prepare/prep_funsd.py \
     --benchmark_jsonl "$BENCHMARK_DIR/funsd_test.jsonl"
 
 run_step "[3/7] XFUND multilingual forms" python scripts/prepare/prep_xfund.py \
-    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/xfund.jsonl"
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/xfund.jsonl" \
+    --benchmark_jsonl "$BENCHMARK_DIR/xfund_test.jsonl"
 
 if [ "$SKIP_LARGE" = "0" ]; then
     run_step "[4/7] HierText natural scene text" python scripts/prepare/prep_hiertext.py \

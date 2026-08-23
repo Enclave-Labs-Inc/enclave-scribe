@@ -44,55 +44,81 @@ def _words_to_text(document: list[dict]) -> str:
     return " ".join(tokens)
 
 
-def run(raw_dir: Path, out_jsonl: Path) -> int:
-    out_jsonl.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
+def run(raw_dir: Path, out_jsonl: Path, benchmark_jsonl: Path | None = None) -> int:
+    """XFUND ships each split as TWO files: a .zip of flat images and a
+    separate .json of annotations. The old code only downloaded the .zip
+    and looked for JSON inside it — that's why it produced 0 samples.
 
-    with open(out_jsonl, "w", encoding="utf-8") as f:
+    val split is routed to benchmark_jsonl (held out) when provided.
+    """
+    out_jsonl.parent.mkdir(parents=True, exist_ok=True)
+    if benchmark_jsonl is not None:
+        benchmark_jsonl.parent.mkdir(parents=True, exist_ok=True)
+
+    train_count = 0
+    test_count = 0
+    with open(out_jsonl, "w", encoding="utf-8") as train_f, \
+         open(benchmark_jsonl, "w", encoding="utf-8") if benchmark_jsonl else _null_writer() as test_f:
         for lang in LANGUAGES:
             for split in ["train", "val"]:
                 zip_name = f"{lang}.{split}.zip"
-                zip_url = f"{XFUND_BASE}/{zip_name}"
+                json_name = f"{lang}.{split}.json"
                 zip_path = raw_dir / "xfund" / zip_name
+                json_path = raw_dir / "xfund" / json_name
 
-                _download(zip_url, zip_path)
+                _download(f"{XFUND_BASE}/{zip_name}", zip_path)
+                _download(f"{XFUND_BASE}/{json_name}", json_path)
 
                 extract_dir = raw_dir / "xfund" / lang / split
                 extract_dir.mkdir(parents=True, exist_ok=True)
-
                 with zipfile.ZipFile(zip_path) as z:
                     z.extractall(extract_dir)
 
-                json_files = list(extract_dir.rglob("*.json"))
-                if not json_files:
-                    print(f"WARNING: no JSON found for {lang}/{split}")
-                    continue
+                data = json.loads(json_path.read_text(encoding="utf-8"))
+                is_heldout = (split == "val" and benchmark_jsonl is not None)
+                target = test_f if is_heldout else train_f
 
-                for json_file in json_files:
-                    data = json.loads(json_file.read_text(encoding="utf-8"))
-                    for doc in data.get("documents", []):
-                        img_file = json_file.parent / doc["img"]["fname"]
-                        if not img_file.exists():
-                            continue
+                for doc in data.get("documents", []):
+                    img_file = extract_dir / doc["img"]["fname"]
+                    if not img_file.exists():
+                        continue
 
-                        text = _words_to_text(doc.get("document", []))
-                        if not text.strip():
-                            continue
+                    text = _words_to_text(doc.get("document", []))
+                    if not text.strip():
+                        continue
 
-                        rel = str(img_file.relative_to(raw_dir))
-                        f.write(json.dumps({"image": rel, "text": text}, ensure_ascii=False) + "\n")
-                        count += 1
+                    rel = str(img_file.relative_to(raw_dir))
+                    record = {"image": rel, "text": text}
+                    if is_heldout:
+                        record["category"] = f"xfund_{lang}"
+                    target.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    if is_heldout:
+                        test_count += 1
+                    else:
+                        train_count += 1
 
-    print(f"XFUND: {count} samples → {out_jsonl}")
-    return count
+    print(f"XFUND: {train_count} train → {out_jsonl}")
+    if benchmark_jsonl:
+        print(f"XFUND: {test_count} val (held out) → {benchmark_jsonl}")
+    return train_count + test_count
+
+
+class _null_writer:
+    """No-op file object stand-in for when benchmark_jsonl is not provided."""
+    def __enter__(self): return self
+    def __exit__(self, *a): pass
+    def write(self, _): pass
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--raw_dir", default="data/raw")
-    parser.add_argument("--out_jsonl", default="data/interim/xfund.jsonl")
+    parser.add_argument("--raw_dir",         default="data/raw")
+    parser.add_argument("--out_jsonl",       default="data/interim/xfund.jsonl")
+    parser.add_argument("--benchmark_jsonl", default="",
+                        help="If set, val split (7 languages) is routed here as held-out test set")
     args = parser.parse_args()
-    run(Path(args.raw_dir), Path(args.out_jsonl))
+    bench = Path(args.benchmark_jsonl) if args.benchmark_jsonl else None
+    run(Path(args.raw_dir), Path(args.out_jsonl), bench)
 
 
 if __name__ == "__main__":
