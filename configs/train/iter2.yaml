@@ -1,0 +1,61 @@
+# EnclaveScribe iter-2 — larger LoRA + mixed OCR/Q&A data on 4× A10G
+#
+# Recommended data prep before this run (from an authenticated instance):
+#   export HF_TOKEN=<...>
+#   IDL_MAX_SAMPLES=30000 bash scripts/prepare/run_all.sh
+#
+# Approx cost: ~9 hours on g5.12xlarge spot (~$28) with the numbers below.
+# Adjust num_train_epochs / IDL_MAX_SAMPLES to trade cost for accuracy.
+#
+# Launch:
+#   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/iter2.yaml
+#
+# Iter-1 vs iter-2 delta:
+#   LoRA r          32 → 64
+#   LoRA alpha      64 → 128
+#   Epochs          3  → 1     (much more data, one clean pass is enough)
+#   Training data   ~1.2k → ~72k samples (CORD + FUNSD + XFUND + IDL + DocVQA)
+
+use_unsloth: false   # HF Trainer + DDP on all 4 GPUs
+
+model:
+  path: Qwen/Qwen2.5-VL-7B-Instruct
+  flash_attn: false   # sdpa is used automatically
+
+lora:
+  r: 64                # up from 32 — more capacity for more/broader data
+  alpha: 128           # keep alpha = 2 * r
+  dropout: 0
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."   # default; DocVQA rows override via `prompt` field in JSONL
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/iter2
+  num_train_epochs: 1                 # 72k samples × 1 epoch ≈ 2,250 steps
+  per_device_train_batch_size: 1      # 22 GB A10G — lm_head + Liger fits at bs=1
+  gradient_accumulation_steps: 8      # effective batch = 32 (1 * 8 * 4)
+  learning_rate: 1.5e-4               # slightly lower than iter-1 for bigger LoRA + more data
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03                  # 0.05 was too much warmup at only 111 steps
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false              # required for DDP + LoRA
+  use_liger_kernel: true              # fuses lm_head + cross_entropy (saved iter-1 from OOM)
+  ddp_find_unused_parameters: false   # LoRA has no unused params
+  remove_unused_columns: false        # DocumentDataset returns dicts; Trainer must not drop keys
+  logging_steps: 20
+  save_steps: 500
+  eval_steps: 500
+  save_total_limit: 5
+  dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter2"
