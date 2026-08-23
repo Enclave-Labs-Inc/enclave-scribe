@@ -61,7 +61,8 @@ def _title_page(pdf, run, stats: dict):
     plt.close(fig)
 
 
-def _plot_metric(pdf, history, metric: str, title: str, ylabel: str) -> bool:
+def _plot_metric(pdf, history, metric: str, title: str, ylabel: str,
+                 png_dir: Path | None = None) -> bool:
     import matplotlib.pyplot as plt
     if metric not in history.columns:
         return False
@@ -84,6 +85,9 @@ def _plot_metric(pdf, history, metric: str, title: str, ylabel: str) -> bool:
     ax.spines["right"].set_visible(False)
 
     pdf.savefig(fig, bbox_inches="tight")
+    if png_dir is not None:
+        slug = metric.replace("/", "_")
+        fig.savefig(png_dir / f"{slug}.png", dpi=150, bbox_inches="tight")
     plt.close(fig)
     return True
 
@@ -105,7 +109,12 @@ def main():
     parser = argparse.ArgumentParser(description="Export W&B run as PDF report")
     parser.add_argument("--run", required=True, help="W&B run path: entity/project/run_id")
     parser.add_argument("--out", default="results/training_report.pdf")
+    parser.add_argument("--png_dir", default="", help="Optional: also save each chart as PNG here")
     args = parser.parse_args()
+
+    png_dir = Path(args.png_dir) if args.png_dir else None
+    if png_dir is not None:
+        png_dir.mkdir(parents=True, exist_ok=True)
 
     run = _fetch_run(args.run)
     history = run.history(samples=2000)
@@ -136,9 +145,9 @@ def main():
     with PdfPages(out_path) as pdf:
         _title_page(pdf, run, stats)
 
-        _plot_metric(pdf, history, "train/loss",          "Training Loss",         "Loss")
-        _plot_metric(pdf, history, "train/learning_rate", "Learning Rate (cosine + 5% warmup)", "Learning rate")
-        _plot_metric(pdf, history, "train/grad_norm",     "Gradient Norm",         "‖grad‖")
+        _plot_metric(pdf, history, "train/loss",          "Training Loss",         "Loss", png_dir)
+        _plot_metric(pdf, history, "train/learning_rate", "Learning Rate (cosine + 5% warmup)", "Learning rate", png_dir)
+        _plot_metric(pdf, history, "train/grad_norm",     "Gradient Norm",         "‖grad‖", png_dir)
 
         # Also emit any other train/* numeric metric present, one page each
         extras = [c for c in history.columns
@@ -146,7 +155,7 @@ def main():
                   and c not in {"train/loss", "train/learning_rate", "train/grad_norm",
                                 "train/global_step", "train/epoch"}]
         for m in extras:
-            _plot_metric(pdf, history, m, m, m.split("/", 1)[1])
+            _plot_metric(pdf, history, m, m, m.split("/", 1)[1], png_dir)
 
     print(f"Wrote {out_path.resolve()}")
 
