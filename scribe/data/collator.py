@@ -12,12 +12,16 @@ class DocumentCollator:
         messages_list, images_list = [], []
         for item in batch:
             images_list.append(item["image"])
+            # Per-sample prompt override (from JSONL) takes precedence over the
+            # collator's default. Lets Q&A datasets like DocVQA use their own
+            # prompts while OCR datasets share the "document parsing." default.
+            item_prompt = item.get("prompt", self.prompt)
             messages_list.append([
                 {
                     "role": "user",
                     "content": [
                         {"type": "image", "image": item["image"]},
-                        {"type": "text", "text": self.prompt},
+                        {"type": "text", "text": item_prompt},
                     ],
                 },
                 {
