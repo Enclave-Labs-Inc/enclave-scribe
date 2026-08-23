@@ -54,6 +54,11 @@ def check_idl() -> tuple[bool, str]:
     return _try_hf("cathyzheng/IDL-WDS", split="train", trust_remote_code=True)
 
 
+def check_idl_pixparse() -> tuple[bool, str]:
+    """Alternative IDL maintainer — used as fallback for cathyzheng/IDL-WDS."""
+    return _try_hf("pixparse/idl-wds", split="train")
+
+
 def check_xfund() -> tuple[bool, str]:
     """XFUND zips live on GitHub releases. Test one language/split."""
     url = "https://github.com/doc-analysis/XFUND/releases/download/v1.0/zh.train.zip"
@@ -116,6 +121,7 @@ CHECKS = [
     ("TextOCR images (Open Images CDN)",                check_textocr_images),
     ("OmniDocBench (HF: opendatalab/OmniDocBench)",     check_omnidocbench),
     ("IDL-WDS (HF: cathyzheng/IDL-WDS, streaming)",     check_idl),
+    ("IDL-WDS ALT (HF: pixparse/idl-wds, streaming)",   check_idl_pixparse),
 ]
 
 
