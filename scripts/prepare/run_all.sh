@@ -71,18 +71,22 @@ run_step "[6/7] IDL industry documents (pixparse/idl-wds, target $IDL_MAX_SAMPLE
     python scripts/prepare/prep_idl.py \
     --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/idl.jsonl" --max_samples "$IDL_MAX_SAMPLES"
 
-run_step "[7/7] OmniDocBench (benchmark only, 1,651 pages)" python scripts/prepare/prep_omnidocbench.py \
+run_step "[7/8] OmniDocBench (benchmark only, 1,651 pages)" python scripts/prepare/prep_omnidocbench.py \
     --raw_dir "$RAW_DIR" --benchmark_jsonl "$BENCHMARK_DIR/omnidocbench_test.jsonl"
 
+run_step "[8/8] DocVQA (train + val held out)" python scripts/prepare/prep_docvqa.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/docvqa.jsonl" \
+    --benchmark_jsonl "$BENCHMARK_DIR/docvqa_test.jsonl"
+
 echo ""
-echo "=== [8/9] Merging all training datasets that succeeded ==="
+echo "=== [9/10] Merging all training datasets that succeeded ==="
 python scripts/prepare/merge.py \
     --interim_dir "$INTERIM_DIR" \
     --out_dir "$PROCESSED_DIR" \
     --val_ratio 0.02
 
 echo ""
-echo "=== [9/9] Aggregating held-out test splits ==="
+echo "=== [10/10] Aggregating held-out test splits ==="
 HELDOUT="$BENCHMARK_DIR/heldout_test.jsonl"
 : > "$HELDOUT"
 shopt -s nullglob
