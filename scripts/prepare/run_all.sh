@@ -20,7 +20,7 @@ RAW_DIR=${RAW_DIR:-data/raw}
 INTERIM_DIR=${INTERIM_DIR:-data/interim}
 PROCESSED_DIR=${PROCESSED_DIR:-data/processed}
 BENCHMARK_DIR=${BENCHMARK_DIR:-data/benchmark}
-SKIP_LARGE=${SKIP_LARGE:-1}   # skip IDL (120GB) and HierText (broken URL) by default
+SKIP_LARGE=${SKIP_LARGE:-1}   # skip HierText (broken URL) by default; IDL now capped via IDL_MAX_SAMPLES
 
 echo "=== EnclaveScribe Data Prep ==="
 echo "Raw dir      : $RAW_DIR"
@@ -66,13 +66,10 @@ fi
 run_step "[5/7] TextOCR natural images" python scripts/prepare/prep_textocr.py \
     --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/textocr.jsonl"
 
-if [ "$SKIP_LARGE" = "0" ]; then
-    run_step "[6/7] IDL industry documents (250K sample)" python scripts/prepare/prep_idl.py \
-        --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/idl.jsonl" --max_samples 250000
-else
-    echo ""
-    echo "[6/7] IDL: SKIPPED (~120GB download — set SKIP_LARGE=0 to include)"
-fi
+IDL_MAX_SAMPLES=${IDL_MAX_SAMPLES:-100000}
+run_step "[6/7] IDL industry documents (pixparse/idl-wds, target $IDL_MAX_SAMPLES pages)" \
+    python scripts/prepare/prep_idl.py \
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/idl.jsonl" --max_samples "$IDL_MAX_SAMPLES"
 
 run_step "[7/7] OmniDocBench (benchmark only, 1,651 pages)" python scripts/prepare/prep_omnidocbench.py \
     --raw_dir "$RAW_DIR" --benchmark_jsonl "$BENCHMARK_DIR/omnidocbench_test.jsonl"
