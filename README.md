@@ -44,6 +44,8 @@ bash scripts/prepare/run_all.sh
 
 CORD and FUNSD produce samples out of the box; the other 5 prep scripts have known bugs being fixed in iter-2 (see roadmap below).
 
+Official test splits (CORD, FUNSD) are automatically routed to `data/benchmark/heldout_test.jsonl` and kept out of the training pool — use this file for stable, apples-to-apples evaluation across iterations.
+
 ### Train (4× A10G, ~26 min, ~$1.40 spot)
 
 ```bash

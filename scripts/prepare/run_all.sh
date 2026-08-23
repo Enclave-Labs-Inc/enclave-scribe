@@ -19,16 +19,18 @@
 RAW_DIR=${RAW_DIR:-data/raw}
 INTERIM_DIR=${INTERIM_DIR:-data/interim}
 PROCESSED_DIR=${PROCESSED_DIR:-data/processed}
+BENCHMARK_DIR=${BENCHMARK_DIR:-data/benchmark}
 SKIP_LARGE=${SKIP_LARGE:-1}   # skip IDL (120GB) and HierText (broken URL) by default
 
 echo "=== EnclaveScribe Data Prep ==="
 echo "Raw dir      : $RAW_DIR"
 echo "Interim dir  : $INTERIM_DIR"
 echo "Processed dir: $PROCESSED_DIR"
+echo "Benchmark dir: $BENCHMARK_DIR (official test splits — never used in training)"
 echo "Skip large   : $SKIP_LARGE (set SKIP_LARGE=0 to include IDL + HierText)"
 echo ""
 
-mkdir -p "$RAW_DIR" "$INTERIM_DIR" "$PROCESSED_DIR"
+mkdir -p "$RAW_DIR" "$INTERIM_DIR" "$PROCESSED_DIR" "$BENCHMARK_DIR"
 
 run_step() {
     local name="$1"; shift
@@ -42,10 +44,12 @@ run_step() {
 }
 
 run_step "[1/7] CORD receipts" python scripts/prepare/prep_cord.py \
-    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/cord.jsonl"
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/cord.jsonl" \
+    --benchmark_jsonl "$BENCHMARK_DIR/cord_test.jsonl"
 
 run_step "[2/7] FUNSD forms" python scripts/prepare/prep_funsd.py \
-    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/funsd.jsonl"
+    --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/funsd.jsonl" \
+    --benchmark_jsonl "$BENCHMARK_DIR/funsd_test.jsonl"
 
 run_step "[3/7] XFUND multilingual forms" python scripts/prepare/prep_xfund.py \
     --raw_dir "$RAW_DIR" --out_jsonl "$INTERIM_DIR/xfund.jsonl"
@@ -70,13 +74,33 @@ else
 fi
 
 echo ""
-echo "=== [7/7] Merging all datasets that succeeded ==="
+echo "=== [7/8] Merging all datasets that succeeded ==="
 python scripts/prepare/merge.py \
     --interim_dir "$INTERIM_DIR" \
     --out_dir "$PROCESSED_DIR" \
     --val_ratio 0.02
 
 echo ""
+echo "=== [8/8] Aggregating held-out test splits ==="
+HELDOUT="$BENCHMARK_DIR/heldout_test.jsonl"
+: > "$HELDOUT"
+shopt -s nullglob
+for f in "$BENCHMARK_DIR"/*_test.jsonl; do
+    [ "$f" = "$HELDOUT" ] && continue
+    cat "$f" >> "$HELDOUT"
+done
+n=$(wc -l < "$HELDOUT" | tr -d ' ')
+echo "Held-out test set: $n samples → $HELDOUT"
+
+echo ""
 echo "=== Done. Ready to train: ==="
 echo "  torchrun --nproc_per_node=2 scripts/train.py \\"
 echo "    --config configs/train/lora_lambda_2xa100.yaml"
+echo ""
+echo "After training, evaluate on the held-out test set:"
+echo "  python scripts/eval.py \\"
+echo "    --gt_jsonl   $HELDOUT \\"
+echo "    --image_root $RAW_DIR \\"
+echo "    --base_model Qwen/Qwen2.5-VL-7B-Instruct \\"
+echo "    --adapter_dir outputs/iter1 \\"
+echo "    --out_json   results/iter1_heldout.json"

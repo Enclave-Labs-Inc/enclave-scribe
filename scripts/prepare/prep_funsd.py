@@ -19,15 +19,25 @@ def _words_to_text(words: list[str], bboxes: list[list[int]]) -> str:
     return " ".join(w for w, _ in pairs if w.strip())
 
 
-def run(raw_dir: Path, out_jsonl: Path) -> int:
+def run(raw_dir: Path, out_jsonl: Path, benchmark_jsonl: Path | None = None) -> int:
+    """Route FUNSD splits: train → out_jsonl (training pool);
+    test → benchmark_jsonl (held-out test set), if provided.
+    Falls back to old behavior (both splits → out_jsonl) when benchmark_jsonl is None.
+    """
     ds = load_dataset("nielsr/funsd")
     out_jsonl.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
+    if benchmark_jsonl is not None:
+        benchmark_jsonl.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(out_jsonl, "w", encoding="utf-8") as f:
+    train_count = 0
+    test_count = 0
+    with open(out_jsonl, "w", encoding="utf-8") as train_f, \
+         open(benchmark_jsonl, "w", encoding="utf-8") if benchmark_jsonl else _null_writer() as test_f:
         for split in ["train", "test"]:
             img_dir = raw_dir / "funsd" / split
             img_dir.mkdir(parents=True, exist_ok=True)
+            is_heldout = (split == "test" and benchmark_jsonl is not None)
+            target = test_f if is_heldout else train_f
 
             for idx, sample in enumerate(tqdm(ds[split], desc=f"FUNSD/{split}")):
                 text = _words_to_text(sample["words"], sample["bboxes"])
@@ -39,19 +49,37 @@ def run(raw_dir: Path, out_jsonl: Path) -> int:
                     sample["image"].save(img_path)
 
                 rel = str(img_path.relative_to(raw_dir))
-                f.write(json.dumps({"image": rel, "text": text}, ensure_ascii=False) + "\n")
-                count += 1
+                record = {"image": rel, "text": text}
+                if is_heldout:
+                    record["category"] = "funsd"
+                target.write(json.dumps(record, ensure_ascii=False) + "\n")
+                if is_heldout:
+                    test_count += 1
+                else:
+                    train_count += 1
 
-    print(f"FUNSD: {count} samples → {out_jsonl}")
-    return count
+    print(f"FUNSD: {train_count} train → {out_jsonl}")
+    if benchmark_jsonl:
+        print(f"FUNSD: {test_count} test → {benchmark_jsonl} (held out)")
+    return train_count + test_count
+
+
+class _null_writer:
+    """No-op file object stand-in for when benchmark_jsonl is not provided."""
+    def __enter__(self): return self
+    def __exit__(self, *a): pass
+    def write(self, _): pass
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--raw_dir", default="data/raw")
-    parser.add_argument("--out_jsonl", default="data/interim/funsd.jsonl")
+    parser.add_argument("--raw_dir",         default="data/raw")
+    parser.add_argument("--out_jsonl",       default="data/interim/funsd.jsonl")
+    parser.add_argument("--benchmark_jsonl", default="",
+                        help="If set, official test split is routed here instead of --out_jsonl")
     args = parser.parse_args()
-    run(Path(args.raw_dir), Path(args.out_jsonl))
+    bench = Path(args.benchmark_jsonl) if args.benchmark_jsonl else None
+    run(Path(args.raw_dir), Path(args.out_jsonl), bench)
 
 
 if __name__ == "__main__":
