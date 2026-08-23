@@ -74,15 +74,18 @@ else
     echo "[6/7] IDL: SKIPPED (~120GB download — set SKIP_LARGE=0 to include)"
 fi
 
+run_step "[7/7] OmniDocBench (benchmark only, 1,651 pages)" python scripts/prepare/prep_omnidocbench.py \
+    --raw_dir "$RAW_DIR" --benchmark_jsonl "$BENCHMARK_DIR/omnidocbench_test.jsonl"
+
 echo ""
-echo "=== [7/8] Merging all datasets that succeeded ==="
+echo "=== [8/9] Merging all training datasets that succeeded ==="
 python scripts/prepare/merge.py \
     --interim_dir "$INTERIM_DIR" \
     --out_dir "$PROCESSED_DIR" \
     --val_ratio 0.02
 
 echo ""
-echo "=== [8/8] Aggregating held-out test splits ==="
+echo "=== [9/9] Aggregating held-out test splits ==="
 HELDOUT="$BENCHMARK_DIR/heldout_test.jsonl"
 : > "$HELDOUT"
 shopt -s nullglob
