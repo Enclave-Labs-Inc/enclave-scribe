@@ -23,8 +23,8 @@ model:
   flash_attn: false   # sdpa is used automatically
 
 lora:
-  r: 64                # up from 32 — more capacity for more/broader data
-  alpha: 128           # keep alpha = 2 * r
+  r: 32                # r=64 OOM'd on 22 GB A10G at step 14 — back to iter-1's proven r=32.
+  alpha: 64            # keep alpha = 2 * r. Real iter-2 lift comes from 60x more data, not LoRA capacity.
   dropout: 0
 
 dataset:
