@@ -30,11 +30,18 @@ DATASET_ID = "pixparse/idl-wds"
 SHARD_SIZE = 5000
 
 
-def _tiff_frames(tif_bytes: bytes):
-    """Yield each frame in a multi-page TIFF as an RGB PIL image."""
-    with Image.open(io.BytesIO(tif_bytes)) as img:
-        for frame in ImageSequence.Iterator(img):
-            yield frame.convert("RGB")
+def _tiff_frames(tif):
+    """Yield each frame in a multi-page TIFF as an RGB PIL image.
+
+    pixparse/idl-wds auto-decodes the .tif key into a PIL TiffImageFile
+    (not raw bytes). Accept both to be robust to future codec changes.
+    """
+    if isinstance(tif, (bytes, bytearray)):
+        img = Image.open(io.BytesIO(tif))
+    else:
+        img = tif  # already a PIL Image (typically TiffImageFile)
+    for frame in ImageSequence.Iterator(img):
+        yield frame.convert("RGB")
 
 
 def _page_text(page: dict) -> str:
@@ -85,8 +92,8 @@ def run(raw_dir: Path, out_jsonl: Path, max_samples: int = 100_000) -> int:
                 break
             docs_seen += 1
 
-            tif_bytes = sample.get("tif")
-            if not tif_bytes or not isinstance(tif_bytes, (bytes, bytearray)):
+            tif = sample.get("tif")
+            if tif is None:
                 docs_skipped += 1
                 continue
 
@@ -101,7 +108,7 @@ def run(raw_dir: Path, out_jsonl: Path, max_samples: int = 100_000) -> int:
                 continue
 
             try:
-                frames = list(_tiff_frames(tif_bytes))
+                frames = list(_tiff_frames(tif))
             except Exception:
                 docs_skipped += 1
                 continue
