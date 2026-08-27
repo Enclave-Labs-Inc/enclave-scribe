@@ -1,21 +1,19 @@
-"""Tool implementations for the agentic OCR pipeline.
+"""Tools for the agentic OCR pipeline.
 
-Each tool does ONE thing and is independently callable by the orchestrator.
-Tools accept PIL Images (or paths) and return either strings or structured
-dicts — no hidden state, no orchestration logic here.
+Simplified 2026-08-27: dropped per-region extractors (extract_table,
+describe_image, identify_seal, extract_chart_data) and the router. One
+page-level VLM call handles everything. See prompts.py for the rationale.
 
-Design:
-- All VLM-based tools go through _vlm_generate() so the model call is one code
-  path (easier to tune, log, cache later).
-- Cropping a region from a page image is a tool too (crop_region), so the
-  orchestrator can compose "detect layout → crop each region → route to
-  extractor" without any tool needing to know about the others.
+Public API:
+    pdf_to_pages(path, dpi) -> list[PIL.Image]
+    extract_page(image, registry) -> str (markdown)
+    assemble_markdown(per_page_markdown, include_page_markers=True) -> str
+    validate_output(markdown, source_pages) -> dict
 """
 from __future__ import annotations
 
 import io
 from pathlib import Path
-from typing import Any
 
 from PIL import Image
 
@@ -23,21 +21,20 @@ from . import prompts
 from .models import ModelRegistry, VLMHandle
 
 
-# ─── PDF handling ───────────────────────────────────────────────────────────
+# ─── PDF → images ────────────────────────────────────────────────────────────
 
 def pdf_to_pages(pdf_path: str | Path, dpi: int = 200) -> list[Image.Image]:
-    """Convert a PDF into a list of PIL Images, one per page.
+    """Convert a PDF to one PIL Image per page.
 
-    Uses PyMuPDF (fitz) — no external system dependencies (unlike pdf2image
-    which needs poppler). DPI 200 is a decent tradeoff: readable small text,
-    keeps images under ~5 MB per page.
+    Uses PyMuPDF (no external system deps like poppler). DPI 200 is a
+    decent tradeoff: readable small text, keeps pages under ~5 MB.
     """
-    import fitz  # PyMuPDF
+    import pymupdf
 
-    doc = fitz.open(str(pdf_path))
+    doc = pymupdf.open(str(pdf_path))
     pages: list[Image.Image] = []
     zoom = dpi / 72.0
-    matrix = fitz.Matrix(zoom, zoom)
+    matrix = pymupdf.Matrix(zoom, zoom)
     for page in doc:
         pix = page.get_pixmap(matrix=matrix, alpha=False)
         img = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
@@ -46,44 +43,25 @@ def pdf_to_pages(pdf_path: str | Path, dpi: int = 200) -> list[Image.Image]:
     return pages
 
 
-# ─── Layout detection ───────────────────────────────────────────────────────
+# ─── VLM extraction ──────────────────────────────────────────────────────────
 
-def detect_layout(image: Image.Image, registry: ModelRegistry) -> list[dict]:
-    """Detect regions in a page image.
+def extract_page(image: Image.Image, registry: ModelRegistry,
+                 max_new_tokens: int = 4096) -> str:
+    """Extract a whole page as markdown via one VLM call.
 
-    Returns a list of dicts: [{label, bbox: (x1,y1,x2,y2), confidence}, ...]
-    Labels are one of: text, table, figure, seal, logo, chart, image, picture.
-    """
-    detector = registry.layout()
-    return detector.detect(image)
-
-
-def crop_region(image: Image.Image, bbox: tuple[int, int, int, int]) -> Image.Image:
-    """Crop a bounding box out of a page image. Bbox is (x1, y1, x2, y2)."""
-    return image.crop(bbox)
-
-
-# ─── Region extractors (all go through the VLM) ─────────────────────────────
-
-def _vlm_generate(
-    handle: VLMHandle,
-    image: Image.Image,
-    prompt: str,
-    max_new_tokens: int = 2048,
-) -> str:
-    """Single code path for every VLM call.
-
-    Kept generic so we can swap prompts/images without any tool knowing
-    about generation params or chat templates.
+    The model is expected to handle text, tables, images, seals, and layout
+    internally — that's what fine-tuning is for. Do not add per-region
+    routing here.
     """
     import torch
 
+    handle: VLMHandle = registry.vlm()
     messages = [
         {
             "role": "user",
             "content": [
                 {"type": "image", "image": image},
-                {"type": "text",  "text": prompt},
+                {"type": "text",  "text": prompts.PAGE},
             ],
         }
     ]
@@ -105,136 +83,31 @@ def _vlm_generate(
     )[0].strip()
 
 
-def extract_text(image: Image.Image, registry: ModelRegistry) -> str:
-    """Extract all text from a region, preserving original script and layout."""
-    return _vlm_generate(registry.vlm(), image, prompts.TEXT)
+# ─── Assembly ────────────────────────────────────────────────────────────────
 
+def assemble_markdown(per_page_markdown: list[str],
+                      include_page_markers: bool = True) -> str:
+    """Concatenate per-page markdown into a single document.
 
-def extract_table(image: Image.Image, registry: ModelRegistry) -> str:
-    """Extract a table region as HTML with rowspan/colspan preserved."""
-    return _vlm_generate(registry.vlm(), image, prompts.TABLE, max_new_tokens=4096)
-
-
-def describe_image(image: Image.Image, registry: ModelRegistry) -> str:
-    """Describe a figure, chart, or photograph in one to three sentences."""
-    return _vlm_generate(registry.vlm(), image, prompts.FIGURE, max_new_tokens=512)
-
-
-def identify_seal(image: Image.Image, registry: ModelRegistry) -> str:
-    """Identify an official seal, emblem, or logo."""
-    return _vlm_generate(registry.vlm(), image, prompts.SEAL, max_new_tokens=256)
-
-
-def extract_chart_data(image: Image.Image, registry: ModelRegistry) -> str:
-    """Extract data from a chart as a markdown table with chart-type header."""
-    return _vlm_generate(registry.vlm(), image, prompts.CHART_DATA, max_new_tokens=1024)
-
-
-# Router — orchestrator calls this to send a region to the right extractor.
-_EXTRACTORS = {
-    "text":    extract_text,
-    "table":   extract_table,
-    "figure":  describe_image,
-    "image":   describe_image,
-    "picture": describe_image,
-    "seal":    identify_seal,
-    "logo":    identify_seal,
-    "chart":   extract_chart_data,
-}
-
-
-def extract_for_label(label: str, image: Image.Image, registry: ModelRegistry) -> str:
-    """Route a region to the appropriate extractor based on its label."""
-    fn = _EXTRACTORS.get(label.lower(), extract_text)
-    return fn(image, registry)
-
-
-# ─── Reading order ──────────────────────────────────────────────────────────
-
-def order_regions(regions: list[dict]) -> list[dict]:
-    """Sort regions in reading order (top-to-bottom, left-to-right within rows).
-
-    Simple algorithm: sort by y-center, and within a horizontal band (regions
-    whose y-centers are close), sort by x-center. Good enough for single- and
-    two-column layouts. For complex multi-column layouts we'd need XY-cut.
+    Emits `[page_number]N[/page_number]` separators matching the LlamaParse
+    reference format. First page has no leading marker.
     """
-    def y_center(r): return (r["bbox"][1] + r["bbox"][3]) / 2
-    def x_center(r): return (r["bbox"][0] + r["bbox"][2]) / 2
-    def height(r):   return r["bbox"][3] - r["bbox"][1]
-
-    if not regions:
-        return regions
-
-    # Sort by y-center first
-    sorted_regions = sorted(regions, key=y_center)
-
-    # Group into horizontal bands: two regions are in the same band if their
-    # y-centers are within half the shorter one's height.
-    bands: list[list[dict]] = [[sorted_regions[0]]]
-    for r in sorted_regions[1:]:
-        last_band_ymax = max(x["bbox"][3] for x in bands[-1])
-        if r["bbox"][1] < last_band_ymax:
-            bands[-1].append(r)
-        else:
-            bands.append([r])
-
-    # Within each band, sort left-to-right
-    out: list[dict] = []
-    for band in bands:
-        out.extend(sorted(band, key=x_center))
-    return out
-
-
-# ─── Markdown assembly ──────────────────────────────────────────────────────
-
-def assemble_markdown(
-    page_extractions: list[list[tuple[str, str]]],
-    include_page_markers: bool = True,
-) -> str:
-    """Combine per-page, per-region extractions into a single markdown document.
-
-    Input: page_extractions[page_idx] = [(region_label, extracted_content), ...]
-    (Regions already in reading order.)
-    Output: one markdown string.
-
-    Formatting rules:
-      - `text` regions: emitted as-is (preserving newlines)
-      - `table` regions: emitted as-is (already HTML)
-      - `figure` / `image` regions: emitted as `> Figure: <description>`
-      - `seal` / `logo` regions: emitted as `> Seal: <identification>`
-      - `chart` regions: emitted as-is (already markdown table)
-      - Page separators use `[page_number]N[/page_number]` markers matching
-        the reference output.md format.
-    """
-    out: list[str] = []
-    for i, page in enumerate(page_extractions, start=1):
+    parts: list[str] = []
+    for i, page_md in enumerate(per_page_markdown, start=1):
         if include_page_markers and i > 1:
-            out.append(f"\n[page_number]{i}[/page_number]\n")
-        for label, content in page:
-            label_l = label.lower()
-            content = (content or "").strip()
-            if not content:
-                continue
-            if label_l in ("figure", "image", "picture"):
-                out.append(f"\n> Figure: {content}\n")
-            elif label_l in ("seal", "logo"):
-                out.append(f"\n> Seal: {content}\n")
-            else:
-                # text, table, chart — emit as-is with blank-line separators
-                out.append(content)
-        out.append("")  # blank line between pages
-    return "\n".join(out).strip() + "\n"
+            parts.append(f"\n[page_number]{i}[/page_number]\n")
+        parts.append((page_md or "").strip())
+        parts.append("")   # blank line between pages
+    return "\n".join(parts).strip() + "\n"
 
 
-# ─── Validation (light-touch for MVP) ───────────────────────────────────────
+# ─── Validation ──────────────────────────────────────────────────────────────
 
 def validate_output(markdown: str, source_pages: list[Image.Image]) -> dict:
-    """Very light validation of assembled markdown.
+    """Cheap sanity checks on the assembled markdown.
 
-    Returns a dict with issues found. Non-empty issues list = orchestrator
-    may want to retry specific pages/regions. Full validation (compare against
-    known page structure, verify table cell counts, detect language mismatches)
-    is future work.
+    Non-empty issues list = orchestrator may want to retry specific pages.
+    Confidence-based retry loops are future work.
     """
     issues: list[str] = []
     if not markdown.strip():
@@ -246,7 +119,7 @@ def validate_output(markdown: str, source_pages: list[Image.Image]) -> dict:
             f"missing_page_markers: expected {n_pages - 1}, found {n_page_markers}"
         )
     return {
-        "n_chars":     len(markdown),
-        "n_pages_in":  n_pages,
-        "issues":      issues,
+        "n_chars":    len(markdown),
+        "n_pages_in": n_pages,
+        "issues":     issues,
     }

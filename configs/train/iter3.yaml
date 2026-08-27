@@ -1,0 +1,64 @@
+# EnclaveScribe iter-3 — Indic OCR LoRA on top of OLMoCR-2-7B-1025
+#
+# Base model: allenai/olmOCR-2-7B-1025 (Qwen2.5-VL-7B fine-tuned by
+# Allen AI for English document OCR). Verified in Phase 0 (2026-08-27)
+# to load and serve correctly on A10G with vLLM.
+#
+# Training data: himalaya-ai/devanagari_ocr_dataset — 58 GB real Indic
+# OCR data compiled from 7 curated sources (IIT-Indic-HW-Words,
+# IndicVisionBench, NayanaBench, and others). Covers Hindi, Marathi,
+# Sanskrit, Nepali, Pali. Pre-prepped via scripts/prepare/prep_himalaya_indic.py.
+#
+# Approach: LoRA r=32 (iter-1 proven config, r=64 OOM'd on A10G in iter-2).
+# One epoch, single unified page-level prompt (no per-region routing —
+# see scribe/agent/prompts.py rationale).
+#
+# Launch:
+#   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/iter3.yaml
+#
+# Approx cost: ~4-8 hours on g5.12xlarge spot (~$15-25) with ~30k samples,
+# scaled by --max_samples in the prep script.
+
+use_unsloth: false                # HF Trainer + DDP on 4 GPUs
+
+model:
+  path: allenai/olmOCR-2-7B-1025  # Qwen2.5-VL fine-tuned by Allen AI for OCR
+  flash_attn: false               # not installed on the DL AMI
+
+lora:
+  r: 32                           # iter-1 proven; r=64 OOM'd on 22GB A10G
+  alpha: 64                       # 2 * r
+  dropout: 0
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl: data/processed/val.jsonl
+  image_root: data/raw
+
+prompt: "document parsing."       # base prompt; per-sample prompts in JSONL override
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/iter3
+  num_train_epochs: 1
+  per_device_train_batch_size: 1  # A10G 22GB
+  gradient_accumulation_steps: 8  # effective batch = 32
+  learning_rate: 1.5e-4
+  lr_scheduler_type: cosine
+  warmup_ratio: 0.03
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false           # required for DDP + LoRA
+  use_liger_kernel: true           # fused lm_head + CE, saves ~2GB
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false     # DocumentDataset returns dicts; keep them
+  logging_steps: 20
+  save_steps: 500
+  eval_steps: 500
+  save_total_limit: 5
+  dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter3-indic"
