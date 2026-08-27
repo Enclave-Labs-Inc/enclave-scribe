@@ -16,10 +16,15 @@
 # Launch:
 #   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/iter3.yaml
 #
-# Approx cost: ~4-8 hours on g5.12xlarge spot (~$15-25) with ~30k samples,
+# Approx cost: ~16-20 hours on g5.xlarge on-demand (~$16-20) with ~30k samples,
 # scaled by --max_samples in the prep script.
+#
+# Sized for SINGLE-GPU training (g5.xlarge, 1x A10G 24GB). Effective batch
+# size 32 is preserved by cranking gradient_accumulation_steps to 32
+# (was 8 on the earlier 4-GPU config). For 4-GPU (g5.12xlarge) training,
+# reduce gradient_accumulation_steps back to 8.
 
-use_unsloth: false                # HF Trainer + DDP on 4 GPUs
+use_unsloth: false                # HF Trainer, single GPU
 
 model:
   path: allenai/olmOCR-2-7B-1025  # Qwen2.5-VL fine-tuned by Allen AI for OCR
@@ -43,7 +48,7 @@ training_args:
   output_dir: outputs/iter3
   num_train_epochs: 1
   per_device_train_batch_size: 1  # A10G 22GB
-  gradient_accumulation_steps: 8  # effective batch = 32
+  gradient_accumulation_steps: 32 # effective batch = 32 on 1 GPU (was 8 on 4 GPUs)
   learning_rate: 1.5e-4
   lr_scheduler_type: cosine
   warmup_ratio: 0.03

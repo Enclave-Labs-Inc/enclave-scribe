@@ -17,12 +17,12 @@ End-to-end steps to run iter-3 on AWS. All commands are the copy-paste sequence.
 
 ## Step 1 — Launch training instance (~5 min)
 
-**On your local machine.** Same size as iter-2 since Indic dataset is large (~58 GB from HF):
+**On your local machine.** Using g5.xlarge (1× A10G, ~$1/hr on-demand). Cheaper and more available than g5.12xlarge; training takes ~16-20 hrs instead of ~4-6 but total cost is actually lower.
 
 ```bash
 INSTANCE_ID=$(aws ec2 run-instances \
   --image-id ami-012ba162b9cd2729c \
-  --instance-type g5.12xlarge \
+  --instance-type g5.xlarge \
   --key-name enclave-scribe-key \
   --security-group-ids $(aws ec2 describe-security-groups \
     --filters "Name=group-name,Values=enclave-scribe-sg" \
@@ -139,8 +139,8 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 cd ~/enclave-scribe && source .venv/bin/activate
 
-# Launch
-torchrun --nproc_per_node=4 scripts/train.py \
+# Launch (single-GPU — no torchrun needed)
+python scripts/train.py \
   --config configs/train/iter3.yaml 2>&1 | tee train.log
 ```
 
