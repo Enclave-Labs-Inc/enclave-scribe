@@ -1,150 +1,174 @@
 """himalaya-ai/devanagari_ocr_dataset — real Indic OCR data curated from 7 sources.
 
-Dataset : himalaya-ai/devanagari_ocr_dataset  (~58 GB, ShareGPT format)
-Content : Hindi, Marathi, Sanskrit, Nepali, Pali document + word OCR
-Sources : IIT-Indic-HW-Words, IndicVisionBench, NayanaBench, and more
+Dataset : himalaya-ai/devanagari_ocr_dataset (~58 GB tar.gz shards + 2 GB JSON)
+Content : Hindi, Marathi, Sanskrit, Nepali, Pali, English word/page/document OCR
+Sources : IIT-Indic-HW-Words, IndicVisionBench, NayanaBench, and 4 more
 Output  : data/raw/himalaya_indic/<shard>/<idx>.jpg
           data/interim/himalaya_indic.jsonl
           data/benchmark/himalaya_indic_test.jsonl  (2% held out)
 
-The upstream schema is ShareGPT-style:
+The upstream schema (discovered 2026-08-27 by probing a real sample):
+
+  Streaming iterator yields WebDataset-style samples per tar.gz shard:
     {
-      "image":         "images/xxx.jpg",
-      "conversations": [
-        {"from": "human", "value": "<image>\\nText Recognition:"},
-        {"from": "gpt",   "value": "स्वर्ग आफै"}
-      ]
+      "__key__": "hindi_local_1285138",   # stem of the image filename
+      "__url__": "hf://...images_batch_001.tar.gz",
+      "png":     <PIL Image>,             # the cropped OCR image
     }
 
-We convert to our DocumentDataset schema:
+  Text annotations live in a SEPARATE devanagari_ocr.json file (2.15 GB,
+  7.5M entries) keyed by image path in "messages" format:
     {
-      "image":  "himalaya_indic/<shard>/<idx>.jpg",
-      "text":   "स्वर्ग आफै",
-      "prompt": "Text Recognition:"          # optional per-sample prompt
+      "messages": [
+        {"role": "user",      "content": "<image>Transcribe the Devanagari text..."},
+        {"role": "assistant", "content": "स्वर्ग आफै"}
+      ],
+      "images":   ["devanagari_ocr/nepali_0.png"]
     }
 
-Filtering rules:
-- Skip samples with empty text
-- Skip samples where image can't be opened
-- Skip samples with text < MIN_TEXT_CHARS (default 3)
+We download the JSON once, build a lookup {image_stem → assistant_text}, then
+iterate the tar.gz stream and match each sample by __key__.
 """
 import argparse
 import json
+import random
 from pathlib import Path
 
 from datasets import load_dataset
+from huggingface_hub import hf_hub_download
 from PIL import Image
 from tqdm import tqdm
 
 
-DATASET_ID    = "himalaya-ai/devanagari_ocr_dataset"
-SHARD_SIZE    = 5000
-MIN_TEXT_CHARS = 3
+DATASET_ID     = "himalaya-ai/devanagari_ocr_dataset"
+ANNOTATION_FN  = "devanagari_ocr.json"
+SHARD_SIZE     = 5000
+MIN_TEXT_CHARS = 1
 
 
-def _extract_conversation_text(conversations) -> tuple[str, str]:
-    """Pull (human_prompt, gpt_answer) out of the ShareGPT conversation list.
+def _build_annotation_lookup() -> dict[str, str]:
+    """Download the annotations JSON and build {image_stem: text} lookup.
 
-    Human values may contain "<image>\\n" prefix; we strip that so the prompt
-    is just the task instruction. gpt answer becomes the training target.
+    Image paths in the JSON look like 'devanagari_ocr/nepali_0.png'.
+    The tar.gz stream yields __key__ = 'nepali_0' (stem only).
+    We key the lookup by stem so matching is trivial.
     """
-    human = ""
-    gpt   = ""
-    for turn in (conversations or []):
-        who = str(turn.get("from", "")).lower()
-        val = str(turn.get("value", "")).strip()
-        if who == "human":
-            human = val.replace("<image>", "").strip()
-        elif who in ("gpt", "assistant"):
-            gpt = val
-    return human, gpt
+    print(f"Downloading {ANNOTATION_FN} (first time only, ~2 GB) ...")
+    ann_path = hf_hub_download(DATASET_ID, ANNOTATION_FN, repo_type="dataset")
+    print(f"  cached at {ann_path}")
+    print("Loading + building lookup dict (this can take a couple minutes) ...")
+
+    with open(ann_path, "r", encoding="utf-8") as f:
+        entries = json.load(f)
+
+    lookup: dict[str, str] = {}
+    for e in tqdm(entries, desc="indexing annotations"):
+        # Extract assistant text from messages
+        msgs = e.get("messages") or []
+        assistant_text = ""
+        for m in msgs:
+            if str(m.get("role", "")).lower() in ("assistant", "gpt"):
+                assistant_text = str(m.get("content", "")).strip()
+                break
+        if not assistant_text or len(assistant_text) < MIN_TEXT_CHARS:
+            continue
+
+        # Extract image stem from paths
+        images = e.get("images") or []
+        for img_ref in images:
+            stem = Path(str(img_ref)).stem
+            if stem:
+                # Later entries win — safe because assistant_text is deterministic
+                # per stem in this dataset.
+                lookup[stem] = assistant_text
+
+    print(f"Built lookup: {len(lookup):,} image stems -> text")
+    return lookup
 
 
 def run(
     raw_dir: Path,
     out_jsonl: Path,
     benchmark_jsonl: Path | None,
-    max_samples: int = 100_000,
+    max_samples: int = 30_000,
     val_ratio: float = 0.02,
     seed: int = 42,
 ) -> int:
-    import random
     rng = random.Random(seed)
 
     out_jsonl.parent.mkdir(parents=True, exist_ok=True)
     if benchmark_jsonl is not None:
         benchmark_jsonl.parent.mkdir(parents=True, exist_ok=True)
 
-    print(f"Streaming {DATASET_ID} (target {max_samples:,} samples)...")
+    # Step 1: annotations lookup
+    lookup = _build_annotation_lookup()
+
+    # Step 2: tar.gz stream
+    print(f"Streaming {DATASET_ID} (target {max_samples:,} matched samples) ...")
     ds = load_dataset(DATASET_ID, split="train", streaming=True)
 
     img_base = raw_dir / "himalaya_indic"
     img_base.mkdir(parents=True, exist_ok=True)
 
     train_count = 0
-    test_count  = 0
-    skipped     = 0
-    shard       = 0
-    shard_dir   = img_base / f"{shard:04d}"
+    test_count = 0
+    seen = 0
+    unmatched = 0
+    broken = 0
+    shard = 0
+    shard_dir = img_base / f"{shard:04d}"
     shard_dir.mkdir(exist_ok=True)
 
     train_f = open(out_jsonl, "w", encoding="utf-8")
-    test_f  = open(benchmark_jsonl, "w", encoding="utf-8") if benchmark_jsonl else None
+    test_f = open(benchmark_jsonl, "w", encoding="utf-8") if benchmark_jsonl else None
 
     try:
-        pbar = tqdm(total=max_samples, desc="himalaya-ai")
+        pbar = tqdm(total=max_samples, desc="himalaya-ai matched")
         for sample in ds:
             if train_count + test_count >= max_samples:
                 break
+            seen += 1
 
-            # Extract prompt + target text from the ShareGPT conversation.
-            human_prompt, gpt_answer = _extract_conversation_text(
-                sample.get("conversations", [])
-            )
-            if not gpt_answer or len(gpt_answer.strip()) < MIN_TEXT_CHARS:
-                skipped += 1
+            key = str(sample.get("__key__", "")).strip()
+            if not key:
+                unmatched += 1
                 continue
 
-            # Get the image — HF returns a PIL Image when the field is decoded.
-            img = sample.get("image")
-            if img is None:
-                skipped += 1
+            text = lookup.get(key)
+            if not text:
+                unmatched += 1
+                continue
+
+            img = sample.get("png")
+            if img is None or not hasattr(img, "convert"):
+                broken += 1
                 continue
             try:
-                if not hasattr(img, "convert"):
-                    # Sometimes the image arrives as dict {"bytes": ..., "path": ...}
-                    if isinstance(img, dict) and "bytes" in img:
-                        import io
-                        img = Image.open(io.BytesIO(img["bytes"]))
-                    else:
-                        skipped += 1
-                        continue
                 img = img.convert("RGB")
             except Exception:
-                skipped += 1
+                broken += 1
                 continue
 
-            # Route to train vs benchmark by ratio (only when benchmark file open)
+            # Route to train or held-out
             is_test = (test_f is not None and rng.random() < val_ratio)
             target_f = test_f if is_test else train_f
-            counter  = "test_count" if is_test else "train_count"
 
-            # Rotate shard every SHARD_SIZE samples (across both train+test)
             total = train_count + test_count
             if total > 0 and total % SHARD_SIZE == 0:
                 shard += 1
                 shard_dir = img_base / f"{shard:04d}"
                 shard_dir.mkdir(exist_ok=True)
 
-            # Save image
             fname = f"{total % SHARD_SIZE:05d}.jpg"
             img_path = shard_dir / fname
             img.save(img_path, "JPEG", quality=90)
 
             rel = str(img_path.relative_to(raw_dir))
-            record = {"image": rel, "text": gpt_answer}
-            if human_prompt:
-                record["prompt"] = human_prompt
+            record = {
+                "image":  rel,
+                "text":   text,
+                "prompt": "Transcribe the Devanagari text from this image:",
+            }
             if is_test:
                 record["category"] = "himalaya_indic"
 
@@ -161,10 +185,10 @@ def run(
         if test_f is not None:
             test_f.close()
 
-    print(f"himalaya-ai: {train_count:,} train → {out_jsonl}")
+    print(f"\nhimalaya-ai: {train_count:,} train → {out_jsonl}")
     if benchmark_jsonl:
         print(f"himalaya-ai: {test_count:,} held out → {benchmark_jsonl}")
-    print(f"skipped: {skipped:,} (empty text / broken image / short text)")
+    print(f"seen: {seen:,}  unmatched: {unmatched:,}  broken: {broken:,}")
     return train_count + test_count
 
 
@@ -173,11 +197,9 @@ def main():
     parser.add_argument("--raw_dir",         default="data/raw")
     parser.add_argument("--out_jsonl",       default="data/interim/himalaya_indic.jsonl")
     parser.add_argument("--benchmark_jsonl", default="",
-                        help="If set, val_ratio of samples are routed here as held-out test")
-    parser.add_argument("--max_samples",     type=int, default=100_000,
-                        help="Cap on total samples emitted (train + held-out)")
-    parser.add_argument("--val_ratio",       type=float, default=0.02,
-                        help="Fraction of samples routed to benchmark_jsonl")
+                        help="If set, val_ratio of samples are routed here")
+    parser.add_argument("--max_samples",     type=int, default=30_000)
+    parser.add_argument("--val_ratio",       type=float, default=0.02)
     args = parser.parse_args()
     bench = Path(args.benchmark_jsonl) if args.benchmark_jsonl else None
     run(
