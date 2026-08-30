@@ -19,14 +19,31 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 Base OLMoCR-2 cannot read Devanagari at all — it hallucinates verbose English descriptions instead of transcribing, which is also why it's slower. Iter-3 is production-viable for single-word Devanagari OCR.
 
-**Runbook**: [`reports/iter3_runbook.md`](reports/iter3_runbook.md)
-**Artifacts**: `s3://enclave-scribe-checkpoints/outputs/iter3/` (380 MB LoRA adapter) · `s3://enclave-scribe-checkpoints/results/iter3/` (evals)
+- **📦 Model on HuggingFace**: [enclavelabs/enclave-scribe-devanagari](https://huggingface.co/enclavelabs/enclave-scribe-devanagari)
+- **📝 Full writeup**: [`reports/iter3/README.md`](reports/iter3/README.md)
+- **▶️ Runbook**: [`reports/iter3_runbook.md`](reports/iter3_runbook.md)
+- **🗂️ Artifacts**: `s3://enclave-scribe-checkpoints/outputs/iter3/` (adapter) · `s3://enclave-scribe-checkpoints/results/iter3/` (evals)
+
+### Use it in 10 lines
+
+```python
+import torch
+from transformers import AutoProcessor, AutoModelForImageTextToText
+from peft import PeftModel
+
+processor = AutoProcessor.from_pretrained("allenai/olmOCR-2-7B-1025")
+model = AutoModelForImageTextToText.from_pretrained(
+    "allenai/olmOCR-2-7B-1025", dtype=torch.bfloat16, device_map="auto"
+)
+model = PeftModel.from_pretrained(model, "enclavelabs/enclave-scribe-devanagari")
+# ...then generate with repetition_penalty=1.1 — see the HF model card for the full snippet.
+```
 
 **Known defects** (fixable in iter-4, not adapter-specific):
-- Generation loops on long dense pages (Qwen2.5-VL degeneration → `<tool_call>` token spam when it runs out of ideas)
-- Word-level training data means the model wasn't optimized for full-page structure
+- Generation loops on long dense pages (Qwen2.5-VL emits `<tool_call>` token spam when it runs out of ideas). Worked around in the agent via `repetition_penalty=1.1` + `bad_words_ids`.
+- Word-level training data means the raw model isn't optimized for full-page structure — for pages use the agent, not the raw adapter.
 
-**Iter-4 scope**: add page-level Devanagari data + generation-config fixes (`repetition_penalty`, stop-token handling).
+**Iter-4 scope**: page-level Devanagari data + formal English-regression benchmark.
 
 ---
 
