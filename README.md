@@ -1,16 +1,38 @@
 # EnclaveScribe
 
-**A sovereign, self-hostable document OCR model fine-tuned from Qwen2.5-VL-7B.**
+**A sovereign, self-hostable OCR model — Indic-first, deterministic document parsing.**
 
 Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See [VISION.md](VISION.md) for the full strategy and benchmark targets.
 
 ---
 
-## Iteration 1 status
+## Iteration 3 status — Devanagari OCR shipped
 
-**Trained on $1.40 of AWS spot compute. Val CER dropped from 6.34 → 0.19 vs base model.**
+**LoRA fine-tune of `allenai/olmOCR-2-7B-1025` on 28,824 real Devanagari samples (himalaya-ai dataset). 8.7 hrs on g5.xlarge, ~$12 total. Held-out CER dropped from 1626% → 17.4% vs the base model on Devanagari.**
 
-![Iter-1 vs base Qwen2.5-VL-7B on 23-sample val](reports/iter1/eval_comparison.png)
+| Metric | Base OLMoCR-2-7B | Iter-3 (LoRA r=32) | Improvement |
+|---|---:|---:|---:|
+| CER ↓  | 16.26 (1626%) | **0.174 (17.4%)** | **~93×** |
+| WER ↓  | 22.64 | **0.468** | 48× |
+| F1 ↑   | 0.013 | **0.534** | 41× |
+| Latency | 1.75 s/sample | **0.84 s/sample** | 2× faster |
+
+Base OLMoCR-2 cannot read Devanagari at all — it hallucinates verbose English descriptions instead of transcribing, which is also why it's slower. Iter-3 is production-viable for single-word Devanagari OCR.
+
+**Runbook**: [`reports/iter3_runbook.md`](reports/iter3_runbook.md)
+**Artifacts**: `s3://enclave-scribe-checkpoints/outputs/iter3/` (380 MB LoRA adapter) · `s3://enclave-scribe-checkpoints/results/iter3/` (evals)
+
+**Known defects** (fixable in iter-4, not adapter-specific):
+- Generation loops on long dense pages (Qwen2.5-VL degeneration → `<tool_call>` token spam when it runs out of ideas)
+- Word-level training data means the model wasn't optimized for full-page structure
+
+**Iter-4 scope**: add page-level Devanagari data + generation-config fixes (`repetition_penalty`, stop-token handling).
+
+---
+
+## Iteration 1 (historical) — Latin OCR proof
+
+Trained on $1.40 of AWS spot compute. Val CER dropped from 6.34 → 0.19 on CORD + FUNSD.
 
 | Metric | Base Qwen2.5-VL-7B | Iter-1 (LoRA r=32) |
 |---|---:|---:|
@@ -19,9 +41,7 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 | BLEU ↑ | 0.00 | **0.65** |
 | F1 ↑ | 0.15 | **0.88** |
 
-**Full report**: [`reports/iter1/README.md`](reports/iter1/README.md)
-
-**Caveat**: val is a 2% random split from the same distribution as train (CORD + FUNSD). Most of the gain reflects the model learning our output format — iter-2 will measure real generalization on a held-out test set.
+Full report: [`reports/iter1/README.md`](reports/iter1/README.md). Val was a 2% random split from the same distribution as train, so most of the iter-1 gain reflects learning the output format — iter-3's numbers above are on a held-out benchmark from an entirely different distribution.
 
 ---
 
@@ -119,17 +139,13 @@ reports/          Per-iteration writeups with charts
 
 ## Roadmap
 
-**Iter-1 ✅ (complete)** — 1,174 samples, LoRA r=32, 26 min training, pipeline validated end-to-end.
-
-**Iter-2 (in progress)**:
-1. Reserve official CORD/FUNSD test splits as a stable held-out benchmark (never in training)
-2. Fix 3 broken prep pipelines: XFUND, TextOCR, OmniDocBench
-3. Add DocVQA → target ~30k training samples across 5+ dataset types
-4. Prompt-per-dataset — teach the model to switch output formats via prompt
-5. LoRA r=64, 2 epochs
-6. Real eval on held-out test + out-of-distribution documents
-
-Estimated iter-2 compute: ~3-4 hours × g5.12xlarge spot ≈ $12–15.
+- **Iter-1 ✅** — 1,174 CORD + FUNSD samples, LoRA r=32, pipeline validated end-to-end.
+- **Iter-2 ✅** — 30k mixed English OCR (DocVQA, XFUND, TextOCR, OmniDocBench, IDL), held-out benchmark, prompt-per-sample. Reference eval JSONs archived in `s3://enclave-scribe-checkpoints/results/iter2/`.
+- **Iter-3 ✅** — 28,824 Devanagari samples on OLMoCR-2-7B, 93× CER improvement (see above).
+- **Iter-4 (planned)**:
+  1. Page-level Devanagari data (iter-3 was word-crops → weak on long-context structure)
+  2. Fix generation-config: `repetition_penalty=1.1`, stop-token handling, better `max_new_tokens`
+  3. Keep English performance from regressing (iter-3 gazette test showed English preserved, but no held-out English benchmark run against iter-3 yet)
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
 
