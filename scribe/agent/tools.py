@@ -13,12 +13,19 @@ Public API:
 from __future__ import annotations
 
 import io
+import re
 from pathlib import Path
 
 from PIL import Image
 
 from . import prompts
 from .models import ModelRegistry, VLMHandle
+
+
+# Qwen2.5-VL emits <tool_call>...</tool_call> tokens when it runs out of ideas
+# on long dense pages. skip_special_tokens=True doesn't strip them because they
+# aren't marked special in the tokenizer. Nuke them post-hoc.
+_TOOL_CALL_RE = re.compile(r"<tool_call>.*?(?:</tool_call>|$)", re.DOTALL)
 
 
 # ─── PDF → images ────────────────────────────────────────────────────────────
@@ -72,15 +79,25 @@ def extract_page(image: Image.Image, registry: ModelRegistry,
         text=[text], images=[image], return_tensors="pt", padding=True
     ).to(handle.model.device)
 
+    # Block Qwen2.5-VL's <tool_call> token outright. If we only strip it
+    # post-hoc, the model happily generates 4096 tokens of nothing but
+    # tool_call blocks on dense pages and we're left with empty output.
+    tok = handle.processor.tokenizer
+    bad_ids = [tok.convert_tokens_to_ids("<tool_call>")]
+    bad_words_ids = [[i] for i in bad_ids if i is not None and i != tok.unk_token_id]
+
     with torch.no_grad():
         output_ids = handle.model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=False,
+            repetition_penalty=1.1,
+            bad_words_ids=bad_words_ids or None,
         )
-    return handle.processor.batch_decode(
+    decoded = handle.processor.batch_decode(
         output_ids[:, inputs.input_ids.shape[1]:], skip_special_tokens=True
-    )[0].strip()
+    )[0]
+    return _TOOL_CALL_RE.sub("", decoded).strip()
 
 
 # ─── Assembly ────────────────────────────────────────────────────────────────
