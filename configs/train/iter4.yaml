@@ -1,0 +1,69 @@
+# EnclaveScribe iter-4 — page-level Devanagari, continuing from iter-3
+#
+# Iter-3 learned Devanagari at the word level (17.4% CER, 93× better than
+# base). Iter-4 adds page-level Devanagari from himalaya-ai's document
+# sources (IndicVisionBench, NayanaBench, Malathip72, gauravgiri/nepali-ocr)
+# so the model handles full-page structure without needing the runtime
+# bad_words_ids workaround that ships in scribe/agent/tools.py after PR #41.
+#
+# Approach: LOAD iter-3 adapter as a starting point (resume_adapter) rather
+# than train fresh LoRA. The scaffolding for resume_adapter lives in
+# scripts/train.py — it uses PeftModel.from_pretrained(..., is_trainable=True).
+#
+# Data: prep via scripts/prepare/prep_himalaya_pages.py — auto-diagnoses
+# prefix distribution on first run so we can tighten filters if the defaults
+# grab the wrong entries.
+#
+# Sized for SINGLE-GPU training (g5.xlarge, 1× A10G 24GB). Pages are far
+# more info-dense than word crops — max_length bumped 4096 → 8192. If OOM,
+# drop max_length to 6144 or reduce max_pixels in scripts/train.py.
+#
+# Approx cost: ~$8-10 on g5.xlarge for 3k pages × 2 epochs.
+
+use_unsloth: false                # HF Trainer, single GPU
+
+model:
+  path: allenai/olmOCR-2-7B-1025  # same base as iter-3
+  flash_attn: false
+
+# Continue training from iter-3 adapter instead of fresh LoRA.
+# S3: s3://enclave-scribe-checkpoints/outputs/iter3/
+resume_adapter: outputs/iter3
+
+# lora: not used when resume_adapter is set — the adapter config is
+# read from outputs/iter3/adapter_config.json (r=32, alpha=64).
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl:   data/processed/val.jsonl
+  image_root:  data/raw
+
+prompt: "Extract this document page as clean markdown."
+max_length: 8192                  # pages have ~2-5× the tokens of word crops
+augment: true
+
+training_args:
+  output_dir: outputs/iter4
+  num_train_epochs: 2             # smaller dataset, more info per sample
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 32 # effective batch 32
+  learning_rate: 5e-5             # lower than iter-3 (1.5e-4) since we're
+                                  # fine-tuning an already-trained adapter,
+                                  # not starting from scratch
+  lr_scheduler_type: cosine
+  warmup_steps: 10                # short warmup — adapter already reasonable
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 10
+  save_steps: 200
+  eval_steps: 200
+  save_total_limit: 3
+  dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter4-pages"
