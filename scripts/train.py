@@ -80,7 +80,18 @@ def main():
             trust_remote_code=True,
         )
 
-        if config.get("lora"):
+        resume_adapter = config.get("resume_adapter")
+        if resume_adapter:
+            # Continue training from an existing LoRA adapter (e.g. iter-3).
+            # is_trainable=True so PEFT re-enables grad on the adapter weights;
+            # without it PeftModel.from_pretrained freezes them.
+            from peft import PeftModel
+            if local_rank == 0:
+                print(f"Resuming LoRA from adapter: {resume_adapter}")
+            model = PeftModel.from_pretrained(model, resume_adapter, is_trainable=True)
+            model.print_trainable_parameters()
+            model.enable_input_require_grads()
+        elif config.get("lora"):
             lora_cfg = build_lora_config(**config["lora"])
             model = apply_lora(model, lora_cfg)
             # Required for gradient_checkpointing + LoRA: without this, gradients
