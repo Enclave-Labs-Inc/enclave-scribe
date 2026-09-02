@@ -1,24 +1,29 @@
 # EnclaveScribe iter-4 — page-level Devanagari, continuing from iter-3
 #
 # Iter-3 learned Devanagari at the word level (17.4% CER, 93× better than
-# base). Iter-4 adds page-level Devanagari from himalaya-ai's document
-# sources (IndicVisionBench, NayanaBench, Malathip72, gauravgiri/nepali-ocr)
-# so the model handles full-page structure without needing the runtime
-# bad_words_ids workaround that ships in scribe/agent/tools.py after PR #41.
+# base). Iter-4 teaches page-level document structure so the model handles
+# full-page inputs without needing the runtime bad_words_ids workaround
+# in scribe/agent/tools.py (PR #41).
 #
-# Approach: LOAD iter-3 adapter as a starting point (resume_adapter) rather
-# than train fresh LoRA. The scaffolding for resume_adapter lives in
-# scripts/train.py — it uses PeftModel.from_pretrained(..., is_trainable=True).
+# DATA STRATEGY (revised 2026-09-02 after himalaya-ai turned out to have
+# no page-level content). Hybrid bootstrap:
+#   1. scripts/prepare/prep_indicdlp_pages.py  — real page images from
+#      ai4bharat/indicdlp (Hindi + Marathi, ~3k pages)
+#   2. scripts/prepare/label_pages_with_iter3.py — pseudo-label each
+#      page by running iter-3 + agent extract_page (uses the bad_words_ids
+#      fix during labeling so pseudo-labels are clean)
+#   3. scripts/prepare/build_iter4_corpus.py — mix ~2.5k pages + ~500
+#      word-level replay samples (5:1) → data/processed/{train,val}.jsonl
 #
-# Data: prep via scripts/prepare/prep_himalaya_pages.py — auto-diagnoses
-# prefix distribution on first run so we can tighten filters if the defaults
-# grab the wrong entries.
+# APPROACH: LOAD iter-3 adapter as starting point (resume_adapter), not
+# fresh LoRA. Adapter config (r=32, α=64) reused from outputs/iter3/.
 #
-# Sized for SINGLE-GPU training (g5.xlarge, 1× A10G 24GB). Pages are far
-# more info-dense than word crops — max_length bumped 4096 → 8192. If OOM,
-# drop max_length to 6144 or reduce max_pixels in scripts/train.py.
+# Sized for SINGLE-GPU training (g5.xlarge, 1× A10G 24GB). Pages have
+# ~2-5k text chars ≈ 1500-2500 tokens + 640 image tokens — fits in 8192.
+# If OOM, drop max_length to 6144 or lower max_pixels in scripts/train.py.
 #
-# Approx cost: ~$8-10 on g5.xlarge for 3k pages × 2 epochs.
+# Approx cost: ~$5-7 for training itself; the bulk labeling in step 2 is
+# the dominant cost (~$50-150 for 3k pages at iter-3's serial speed).
 
 use_unsloth: false                # HF Trainer, single GPU
 
@@ -38,7 +43,7 @@ dataset:
   val_jsonl:   data/processed/val.jsonl
   image_root:  data/raw
 
-prompt: "Extract this document page as clean markdown."
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
 max_length: 8192                  # pages have ~2-5× the tokens of word crops
 augment: true
 
