@@ -137,25 +137,38 @@ ls -lh outputs/iter3/
 
 ---
 
-## Phase 1 — Download IndicDLP page images (~30 min, ~$0.50)
+## Phase 1 — Download IndicDLP page images (~40 min, ~$0.50)
+
+`prep_indicdlp_pages.py` downloads one parquet shard at a time,
+detects its language from the first row's image path, keeps matches
+(extracts all images to disk), deletes non-matches, and stops walking
+a language's shard block once the language boundary is hit. Known
+first-shard indices for hi and mr are baked in from a 2026-09-02
+probe (see `LANG_START_SHARD` in the script).
 
 ```bash
 tmux new -s prep1
 source /opt/pytorch/bin/activate
 
+export HF_TOKEN=<NEW-hf-write-token>   # re-export in the tmux shell
+
 python scripts/prepare/prep_indicdlp_pages.py \
   --raw_dir data/raw/indicdlp_pages \
   --manifest_jsonl data/interim/indicdlp_pages.manifest.jsonl \
   --langs hi mr \
-  --max_samples 3500 2>&1 | tee prep1.log
+  --max_per_lang 1800 2>&1 | tee prep1.log
 
 wc -l data/interim/indicdlp_pages.manifest.jsonl
 du -sh data/raw/indicdlp_pages/
 ```
 
-Detach with **Ctrl+B then D**. If the diagnose prints show the language
-field is named something we didn't guess, kill and rerun with the right
-key — see prep script for the fallback list it tries.
+Detach with **Ctrl+B then D**. Expected download: ~13 shards for hi + ~13
+for mr = ~26 shards × ~500 MB downloaded (auto-deleted after extraction).
+Peak disk usage during Phase 1: ~1 GB.
+
+If a shard's language doesn't match its expected position, the script
+prints a clear boundary message and moves on. If a target language is
+unknown (not in LANG_START_SHARD), the script errors with instructions.
 
 ---
 
