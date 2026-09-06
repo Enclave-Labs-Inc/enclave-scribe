@@ -52,7 +52,7 @@ training_args:
   num_train_epochs: 2             # smaller dataset, more info per sample
   per_device_train_batch_size: 1
   gradient_accumulation_steps: 32 # effective batch 32
-  learning_rate: 5e-5             # lower than iter-3 (1.5e-4) since we're
+  learning_rate: 5.0e-5           # lower than iter-3 (1.5e-4) since we're
                                   # fine-tuning an already-trained adapter,
                                   # not starting from scratch
   lr_scheduler_type: cosine
