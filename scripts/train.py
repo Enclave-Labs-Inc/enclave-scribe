@@ -66,12 +66,15 @@ def main():
         # HF Trainer + torchrun handles placement via LOCAL_RANK.
         # min/max_pixels cap image resolution -> caps visual tokens per image
         # (Qwen2.5-VL default max is ~16k*28*28 which can blow up to 10k+ tokens
-        # per document scan and mismatch the 4096 max_length).
+        # per document scan and mismatch the 4096 max_length). Defaults match
+        # the pre-iter-5 hardcoded values so iter-3/iter-4 configs are unchanged.
+        min_pixels = config["model"].get("min_pixels", 256 * 28 * 28)
+        max_pixels = config["model"].get("max_pixels", 640 * 28 * 28)
         processor = AutoProcessor.from_pretrained(
             model_path,
             trust_remote_code=True,
-            min_pixels=256 * 28 * 28,      # ~200k px -> ~256 tokens min
-            max_pixels=640 * 28 * 28,      # ~500k px -> ~640 tokens max (was 1280 - OOM on 22GB)
+            min_pixels=min_pixels,
+            max_pixels=max_pixels,
         )
         model = AutoModelForImageTextToText.from_pretrained(
             model_path,

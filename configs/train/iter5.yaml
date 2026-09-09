@@ -1,0 +1,83 @@
+# EnclaveScribe iter-5 — page-level Devanagari on a 32B base
+#
+# Iter-4 shipped a class-of-failure fix (no more dead-loops) on the 7B
+# base but training loss stayed flat at ~4.2 across all 82 steps. Read:
+# iter-3's pseudo-labels cap what a LoRA-on-7B can absorb from this
+# corpus. Iter-5 tests whether a bigger base with more LoRA capacity
+# breaks that ceiling. If loss ALSO stays flat here, the ceiling is
+# real and iter-6 must switch to real human labels.
+#
+# Corpus is iter-4's verbatim (793 pseudo-labeled IndicDLP pages + 500
+# word replay). No new data prep.
+#
+# HARDWARE: p4de.24xlarge (8x A100 80GB). FSDP full_shard across 4 GPUs
+# to start; escalate to 8 if OOM. LoRA + FSDP combo is UNTESTED in this
+# repo — main technical risk. Rollback: plain DDP on 2x A100 80GB.
+#
+# NEW vs iter-4:
+#   - base: 7B -> 32B
+#   - fresh LoRA (no resume_adapter; iter-3 r=32 adapter can't load on 32B)
+#   - LoRA r=64/alpha=128 (bump for the extra base capacity)
+#   - FSDP full_shard on Qwen2VLDecoderLayer
+#   - max_pixels 640 -> 1280 (32B has VRAM headroom + wants more detail)
+#   - epochs 2 -> 4 (bigger base has more room to absorb; iter-4 was
+#     also undertraining)
+#   - LR 5.0e-5 -> 1.0e-4 (fresh LoRA, halfway between iter-3's 1.5e-4
+#     and iter-4's resume-adapter 5.0e-5)
+#
+# YAML 1.1 GOTCHA (bit us in iter-4, see configs/train/iter4.yaml:55):
+# `5e-5` parses as STRING. Always write as `1.0e-4` with the decimal.
+
+use_unsloth: false                  # HF Trainer + FSDP, multi-GPU
+
+model:
+  path: allenai/olmOCR-2-32B-1025   # 32B, same Qwen2.5-VL lineage
+  flash_attn: false                 # AMI may not have it built; sdpa is fine
+  # Image-budget knobs promoted from scripts/train.py hardcode. 32B gets
+  # more detail than iter-4's 640; still capped to keep visual tokens < 1280.
+  min_pixels: 200704                # 256 * 28 * 28
+  max_pixels: 1003520               # 1280 * 28 * 28
+
+lora:
+  r: 64                             # 2x iter-3/iter-4, matches lora.py default
+  alpha: 128                        # 2 * r
+  dropout: 0.05
+
+dataset:
+  train_jsonl: data/processed/train.jsonl   # iter-4 corpus verbatim
+  val_jsonl:   data/processed/val.jsonl
+  image_root:  data/raw
+
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
+max_length: 8192                    # same as iter-4; pages ~2-5k text tokens + ~640-1280 image tokens
+augment: true
+
+training_args:
+  output_dir: outputs/iter5
+  num_train_epochs: 4               # 2x iter-4; kill early if loss stays flat
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8    # effective batch = 8 * 4 GPUs = 32 (match iter-4)
+  learning_rate: 1.0e-4             # FLOAT — never write as 1e-4 (YAML 1.1 -> str)
+  lr_scheduler_type: cosine
+  warmup_steps: 20                  # 2x iter-4 (LR is 2x higher, longer warmup safer)
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 5                  # tighter than iter-4 (10) so we spot flat-loss early
+  save_steps: 200
+  eval_steps: 200
+  save_total_limit: 3
+  dataloader_num_workers: 8
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter5-32b"
+  # FSDP config — mirrors full_p4de_24xlarge.yaml. LoRA+FSDP combo is
+  # untested here; if training crashes on step 0, remove these two lines
+  # and fall back to plain DDP.
+  fsdp: "full_shard auto_wrap"
+  fsdp_config:
+    fsdp_transformer_layer_cls_to_wrap: "Qwen2VLDecoderLayer"
