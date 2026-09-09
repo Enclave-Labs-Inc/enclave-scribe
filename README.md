@@ -6,6 +6,36 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 4 status — Page-level Devanagari shipped
+
+**LoRA fine-tune resuming from iter-3, on 793 pseudo-labeled Devanagari page images (ai4bharat/indicdlp) + 500 word replay samples. 1h37m on g5.xlarge, ~$3 training. Fixes iter-3's dead-loop failure mode on long dense pages.**
+
+Ship-gate: 6-page Gazette of India Extraordinary notification with the runtime `bad_words_ids` workaround **DISABLED** in `extract_page`:
+
+| Signal | Iter-3 | **Iter-4** |
+|---|---:|---:|
+| Total chars extracted | 7,122 | **13,646** |
+| Pages dead-looped | 2/6 | **0/6** |
+| Wallclock (6 pages) | 20 min | **12 min** |
+
+Iter-3 dead-looped on pages 4 and 5 (0 chars output, `<tool_call>` blocks stripped by post-hoc regex). Iter-4 extracts every page cleanly with no loops.
+
+Iter-4 is also more source-faithful — for example, it preserves Arabic numerals inside the English section where iter-3 hallucinates Devanagari digits (`२११३` → `2113`).
+
+- **📦 Model on HuggingFace**: [enclavelabs/enclave-scribe-devanagari-iter4](https://huggingface.co/enclavelabs/enclave-scribe-devanagari-iter4) (iter-3 remains at [enclavelabs/enclave-scribe-devanagari](https://huggingface.co/enclavelabs/enclave-scribe-devanagari))
+- **📝 Full writeup**: [`reports/iter4/README.md`](reports/iter4/README.md)
+- **🔬 Head-to-head vs iter-3**: [`reports/iter4/GAZETTE_TEST.md`](reports/iter4/GAZETTE_TEST.md)
+- **🧪 Canonical failure case**: [`tests/fixtures/pdfs/`](tests/fixtures/pdfs/)
+- **🗂️ Artifacts**: `s3://enclave-scribe-checkpoints/outputs/iter4/` (adapter) · `s3://enclave-scribe-checkpoints/results/iter4/` (ship-gate)
+
+### Honest read
+
+Training loss stayed flat at ~4.2 across all 82 steps (grad norms 0.2–0.9). Iter-4's win is a class-of-failure fix (no more dead-looping) rather than a broad character-level uplift. It's "iter-3 that doesn't break on long pages", not "iter-3 but sharper". Iter-5 will pursue either real human labels or a bigger base model.
+
+The runtime `bad_words_ids` workaround stays in production as belt-and-suspenders.
+
+---
+
 ## Iteration 3 status — Devanagari OCR shipped
 
 **LoRA fine-tune of `allenai/olmOCR-2-7B-1025` on 28,824 real Devanagari samples (himalaya-ai dataset). 8.7 hrs on g5.xlarge, ~$12 total. Held-out CER dropped from 1626% → 17.4% vs the base model on Devanagari.**
@@ -159,10 +189,11 @@ reports/          Per-iteration writeups with charts
 - **Iter-1 ✅** — 1,174 CORD + FUNSD samples, LoRA r=32, pipeline validated end-to-end.
 - **Iter-2 ✅** — 30k mixed English OCR (DocVQA, XFUND, TextOCR, OmniDocBench, IDL), held-out benchmark, prompt-per-sample. Reference eval JSONs archived in `s3://enclave-scribe-checkpoints/results/iter2/`.
 - **Iter-3 ✅** — 28,824 Devanagari samples on OLMoCR-2-7B, 93× CER improvement (see above).
-- **Iter-4 (planned)**:
-  1. Page-level Devanagari data (iter-3 was word-crops → weak on long-context structure)
-  2. Fix generation-config: `repetition_penalty=1.1`, stop-token handling, better `max_new_tokens`
-  3. Keep English performance from regressing (iter-3 gazette test showed English preserved, but no held-out English benchmark run against iter-3 yet)
+- **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
+- **Iter-5 (planned)**:
+  1. Real human-labeled Devanagari pages (300–500 samples) to break the iter-3 pseudo-label ceiling — OR bigger base model (`allenai/olmOCR-2-32B-1025`) for more LoRA capacity
+  2. Formal English regression benchmark against both iter-3 and iter-4
+  3. Every iteration runs against [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a regression gate
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
 
