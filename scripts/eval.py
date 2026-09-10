@@ -19,7 +19,9 @@ Usage:
 """
 import argparse
 import json
+import sys
 import time
+import traceback
 from collections import defaultdict
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -27,6 +29,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from scribe.eval.metrics import compute_all
+
+_first_exception_logged = False
 
 # Published scores for comparison (OmniDocBench, lower NED = better)
 SOTA_COMPARISON = {
@@ -46,13 +50,22 @@ def _load_model(base_model: str, adapter_dir: str = ""):
     return model
 
 
-def _run_sample(model, image_root: Path, sample: dict) -> dict:
+def _run_sample(model, image_root: Path, sample: dict, max_new_tokens: int = 4096) -> dict:
+    global _first_exception_logged
     from scribe.infer.local import infer_image
     image_path = str(image_root / sample["image"]) if image_root else sample["image"]
     try:
-        pred = infer_image(model, image_path)
+        pred = infer_image(model, image_path, max_new_tokens=max_new_tokens)
     except Exception as e:
+        # Surface the first exception per run to stderr so silent 100%-CER
+        # runs are easy to diagnose. Subsequent exceptions are still swallowed
+        # so a single bad sample doesn't spam the log across 500 samples.
         pred = ""
+        if not _first_exception_logged:
+            _first_exception_logged = True
+            print(f"\n[eval.py] first per-sample exception on {sample.get('image')!r}: {type(e).__name__}: {e}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
+            print("[eval.py] further per-sample exceptions are swallowed silently.", file=sys.stderr)
     metrics = compute_all(pred, sample["text"])
     return {
         "image":    sample["image"],
@@ -91,7 +104,7 @@ def run(args):
     results = []
     t0 = time.time()
     for sample in tqdm(samples, desc="Evaluating"):
-        results.append(_run_sample(model, image_root, sample))
+        results.append(_run_sample(model, image_root, sample, max_new_tokens=args.max_new_tokens))
 
     elapsed = time.time() - t0
     print(f"\nInference: {elapsed:.1f}s for {len(results)} samples ({elapsed/len(results):.2f}s/sample)")
@@ -170,6 +183,10 @@ def main():
     parser.add_argument("--adapter_dir", default="", help="Path to LoRA adapter (empty = base model only)")
     parser.add_argument("--out_json",    default="results/eval.json")
     parser.add_argument("--limit",       type=int, default=0, help="Limit samples (0 = all)")
+    parser.add_argument("--max_new_tokens", type=int, default=4096,
+                        help="Per-sample generation budget (default 4096). "
+                             "Lower for eval on page-level inputs where full-markdown "
+                             "generation is too slow (e.g. 512).")
     main_args = parser.parse_args()
     run(main_args)
 
