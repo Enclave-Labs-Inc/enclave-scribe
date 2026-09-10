@@ -54,16 +54,17 @@ def parse_adapter_arg(s: str) -> tuple[str, str]:
 
 
 def run_eval_jsonl(adapter_path: str, base_model: str, gt_jsonl: str,
-                   image_root: str, out_json: Path) -> dict:
+                   image_root: str, out_json: Path, max_new_tokens: int) -> dict:
     """Invoke scripts/eval.py; return the parsed JSON payload."""
     out_json.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         sys.executable, "scripts/eval.py",
-        "--gt_jsonl",   gt_jsonl,
-        "--image_root", image_root,
-        "--base_model", base_model,
-        "--adapter_dir", adapter_path,
-        "--out_json",   str(out_json),
+        "--gt_jsonl",       gt_jsonl,
+        "--image_root",     image_root,
+        "--base_model",     base_model,
+        "--adapter_dir",    adapter_path,
+        "--out_json",       str(out_json),
+        "--max_new_tokens", str(max_new_tokens),
     ]
     print(f"$ {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
@@ -195,6 +196,13 @@ def main():
     parser.add_argument("--out",              default="results/regression/regression_table.md")
     parser.add_argument("--work_dir",         default="results/regression",
                         help="Where per-adapter JSON/MD outputs land")
+    parser.add_argument("--devanagari_max_new_tokens", type=int, default=64,
+                        help="Generation budget per Devanagari word sample (default 64). "
+                             "Word crops are short — 4096 would be pure waste.")
+    parser.add_argument("--english_max_new_tokens",    type=int, default=512,
+                        help="Generation budget per English page sample (default 512). "
+                             "iter-5 dry-run at 4096 was 200+ sec/sample on 7B; 512 keeps "
+                             "eval runtime bounded for regression checks.")
     args = parser.parse_args()
 
     if not any([args.devanagari_jsonl, args.english_jsonl, args.gazette_pdf]):
@@ -211,13 +219,13 @@ def main():
         if args.devanagari_jsonl:
             out_json = work / f"{name}_devanagari.json"
             r = run_eval_jsonl(path, args.base_model, args.devanagari_jsonl,
-                               args.image_root, out_json)
+                               args.image_root, out_json, args.devanagari_max_new_tokens)
             row["devanagari_cer"] = {"cer": r["overall"]["cer"], "n": r["n_samples"]}
 
         if args.english_jsonl:
             out_json = work / f"{name}_english.json"
             r = run_eval_jsonl(path, args.base_model, args.english_jsonl,
-                               args.image_root, out_json)
+                               args.image_root, out_json, args.english_max_new_tokens)
             row["english_cer"] = {"cer": r["overall"]["cer"], "n": r["n_samples"]}
 
         if args.gazette_pdf:
