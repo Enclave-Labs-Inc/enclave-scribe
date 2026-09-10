@@ -1,0 +1,6531 @@
+{
+  "model": "himalaya_indic",
+  "benchmark": "data/benchmark/himalaya_500.jsonl",
+  "n_samples": 500,
+  "elapsed_s": 430.03,
+  "overall": {
+    "ned": 0.2151,
+    "cer": 0.2151,
+    "wer": 0.4491,
+    "bleu": 0.0352,
+    "f1": 0.5609
+  },
+  "by_category": {
+    "himalaya_indic": {
+      "ned": 0.2151,
+      "cer": 0.2151,
+      "wer": 0.4491,
+      "bleu": 0.0352,
+      "f1": 0.5609
+    },
+    "__all__": {
+      "ned": 0.2151,
+      "cer": 0.2151,
+      "wer": 0.4491,
+      "bleu": 0.0352,
+      "f1": 0.5609
+    }
+  },
+  "samples": [
+    {
+      "image": "himalaya_indic/0000/00000.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "क्रिस्तिआन",
+      "gt": "क्रिस्तिआन"
+    },
+    {
+      "image": "himalaya_indic/0000/00001.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कूलबेथ",
+      "gt": "कूलबेथ"
+    },
+    {
+      "image": "himalaya_indic/0000/00002.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "योगीदत्त",
+      "gt": "गोरीदत्त"
+    },
+    {
+      "image": "himalaya_indic/0000/00003.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कारतेच्या",
+      "gt": "काखेच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00004.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "चारा घोटाला: लालू यादव पर फ़ैसला आज",
+      "gt": "चारा घोटाला: लालू यादव पर फ़ैसला आज"
+    },
+    {
+      "image": "himalaya_indic/0000/00005.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "काल्मिकी",
+      "gt": "काल्मिकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00006.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "नाट्यप्रयोगाचा",
+      "gt": "नाट्यप्रयोगाचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00007.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2222,
+        "cer": 0.2222,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "द्याकरणही",
+      "gt": "व्याकरणहै"
+    },
+    {
+      "image": "himalaya_indic/0000/00008.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अँताड़ियों",
+      "gt": "अँतड़ियाँ"
+    },
+    {
+      "image": "himalaya_indic/0000/00009.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "तिघांसोबत",
+      "gt": "तिघांसोबत"
+    },
+    {
+      "image": "himalaya_indic/0000/00010.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सत्यमन्दिर",
+      "gt": "सत्यमन्दिर"
+    },
+    {
+      "image": "himalaya_indic/0000/00011.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2727,
+        "cer": 0.2727,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "विन्स्कर्मने",
+      "gt": "विश्वकर्मने"
+    },
+    {
+      "image": "himalaya_indic/0000/00012.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रैसिस",
+      "gt": "रैसिस्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00013.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "दक्षिणादान",
+      "gt": "दक्षिणादान"
+    },
+    {
+      "image": "himalaya_indic/0000/00014.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "माकोबी",
+      "gt": "माकोबी"
+    },
+    {
+      "image": "himalaya_indic/0000/00015.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7143,
+        "cer": 0.7143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "विक्षाली",
+      "gt": "बिरमानी"
+    },
+    {
+      "image": "himalaya_indic/0000/00016.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ताकारींमुळे",
+      "gt": "तक्रारींमुळे"
+    },
+    {
+      "image": "himalaya_indic/0000/00017.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "महणूनच",
+      "gt": "म्हणूनचं"
+    },
+    {
+      "image": "himalaya_indic/0000/00018.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सव्हेचाळीसवा",
+      "gt": "सव्हेचाळीसवा"
+    },
+    {
+      "image": "himalaya_indic/0000/00019.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वेटिड",
+      "gt": "वेटिड"
+    },
+    {
+      "image": "himalaya_indic/0000/00020.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जर्दी।",
+      "gt": "जर्दी।"
+    },
+    {
+      "image": "himalaya_indic/0000/00021.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4074,
+        "cer": 0.4074,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ध्तचक्तिक्तकिटकिट्टेकिट्टिति",
+      "gt": "घ्तचकि्तकि्तकिटत्ेकिटे्ति्ि"
+    },
+    {
+      "image": "himalaya_indic/0000/00022.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "श्रोडा",
+      "gt": "श्रोडा"
+    },
+    {
+      "image": "himalaya_indic/0000/00023.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "४३५सन",
+      "gt": "ऑडिसन"
+    },
+    {
+      "image": "himalaya_indic/0000/00024.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4286,
+        "cer": 0.4286,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बोकायी",
+      "gt": "वोंकाकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00025.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पद्धतींपेक्षा",
+      "gt": "पद्धतींपेक्षा"
+    },
+    {
+      "image": "himalaya_indic/0000/00026.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "झेपेलिनचे",
+      "gt": "झेपेलिनचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00027.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "श्रुकवाहिनी",
+      "gt": "श्रुकवाहिनी"
+    },
+    {
+      "image": "himalaya_indic/0000/00028.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5556,
+        "cer": 0.5556,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "डेमोल्यूशन",
+      "gt": "डेमेल्ज़ा"
+    },
+    {
+      "image": "himalaya_indic/0000/00029.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7143,
+        "cer": 0.7143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अनुस",
+      "gt": "अब्बुला"
+    },
+    {
+      "image": "himalaya_indic/0000/00030.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पानमोडो",
+      "gt": "पानमोडी"
+    },
+    {
+      "image": "himalaya_indic/0000/00031.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "एलोस्ट",
+      "gt": "एलोरेड"
+    },
+    {
+      "image": "himalaya_indic/0000/00032.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ब्रोच",
+      "gt": "ब्रोच"
+    },
+    {
+      "image": "himalaya_indic/0000/00033.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शिरशूलवर्जिनी",
+      "gt": "शिरशूलवर्जिनी"
+    },
+    {
+      "image": "himalaya_indic/0000/00034.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0909,
+        "cer": 0.0909,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कंसन्द्रेशन",
+      "gt": "कंसन्ट्रेशन"
+    },
+    {
+      "image": "himalaya_indic/0000/00035.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "करंजीची",
+      "gt": "करंजीची"
+    },
+    {
+      "image": "himalaya_indic/0000/00036.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इनविंसिबल्स",
+      "gt": "इनविंसिबल्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00037.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वैश्याने",
+      "gt": "वैश्याने"
+    },
+    {
+      "image": "himalaya_indic/0000/00038.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आगृत",
+      "gt": "आगृत"
+    },
+    {
+      "image": "himalaya_indic/0000/00039.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.75,
+        "cer": 0.75,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "डिक्यू",
+      "gt": "ईटेक्स्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00040.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अवशेषः",
+      "gt": "अवशेशः"
+    },
+    {
+      "image": "himalaya_indic/0000/00041.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "गंधर्वाची",
+      "gt": "गंधर्वाची"
+    },
+    {
+      "image": "himalaya_indic/0000/00042.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "दसन्याचा",
+      "gt": "दसऱ्याचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00043.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पैतियम",
+      "gt": "पैतियम"
+    },
+    {
+      "image": "himalaya_indic/0000/00044.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2222,
+        "cer": 0.2222,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "शक्तिसुली",
+      "gt": "सक्तवसुली"
+    },
+    {
+      "image": "himalaya_indic/0000/00045.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बारग",
+      "gt": "बारग"
+    },
+    {
+      "image": "himalaya_indic/0000/00046.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2308,
+        "cer": 0.2308,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कामगारांसामुदेत",
+      "gt": "कामगारांसमवेत"
+    },
+    {
+      "image": "himalaya_indic/0000/00047.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कौच्छित",
+      "gt": "कौच्हित"
+    },
+    {
+      "image": "himalaya_indic/0000/00048.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "दुरचित्रवाहीणी",
+      "gt": "दुरचित्रवाहीणी"
+    },
+    {
+      "image": "himalaya_indic/0000/00049.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0417,
+        "cer": 0.0417,
+        "wer": 0.1818,
+        "bleu": 0.7861,
+        "f1": 0.8182
+      },
+      "pred": "मैं अपने बच्चे की किक भी नहीं महसूस कर पाती थी।",
+      "gt": "'मैं अपने बच्चे की किक भी नहीं महसूस कर पाती थी'"
+    },
+    {
+      "image": "himalaya_indic/0000/00050.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कैलारा",
+      "gt": "कैलाश‌"
+    },
+    {
+      "image": "himalaya_indic/0000/00051.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "चैम्पीयनशिप",
+      "gt": "चैम्पीयनशिप"
+    },
+    {
+      "image": "himalaya_indic/0000/00052.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "गुदी",
+      "gt": "शूटों"
+    },
+    {
+      "image": "himalaya_indic/0000/00053.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इनसाट",
+      "gt": "इनसाट"
+    },
+    {
+      "image": "himalaya_indic/0000/00054.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "काव्यविरोधी",
+      "gt": "काव्यविरोधी"
+    },
+    {
+      "image": "himalaya_indic/0000/00055.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वेकन",
+      "gt": "वेकन"
+    },
+    {
+      "image": "himalaya_indic/0000/00056.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8,
+        "cer": 0.8,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कार्पी",
+      "gt": "छापीं"
+    },
+    {
+      "image": "himalaya_indic/0000/00057.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आइसलंडमधील",
+      "gt": "आइसलंडमधील"
+    },
+    {
+      "image": "himalaya_indic/0000/00058.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पूण्यार्क",
+      "gt": "पूण्यार्क"
+    },
+    {
+      "image": "himalaya_indic/0000/00059.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "१०३७मध्ये",
+      "gt": "१०३१मध्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00060.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "झगडती",
+      "gt": "झगडती"
+    },
+    {
+      "image": "himalaya_indic/0000/00061.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.04,
+        "cer": 0.04,
+        "wer": 0.1429,
+        "bleu": 0.8091,
+        "f1": 0.8571
+      },
+      "pred": "'इंग्लिश-विन्ग्लिश' श्रीदेवी के लिए खास: आर बाल्की",
+      "gt": "‘इंग्लिश-विन्ग्लिश’ श्रीदेवी के लिए खास: आर बाल्की"
+    },
+    {
+      "image": "himalaya_indic/0000/00062.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अंधांत्रात",
+      "gt": "अंधांत्रात"
+    },
+    {
+      "image": "himalaya_indic/0000/00063.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बटाट्यांचे",
+      "gt": "बटाट्यांचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00064.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वाच्या",
+      "gt": "वा‍र्‍या"
+    },
+    {
+      "image": "himalaya_indic/0000/00065.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मारीच।",
+      "gt": "मारीच।"
+    },
+    {
+      "image": "himalaya_indic/0000/00066.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "फुटबॉलच",
+      "gt": "फुटबाॅलच"
+    },
+    {
+      "image": "himalaya_indic/0000/00067.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "दुमन",
+      "gt": "दुमन"
+    },
+    {
+      "image": "himalaya_indic/0000/00068.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "इल्यादीवट",
+      "gt": "इत्यादीबद्दल"
+    },
+    {
+      "image": "himalaya_indic/0000/00069.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3,
+        "cer": 0.3,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पुरोज्जिनी",
+      "gt": "पुरोद्भिदी"
+    },
+    {
+      "image": "himalaya_indic/0000/00070.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रिमु",
+      "gt": "रिमु"
+    },
+    {
+      "image": "himalaya_indic/0000/00071.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "यमुनाबाईँशी",
+      "gt": "यमुनाबाईशी"
+    },
+    {
+      "image": "himalaya_indic/0000/00072.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "भवेत्संध्या",
+      "gt": "भवेत्संध्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00073.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "टॉकीजवर",
+      "gt": "टॉकीजवर"
+    },
+    {
+      "image": "himalaya_indic/0000/00074.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बरषा",
+      "gt": "बरषा"
+    },
+    {
+      "image": "himalaya_indic/0000/00075.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1818,
+        "cer": 0.1818,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "फ़िलींतियों",
+      "gt": "फ़िलीतियों।"
+    },
+    {
+      "image": "himalaya_indic/0000/00076.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मारुतिरायाची",
+      "gt": "मारुतिरायाची"
+    },
+    {
+      "image": "himalaya_indic/0000/00077.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6667,
+        "cer": 0.6667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मादगोरींत",
+      "gt": "मागणीत"
+    },
+    {
+      "image": "himalaya_indic/0000/00078.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "धर्मकीर्तिकृत",
+      "gt": "धर्मकीर्तिकृत"
+    },
+    {
+      "image": "himalaya_indic/0000/00079.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "क्वीम",
+      "gt": "क्वीम"
+    },
+    {
+      "image": "himalaya_indic/0000/00080.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "तहसीलों",
+      "gt": "तहसीलोँ"
+    },
+    {
+      "image": "himalaya_indic/0000/00081.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "क्रिशमस",
+      "gt": "क्रिशमस"
+    },
+    {
+      "image": "himalaya_indic/0000/00082.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "दुश्चार्मी",
+      "gt": "घुमाएगी"
+    },
+    {
+      "image": "himalaya_indic/0000/00083.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हुबन",
+      "gt": "ठुबन"
+    },
+    {
+      "image": "himalaya_indic/0000/00084.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "बजट 2018: अंतिम बजट से पहले मोदी सरकार के सामने हैं ये चुनौतियां",
+      "gt": "बजट 2018: अंतिम बजट से पहले मोदी सरकार के सामने हैं ये चुनौतियां"
+    },
+    {
+      "image": "himalaya_indic/0000/00085.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "दीपऔर",
+      "gt": "द्वीपऔर"
+    },
+    {
+      "image": "himalaya_indic/0000/00086.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3077,
+        "cer": 0.3077,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "समाजावादातल्या",
+      "gt": "समाजावादावरचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00087.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "राजकारणातदेखील",
+      "gt": "राजकारणातदेखील"
+    },
+    {
+      "image": "himalaya_indic/0000/00088.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कवीप्रतिभा",
+      "gt": "कवीप्रतिभा"
+    },
+    {
+      "image": "himalaya_indic/0000/00089.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हल्दीराम",
+      "gt": "हल्दीराम"
+    },
+    {
+      "image": "himalaya_indic/0000/00090.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शिवलिंगपतन",
+      "gt": "शिवलिंगपतन"
+    },
+    {
+      "image": "himalaya_indic/0000/00091.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जीवननौका",
+      "gt": "जीवननौका"
+    },
+    {
+      "image": "himalaya_indic/0000/00092.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आलउद्दीन",
+      "gt": "आलउद्दीन"
+    },
+    {
+      "image": "himalaya_indic/0000/00093.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अन्ताप्रतियोगशाला",
+      "gt": "अन्तर्प्रयोगशाला"
+    },
+    {
+      "image": "himalaya_indic/0000/00094.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "विद्यार्थ्यांपर्यंत",
+      "gt": "विद्यार्थ्यांपर्यंत"
+    },
+    {
+      "image": "himalaya_indic/0000/00095.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "इजिप्ट",
+      "gt": "इजिप्‍ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00096.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वैरीएबल",
+      "gt": "वैरीएबल"
+    },
+    {
+      "image": "himalaya_indic/0000/00097.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कळवाव्या",
+      "gt": "कळवाव्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00098.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बद्धकोष्टापासून",
+      "gt": "बद्धकोष्टापासून"
+    },
+    {
+      "image": "himalaya_indic/0000/00099.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पदशा",
+      "gt": "पदश"
+    },
+    {
+      "image": "himalaya_indic/0000/00100.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8462,
+        "cer": 0.8462,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पेलिस्पोलान",
+      "gt": "फोस्फीनाइटोइन"
+    },
+    {
+      "image": "himalaya_indic/0000/00101.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "तूर्य",
+      "gt": "तूर्य"
+    },
+    {
+      "image": "himalaya_indic/0000/00102.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "विसागु",
+      "gt": "पिसासु"
+    },
+    {
+      "image": "himalaya_indic/0000/00103.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "राम रहीम के साथ दिखी लड़की का 'पूरा सच'",
+      "gt": "राम रहीम के साथ दिखी लड़की का 'पूरा सच'"
+    },
+    {
+      "image": "himalaya_indic/0000/00104.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "अफ़ग़ानिस्तान के सीने पर 40 साल पुराना ज़ख़्म",
+      "gt": "अफ़ग़ानिस्तान के सीने पर 40 साल पुराना ज़ख़्म"
+    },
+    {
+      "image": "himalaya_indic/0000/00105.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ओस्सुले",
+      "gt": "ओरखुले"
+    },
+    {
+      "image": "himalaya_indic/0000/00106.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अष्तफलकीय",
+      "gt": "अष्तफलकीय"
+    },
+    {
+      "image": "himalaya_indic/0000/00107.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "तानरेंगा",
+      "gt": "तानरंग"
+    },
+    {
+      "image": "himalaya_indic/0000/00108.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मुठल",
+      "gt": "मुतल"
+    },
+    {
+      "image": "himalaya_indic/0000/00109.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "चैकु",
+      "gt": "तैफु"
+    },
+    {
+      "image": "himalaya_indic/0000/00110.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ज्ञ्य",
+      "gt": "ज़रा"
+    },
+    {
+      "image": "himalaya_indic/0000/00111.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4444,
+        "cer": 0.4444,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "राव्सनधारण",
+      "gt": "सर्वसधारण"
+    },
+    {
+      "image": "himalaya_indic/0000/00112.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.4286,
+        "cer": 1.4286,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "क्लारिनेटों",
+      "gt": "परंतपाः"
+    },
+    {
+      "image": "himalaya_indic/0000/00113.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कृष्णौं",
+      "gt": "कृष्णै"
+    },
+    {
+      "image": "himalaya_indic/0000/00114.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रुफस",
+      "gt": "रुफस"
+    },
+    {
+      "image": "himalaya_indic/0000/00115.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वाइनोकुलर",
+      "gt": "वाइनोकुलर"
+    },
+    {
+      "image": "himalaya_indic/0000/00116.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रूपवर्णन",
+      "gt": "रूपवर्णन"
+    },
+    {
+      "image": "himalaya_indic/0000/00117.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बाजवान",
+      "gt": "बाजवान"
+    },
+    {
+      "image": "himalaya_indic/0000/00118.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0909,
+        "cer": 0.0909,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ओलंडल्याचे",
+      "gt": "ओलांडल्याचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00119.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "केजीएन",
+      "gt": "केजीएन"
+    },
+    {
+      "image": "himalaya_indic/0000/00120.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लॉइड्ज़",
+      "gt": "लॉइड्ज"
+    },
+    {
+      "image": "himalaya_indic/0000/00121.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2727,
+        "cer": 0.2727,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "डिसपैसरों",
+      "gt": "डिस्पेंसरों"
+    },
+    {
+      "image": "himalaya_indic/0000/00122.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रत्नादी",
+      "gt": "रत्‍नादी"
+    },
+    {
+      "image": "himalaya_indic/0000/00123.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पोलिसांपर्यंत",
+      "gt": "पोलिसांपर्यंत"
+    },
+    {
+      "image": "himalaya_indic/0000/00124.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मार्चस्",
+      "gt": "मार्चस्"
+    },
+    {
+      "image": "himalaya_indic/0000/00125.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वर्सों",
+      "gt": "वर्सो"
+    },
+    {
+      "image": "himalaya_indic/0000/00126.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "श्रीमहामृत्युंजय",
+      "gt": "श्रीमहामृत्युंजय"
+    },
+    {
+      "image": "himalaya_indic/0000/00127.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "क़वाल्ली",
+      "gt": "क़वाल्ली"
+    },
+    {
+      "image": "himalaya_indic/0000/00128.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जाऊऱ्यात",
+      "gt": "आडोश्यात"
+    },
+    {
+      "image": "himalaya_indic/0000/00129.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6364,
+        "cer": 0.6364,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वज़वोद्धीरे",
+      "gt": "वज्रबोधींचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00130.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रसेनजितचचा",
+      "gt": "प्रसेनजितचचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00131.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हास्यचित्रों",
+      "gt": "हास्यचित्रों"
+    },
+    {
+      "image": "himalaya_indic/0000/00132.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अटींवरती",
+      "gt": "अटींवरती"
+    },
+    {
+      "image": "himalaya_indic/0000/00133.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "फ़्रेमयुक्त",
+      "gt": "फ़्रेमयुक्त"
+    },
+    {
+      "image": "himalaya_indic/0000/00134.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.1667,
+        "cer": 1.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "शक्तिरयन्कांमुळे",
+      "gt": "साहि‍त्‍यकार"
+    },
+    {
+      "image": "himalaya_indic/0000/00135.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "उज़ी",
+      "gt": "उज़ो"
+    },
+    {
+      "image": "himalaya_indic/0000/00136.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हेकेखोरपणाने",
+      "gt": "हेकेखोरपणाने"
+    },
+    {
+      "image": "himalaya_indic/0000/00137.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बधणु",
+      "gt": "बधणु"
+    },
+    {
+      "image": "himalaya_indic/0000/00138.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7143,
+        "cer": 0.7143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्रोटीनिन्गके",
+      "gt": "प्रागैतिहासज्ञ"
+    },
+    {
+      "image": "himalaya_indic/0000/00139.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5625,
+        "cer": 0.5625,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लॉर्किंगांसेरिमस",
+      "gt": "ऑर्किआँप्टेरिक्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00140.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "जॉर्डन के शाह इराक़ के हालात पर चिंतित",
+      "gt": "जॉर्डन के शाह इराक़ के हालात पर चिंतित"
+    },
+    {
+      "image": "himalaya_indic/0000/00141.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "टिबिट",
+      "gt": "टिविट"
+    },
+    {
+      "image": "himalaya_indic/0000/00142.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "गांठली",
+      "gt": "गांठली"
+    },
+    {
+      "image": "himalaya_indic/0000/00143.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7,
+        "cer": 0.7,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "माइक्रूक",
+      "gt": "जनित्रातून"
+    },
+    {
+      "image": "himalaya_indic/0000/00144.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पंचमार्गी",
+      "gt": "पंचमार्गी"
+    },
+    {
+      "image": "himalaya_indic/0000/00145.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "माणिकबाबांना",
+      "gt": "माणिकबाबांना"
+    },
+    {
+      "image": "himalaya_indic/0000/00146.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रसारभारतीतर्फे",
+      "gt": "प्रसारभारतीतर्फे"
+    },
+    {
+      "image": "himalaya_indic/0000/00147.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जियोमॉर्फोलॉजी",
+      "gt": "जियोमॉर्फोलॉजी"
+    },
+    {
+      "image": "himalaya_indic/0000/00148.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "यशलिप्सा",
+      "gt": "यशलिप्सा"
+    },
+    {
+      "image": "himalaya_indic/0000/00149.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आभासवद्द",
+      "gt": "आभासवद"
+    },
+    {
+      "image": "himalaya_indic/0000/00150.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बेराडीनेल्ली",
+      "gt": "बेरार्डीनेल्ली"
+    },
+    {
+      "image": "himalaya_indic/0000/00151.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2727,
+        "cer": 0.2727,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "स्किनरोसिस",
+      "gt": "स्क्लिरोसिस"
+    },
+    {
+      "image": "himalaya_indic/0000/00152.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "नेसवलेली",
+      "gt": "नेसवलेली"
+    },
+    {
+      "image": "himalaya_indic/0000/00153.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "नीदरलैन्ड",
+      "gt": "नीदरलैन्ड"
+    },
+    {
+      "image": "himalaya_indic/0000/00154.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आयरेडेल",
+      "gt": "आयरेडेल"
+    },
+    {
+      "image": "himalaya_indic/0000/00155.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5556,
+        "cer": 0.5556,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "निप्थाये",
+      "gt": "त्रिपथायै"
+    },
+    {
+      "image": "himalaya_indic/0000/00156.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कारथिज",
+      "gt": "कारथिज"
+    },
+    {
+      "image": "himalaya_indic/0000/00157.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पाठेगावात",
+      "gt": "पाळेगावात"
+    },
+    {
+      "image": "himalaya_indic/0000/00158.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2143,
+        "cer": 0.2143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "श्र्हसनमार्गातून",
+      "gt": "श्वसनमार्गातून"
+    },
+    {
+      "image": "himalaya_indic/0000/00159.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "लांबविण्यात",
+      "gt": "लांबविण्यात"
+    },
+    {
+      "image": "himalaya_indic/0000/00160.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अलगाय",
+      "gt": "अलगच"
+    },
+    {
+      "image": "himalaya_indic/0000/00161.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3,
+        "cer": 0.3,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "शिरोविंदा",
+      "gt": "शिरोबिंदु।"
+    },
+    {
+      "image": "himalaya_indic/0000/00162.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "फेस्टिव्हलला",
+      "gt": "फेस्टिव्हलला"
+    },
+    {
+      "image": "himalaya_indic/0000/00163.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "संवाहकाभोवती",
+      "gt": "संवाहकाभोवती"
+    },
+    {
+      "image": "himalaya_indic/0000/00164.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "कोरोना वायरस: आगरा मॉडल क्या हो गया है फेल?",
+      "gt": "कोरोना वायरस: आगरा मॉडल क्या हो गया है फेल?"
+    },
+    {
+      "image": "himalaya_indic/0000/00165.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "नॉर्वेयिन",
+      "gt": "नाॅरवेयिन"
+    },
+    {
+      "image": "himalaya_indic/0000/00166.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "०झमॉनोट्रीम्स",
+      "gt": "्झ्रमॉनोट्रीम्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00167.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "40 चरमपंथी मारे गए: पाक सेना",
+      "gt": "40 चरमपंथी मारे गए: पाक सेना"
+    },
+    {
+      "image": "himalaya_indic/0000/00168.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हास्यपत्र",
+      "gt": "हास्यपत्र"
+    },
+    {
+      "image": "himalaya_indic/0000/00169.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मधुर्ला",
+      "gt": "मधुरता"
+    },
+    {
+      "image": "himalaya_indic/0000/00170.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कॉन्फ्युशिअस",
+      "gt": "कॉन्फ्युशिअस"
+    },
+    {
+      "image": "himalaya_indic/0000/00171.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.1667,
+        "cer": 1.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जातीशिवारा",
+      "gt": "कमीशनर"
+    },
+    {
+      "image": "himalaya_indic/0000/00172.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6923,
+        "cer": 0.6923,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कुण्डकुटिसारखांनी",
+      "gt": "कुक्कुटशालाओं"
+    },
+    {
+      "image": "himalaya_indic/0000/00173.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0588,
+        "cer": 0.0588,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रेतोबाहिन्यामध्ये",
+      "gt": "रेतोवाहिन्यामध्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00174.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "टोरिचेल्ली",
+      "gt": "टोरिचेल्ली"
+    },
+    {
+      "image": "himalaya_indic/0000/00175.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "खादवाली",
+      "gt": "खादवाली"
+    },
+    {
+      "image": "himalaya_indic/0000/00176.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "विप्ताष्पाला",
+      "gt": "विप्ताष्पाला"
+    },
+    {
+      "image": "himalaya_indic/0000/00177.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "चिपी",
+      "gt": "चिपी"
+    },
+    {
+      "image": "himalaya_indic/0000/00178.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पुनास्थर्त्वान्नाएं",
+      "gt": "पुनार्स्थाप्नाएं"
+    },
+    {
+      "image": "himalaya_indic/0000/00179.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इलमई",
+      "gt": "इलमई"
+    },
+    {
+      "image": "himalaya_indic/0000/00180.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बाजरातील",
+      "gt": "बाजरातील"
+    },
+    {
+      "image": "himalaya_indic/0000/00181.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पैरामौन",
+      "gt": "पैरागोन"
+    },
+    {
+      "image": "himalaya_indic/0000/00182.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आगाहश्र",
+      "gt": "आगाहश्र"
+    },
+    {
+      "image": "himalaya_indic/0000/00183.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अँटलीने",
+      "gt": "अ‍ॅटलीने"
+    },
+    {
+      "image": "himalaya_indic/0000/00184.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "चर्मप्रसाधन",
+      "gt": "चर्मप्रसाधन"
+    },
+    {
+      "image": "himalaya_indic/0000/00185.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "काँनविलर",
+      "gt": "कॉनविलर"
+    },
+    {
+      "image": "himalaya_indic/0000/00186.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रतिस्प्रधि",
+      "gt": "प्रतिस्प्रधि"
+    },
+    {
+      "image": "himalaya_indic/0000/00187.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "साइक्तर",
+      "gt": "सावस्तर"
+    },
+    {
+      "image": "himalaya_indic/0000/00188.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रतिष्ठांकडे",
+      "gt": "प्रतिष्ठांकडे"
+    },
+    {
+      "image": "himalaya_indic/0000/00189.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बंदारचे",
+      "gt": "बंदारचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00190.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्लेनीमीटर",
+      "gt": "प्लेनीमीटर"
+    },
+    {
+      "image": "himalaya_indic/0000/00191.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मुंसिफ़",
+      "gt": "मुंसिफ़"
+    },
+    {
+      "image": "himalaya_indic/0000/00192.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वंशालोकसंज्ञम्",
+      "gt": "तंत्रालोकसंज्ञम्"
+    },
+    {
+      "image": "himalaya_indic/0000/00193.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अँड्व्हान्स",
+      "gt": "ॲड्व्हान्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00194.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "केम्बैफ़्ट",
+      "gt": "कैमशैफ़्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00195.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मृत्यूप्रमाण",
+      "gt": "मृत्यूप्रमाण"
+    },
+    {
+      "image": "himalaya_indic/0000/00196.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अरिमद्दन",
+      "gt": "अरिमद्दन"
+    },
+    {
+      "image": "himalaya_indic/0000/00197.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "गद्यरचनाएँ",
+      "gt": "गद्यरचनाएँ"
+    },
+    {
+      "image": "himalaya_indic/0000/00198.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "निवन्धकार",
+      "gt": "निवन्धकार"
+    },
+    {
+      "image": "himalaya_indic/0000/00199.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अस्तरूप",
+      "gt": "अस्तरूप"
+    },
+    {
+      "image": "himalaya_indic/0000/00200.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एम०ओ०एल०",
+      "gt": "एम०ओ०एल०"
+    },
+    {
+      "image": "himalaya_indic/0000/00201.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अर्थशास्त्रमिदं",
+      "gt": "अर्थशास्त्रमिदं"
+    },
+    {
+      "image": "himalaya_indic/0000/00202.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शिवार्",
+      "gt": "शिवार्"
+    },
+    {
+      "image": "himalaya_indic/0000/00203.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "देशबांधवोने",
+      "gt": "देशबांधवोने"
+    },
+    {
+      "image": "himalaya_indic/0000/00204.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पुरानानुरु",
+      "gt": "पुरानानुरु"
+    },
+    {
+      "image": "himalaya_indic/0000/00205.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "चामड्याचा",
+      "gt": "चामड्याचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00206.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3,
+        "cer": 0.3,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आप्तेशही",
+      "gt": "आप्तेष्टही"
+    },
+    {
+      "image": "himalaya_indic/0000/00207.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "सारि",
+      "gt": "रसरि"
+    },
+    {
+      "image": "himalaya_indic/0000/00208.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0833,
+        "cer": 0.0833,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जेनीग्सच्या",
+      "gt": "जेनींग्सच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00209.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "त्रेच्यावेळी",
+      "gt": "त्रेच्यावेळी"
+    },
+    {
+      "image": "himalaya_indic/0000/00210.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कैप्सूलीकृत",
+      "gt": "कैप्सूलीकृत"
+    },
+    {
+      "image": "himalaya_indic/0000/00211.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आयोके",
+      "gt": "आयोमेद"
+    },
+    {
+      "image": "himalaya_indic/0000/00212.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मातसईच्या",
+      "gt": "भातसईच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00213.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 25.0,
+        "cer": 25.0,
+        "wer": 6.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "The text in the image is:",
+      "gt": "ए"
+    },
+    {
+      "image": "himalaya_indic/0000/00214.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "नर्सिपुर",
+      "gt": "नर्सिपुर"
+    },
+    {
+      "image": "himalaya_indic/0000/00215.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8182,
+        "cer": 0.8182,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कोलाडामध्ये",
+      "gt": "आनंदवनाच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00216.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रातन्ज",
+      "gt": "रातन्ज"
+    },
+    {
+      "image": "himalaya_indic/0000/00217.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6667,
+        "cer": 0.6667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "एवकुर्डेस",
+      "gt": "एवकुईस"
+    },
+    {
+      "image": "himalaya_indic/0000/00218.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1176,
+        "cer": 0.1176,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ब्राम्हणेतरांचे",
+      "gt": "ब्राम्हणेत्तरांचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00219.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हिंसाभास",
+      "gt": "हिंसाभास"
+    },
+    {
+      "image": "himalaya_indic/0000/00220.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अंगाभेवती",
+      "gt": "अंगाभेवती"
+    },
+    {
+      "image": "himalaya_indic/0000/00221.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4286,
+        "cer": 0.4286,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जागनावघी",
+      "gt": "नानावधी"
+    },
+    {
+      "image": "himalaya_indic/0000/00222.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रोजेक्शनिस्ट",
+      "gt": "प्रोजेक्शनिस्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00223.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.625,
+        "cer": 0.625,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अस्थिवानता",
+      "gt": "अभिधानतः"
+    },
+    {
+      "image": "himalaya_indic/0000/00224.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मानण्यातून",
+      "gt": "मानण्यातून"
+    },
+    {
+      "image": "himalaya_indic/0000/00225.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कावेरीपत्तनम्",
+      "gt": "कावेरीपत्तनम्"
+    },
+    {
+      "image": "himalaya_indic/0000/00226.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "तूअर",
+      "gt": "तूअर"
+    },
+    {
+      "image": "himalaya_indic/0000/00227.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2222,
+        "cer": 0.2222,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्रेद्राण्ग",
+      "gt": "प्रेद्राग"
+    },
+    {
+      "image": "himalaya_indic/0000/00228.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ज़ेरोंकोंफ़",
+      "gt": "ज़ेरोंकोंफ़"
+    },
+    {
+      "image": "himalaya_indic/0000/00229.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रायाराव",
+      "gt": "रायाराव"
+    },
+    {
+      "image": "himalaya_indic/0000/00230.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "म्लेवित",
+      "gt": "म्लेक्षित"
+    },
+    {
+      "image": "himalaya_indic/0000/00231.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "दानाध्यक्षाचे",
+      "gt": "दानाध्यक्षाचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00232.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "डावखोरे",
+      "gt": "डावखोरे"
+    },
+    {
+      "image": "himalaya_indic/0000/00233.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "संयंत्रात",
+      "gt": "संयंत्रात"
+    },
+    {
+      "image": "himalaya_indic/0000/00234.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पुसेशी",
+      "gt": "पुसेशी"
+    },
+    {
+      "image": "himalaya_indic/0000/00235.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लिचेबहारे",
+      "gt": "लिचेनस्टेन"
+    },
+    {
+      "image": "himalaya_indic/0000/00236.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "परेशान",
+      "gt": "परेशान"
+    },
+    {
+      "image": "himalaya_indic/0000/00237.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3636,
+        "cer": 0.3636,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "देण्याकडूनचे",
+      "gt": "देण्यामागचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00238.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एमाण्डा",
+      "gt": "एमाण्डा"
+    },
+    {
+      "image": "himalaya_indic/0000/00239.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मुतलाना",
+      "gt": "भुतलाना"
+    },
+    {
+      "image": "himalaya_indic/0000/00240.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शस्त्रनिर्मिती",
+      "gt": "शस्त्रनिर्मिती"
+    },
+    {
+      "image": "himalaya_indic/0000/00241.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3,
+        "cer": 0.3,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मॅद्यांना",
+      "gt": "मेंढ्यांना"
+    },
+    {
+      "image": "himalaya_indic/0000/00242.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "परिचिति",
+      "gt": "परिचिति"
+    },
+    {
+      "image": "himalaya_indic/0000/00243.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "विदुषि",
+      "gt": "विदुषि"
+    },
+    {
+      "image": "himalaya_indic/0000/00244.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "डॅपसोनच्या",
+      "gt": "डॅपसोनच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00245.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "सहलेखकडी",
+      "gt": "सहलेखकही"
+    },
+    {
+      "image": "himalaya_indic/0000/00246.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मिकाईल",
+      "gt": "मिकाईल"
+    },
+    {
+      "image": "himalaya_indic/0000/00247.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "धौलावीरा",
+      "gt": "धौलावीरा"
+    },
+    {
+      "image": "himalaya_indic/0000/00248.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8571,
+        "cer": 0.8571,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मॉर्डियाओं",
+      "gt": "मॉडलरों"
+    },
+    {
+      "image": "himalaya_indic/0000/00249.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8,
+        "cer": 0.8,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्लाइसिया",
+      "gt": "फ़ाइब्रोसा"
+    },
+    {
+      "image": "himalaya_indic/0000/00250.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4211,
+        "cer": 0.4211,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "धर्मंशास्त्रावलोक",
+      "gt": "धर्मशास्त्रशब्दकोषः"
+    },
+    {
+      "image": "himalaya_indic/0000/00251.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "केनरवाइसे",
+      "gt": "फेनरबाहसे"
+    },
+    {
+      "image": "himalaya_indic/0000/00252.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "उधाड्यातला",
+      "gt": "उघड्यावरचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00253.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इलन",
+      "gt": "इलन"
+    },
+    {
+      "image": "himalaya_indic/0000/00254.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जेस्जिज़",
+      "gt": "जेञ्जि"
+    },
+    {
+      "image": "himalaya_indic/0000/00255.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "विशुद्धतक़ारखे",
+      "gt": "विशुद्धचक्राख्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00256.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कोल्हापूरसारख्या",
+      "gt": "कोल्हापूरसारख्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00257.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "लॅबोरेटरीचे",
+      "gt": "लॅबोरेटरीचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00258.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पर्वतप्रणालीच्या",
+      "gt": "पर्वतप्रणालीच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00259.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "उपंग",
+      "gt": "उपंग"
+    },
+    {
+      "image": "himalaya_indic/0000/00260.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्वसमाहित",
+      "gt": "स्वसमाहित"
+    },
+    {
+      "image": "himalaya_indic/0000/00261.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "लिओनोर्ड",
+      "gt": "लिओनोर्ड"
+    },
+    {
+      "image": "himalaya_indic/0000/00262.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बेहिंगला",
+      "gt": "बेह्रिंगला"
+    },
+    {
+      "image": "himalaya_indic/0000/00263.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अधिसभेत",
+      "gt": "अधिसभेत"
+    },
+    {
+      "image": "himalaya_indic/0000/00264.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0714,
+        "cer": 0.0714,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कल्पद्रमांकुर",
+      "gt": "कल्पद्रुमांकुर"
+    },
+    {
+      "image": "himalaya_indic/0000/00265.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "छछुंदरो",
+      "gt": "छछुंदरों"
+    },
+    {
+      "image": "himalaya_indic/0000/00266.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मदिरगर्भ",
+      "gt": "मंदिरगर्भ"
+    },
+    {
+      "image": "himalaya_indic/0000/00267.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मगावली",
+      "gt": "मगावली"
+    },
+    {
+      "image": "himalaya_indic/0000/00268.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "राजाभाऊंच्या",
+      "gt": "राजाभाऊंच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00269.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "यजामान्",
+      "gt": "यजमानं"
+    },
+    {
+      "image": "himalaya_indic/0000/00270.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "यॉर्क",
+      "gt": "यॉर्क"
+    },
+    {
+      "image": "himalaya_indic/0000/00271.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0769,
+        "cer": 0.0769,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वाल्यव्यवस्था",
+      "gt": "वाल्वव्यवस्था"
+    },
+    {
+      "image": "himalaya_indic/0000/00272.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "नेपोलुत्तिने",
+      "gt": "नेपोमुसेनो"
+    },
+    {
+      "image": "himalaya_indic/0000/00273.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4,
+        "cer": 0.4,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बॉड",
+      "gt": "ब्वॉड"
+    },
+    {
+      "image": "himalaya_indic/0000/00274.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लाखेलपर्यंत",
+      "gt": "लाहोरापर्यंत"
+    },
+    {
+      "image": "himalaya_indic/0000/00275.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लानलेनार्थे",
+      "gt": "हानलेमध्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00276.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1818,
+        "cer": 0.1818,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "गाइयांमधील",
+      "gt": "गाड्यांमधील"
+    },
+    {
+      "image": "himalaya_indic/0000/00277.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पूर्वं",
+      "gt": "पूर्वै"
+    },
+    {
+      "image": "himalaya_indic/0000/00278.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कीर्तनकारांकडून",
+      "gt": "कीर्तनकारांकडून"
+    },
+    {
+      "image": "himalaya_indic/0000/00279.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बैंड्ट",
+      "gt": "बैंड्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00280.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शीधे",
+      "gt": "शीधे"
+    },
+    {
+      "image": "himalaya_indic/0000/00281.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "फ़िल्मफ़ेयरः बाजीराव मस्तानी सर्वश्रेष्ठ फ़िल्म",
+      "gt": "फ़िल्मफ़ेयरः बाजीराव मस्तानी सर्वश्रेष्ठ फ़िल्म"
+    },
+    {
+      "image": "himalaya_indic/0000/00282.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पत्रओ",
+      "gt": "पत्रओ"
+    },
+    {
+      "image": "himalaya_indic/0000/00283.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "परावठा",
+      "gt": "परावठा"
+    },
+    {
+      "image": "himalaya_indic/0000/00284.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "हातोहातच्या",
+      "gt": "हातोहातच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00285.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5714,
+        "cer": 0.5714,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "होजताल",
+      "gt": "है।जवाब"
+    },
+    {
+      "image": "himalaya_indic/0000/00286.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रसदारुं",
+      "gt": "रसदारु"
+    },
+    {
+      "image": "himalaya_indic/0000/00287.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एंटोली",
+      "gt": "एंटोली"
+    },
+    {
+      "image": "himalaya_indic/0000/00288.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4545,
+        "cer": 0.4545,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "गुणवृद्धिचे",
+      "gt": "गुणसूत्राचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00289.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "स्वलोदोव्स्का",
+      "gt": "स्क्लोदोव्स्का"
+    },
+    {
+      "image": "himalaya_indic/0000/00290.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रसिद्धिप्राप्ति",
+      "gt": "प्रसिद्धिप्राप्ति"
+    },
+    {
+      "image": "himalaya_indic/0000/00291.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "स्थलांचींच",
+      "gt": "स्थलांचीं"
+    },
+    {
+      "image": "himalaya_indic/0000/00292.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आलेकझांडर",
+      "gt": "आलेक्झांडर"
+    },
+    {
+      "image": "himalaya_indic/0000/00293.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आकडेमोडीसाठी",
+      "gt": "आकडेमोडीसाठी"
+    },
+    {
+      "image": "himalaya_indic/0000/00294.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ब्रेनैन",
+      "gt": "ब्रेनैन"
+    },
+    {
+      "image": "himalaya_indic/0000/00295.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मॉडरेटों",
+      "gt": "मॉडरेटों"
+    },
+    {
+      "image": "himalaya_indic/0000/00296.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "छबीस",
+      "gt": "छबीस"
+    },
+    {
+      "image": "himalaya_indic/0000/00297.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0833,
+        "cer": 0.0833,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "संघलनाबरोबरच",
+      "gt": "संचलनाबरोबरच"
+    },
+    {
+      "image": "himalaya_indic/0000/00298.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कैंटकावर",
+      "gt": "कीटकावर"
+    },
+    {
+      "image": "himalaya_indic/0000/00299.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0909,
+        "cer": 0.0909,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "राजद्रोहियों",
+      "gt": "राजद्रोहियो"
+    },
+    {
+      "image": "himalaya_indic/0000/00300.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मापकृति",
+      "gt": "मोमकृति"
+    },
+    {
+      "image": "himalaya_indic/0000/00301.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्रज्ञानुसार",
+      "gt": "जन्मानुसार"
+    },
+    {
+      "image": "himalaya_indic/0000/00302.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वधकर्यांची",
+      "gt": "वधकर्यांची"
+    },
+    {
+      "image": "himalaya_indic/0000/00303.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रसन्न्ता",
+      "gt": "प्रसन्न्ता"
+    },
+    {
+      "image": "himalaya_indic/0000/00304.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सोडिनम",
+      "gt": "सोडिनम"
+    },
+    {
+      "image": "himalaya_indic/0000/00305.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3846,
+        "cer": 0.3846,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "गैस्ट्रोकार्डिया",
+      "gt": "गैस्ट्रोकालिक"
+    },
+    {
+      "image": "himalaya_indic/0000/00306.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ऐन्द्रिकता",
+      "gt": "ऐन्द्रिकता"
+    },
+    {
+      "image": "himalaya_indic/0000/00307.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सप्तांगों",
+      "gt": "सप्तांगों"
+    },
+    {
+      "image": "himalaya_indic/0000/00308.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7143,
+        "cer": 0.7143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "होंगे",
+      "gt": "तीरांचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00309.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3636,
+        "cer": 0.3636,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ह्यंगलंडनंतर",
+      "gt": "इंग्लंडनंतर"
+    },
+    {
+      "image": "himalaya_indic/0000/00310.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पातंजलयोग",
+      "gt": "पातंजलयोग"
+    },
+    {
+      "image": "himalaya_indic/0000/00311.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मुस्तफाखान",
+      "gt": "मुस्तफाखान"
+    },
+    {
+      "image": "himalaya_indic/0000/00312.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "उदैत्",
+      "gt": "उदैत्"
+    },
+    {
+      "image": "himalaya_indic/0000/00313.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्मीटनियन",
+      "gt": "स्मीटनियन"
+    },
+    {
+      "image": "himalaya_indic/0000/00314.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "योंचना",
+      "gt": "योचना"
+    },
+    {
+      "image": "himalaya_indic/0000/00315.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "प्रतिष्टंभ",
+      "gt": "प्रतिष्टंभ"
+    },
+    {
+      "image": "himalaya_indic/0000/00316.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्टीफनो",
+      "gt": "स्टीफनो"
+    },
+    {
+      "image": "himalaya_indic/0000/00317.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "चित्रपटश्रृंखलेमध्ये",
+      "gt": "चित्रपटशृंखलेमध्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00318.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3333,
+        "cer": 0.3333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वाइक्शन",
+      "gt": "वाइव्रेशन"
+    },
+    {
+      "image": "himalaya_indic/0000/00319.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जियोर्दानो",
+      "gt": "जियोर्दानो"
+    },
+    {
+      "image": "himalaya_indic/0000/00320.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3,
+        "cer": 0.3,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "माऊस़्करे",
+      "gt": "माऊसद्वारे"
+    },
+    {
+      "image": "himalaya_indic/0000/00321.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मधायामावती",
+      "gt": "मधायामावती"
+    },
+    {
+      "image": "himalaya_indic/0000/00322.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बुलक",
+      "gt": "तुग्लक"
+    },
+    {
+      "image": "himalaya_indic/0000/00323.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.8333,
+        "cer": 0.8333,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "न्हीन्नी",
+      "gt": "गोन्धी"
+    },
+    {
+      "image": "himalaya_indic/0000/00324.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ताइली",
+      "gt": "ताईज़ी"
+    },
+    {
+      "image": "himalaya_indic/0000/00325.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4,
+        "cer": 0.4,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वैश्या",
+      "gt": "वैभ्य"
+    },
+    {
+      "image": "himalaya_indic/0000/00326.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "नागरिकता क़ानून: कर्नाटक में विरोध-प्रदर्शन के दौरान चली गोली",
+      "gt": "नागरिकता क़ानून: कर्नाटक में विरोध-प्रदर्शन के दौरान चली गोली"
+    },
+    {
+      "image": "himalaya_indic/0000/00327.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0909,
+        "cer": 0.0909,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कनफ़ेडरेशन्स",
+      "gt": "कनफेडरेशन्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00328.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रणदेव",
+      "gt": "रणदेव"
+    },
+    {
+      "image": "himalaya_indic/0000/00329.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्त्रीबीजांची",
+      "gt": "स्त्रीबीजांची"
+    },
+    {
+      "image": "himalaya_indic/0000/00330.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बँकवाटरचा",
+      "gt": "बॅकवाटरचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00331.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.875,
+        "cer": 0.875,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रुक्तानिया",
+      "gt": "सुधारिणी"
+    },
+    {
+      "image": "himalaya_indic/0000/00332.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "यशस्वी जायसवाल की कहानी आपके दिल को छू लेगी",
+      "gt": "यशस्वी जायसवाल की कहानी आपके दिल को छू लेगी"
+    },
+    {
+      "image": "himalaya_indic/0000/00333.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "भावसाधना",
+      "gt": "भावसाधना"
+    },
+    {
+      "image": "himalaya_indic/0000/00334.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "नेरोगेज",
+      "gt": "नेरोगेज"
+    },
+    {
+      "image": "himalaya_indic/0000/00335.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "तत्वांमुळे",
+      "gt": "तत्वांमुळे"
+    },
+    {
+      "image": "himalaya_indic/0000/00336.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पूजाफूल",
+      "gt": "पूजाफूल"
+    },
+    {
+      "image": "himalaya_indic/0000/00337.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ईएफ़",
+      "gt": "ईएफ़"
+    },
+    {
+      "image": "himalaya_indic/0000/00338.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कुंक्षचाचे",
+      "gt": "मुद्राक्षरांचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00339.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्रवेशच्छारावर",
+      "gt": "प्रवेशव्दारावर"
+    },
+    {
+      "image": "himalaya_indic/0000/00340.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1538,
+        "cer": 0.1538,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "तिसाकिकाल्सिन",
+      "gt": "तिसोकिकात्सिन"
+    },
+    {
+      "image": "himalaya_indic/0000/00341.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "ब्रून्ज",
+      "gt": "ब्रून्ज"
+    },
+    {
+      "image": "himalaya_indic/0000/00342.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जर्मनों",
+      "gt": "जर्मनो"
+    },
+    {
+      "image": "himalaya_indic/0000/00343.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6667,
+        "cer": 0.6667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कमर्पिना",
+      "gt": "कर्मामेला"
+    },
+    {
+      "image": "himalaya_indic/0000/00344.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4667,
+        "cer": 0.4667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "गामगंचावलिकूर",
+      "gt": "ग्रामपंचायतिकडे"
+    },
+    {
+      "image": "himalaya_indic/0000/00345.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रतोकी",
+      "gt": "रत्नोंकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00346.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "झोपते",
+      "gt": "झोपते"
+    },
+    {
+      "image": "himalaya_indic/0000/00347.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "धमन्यामधील",
+      "gt": "धमन्यामधील"
+    },
+    {
+      "image": "himalaya_indic/0000/00348.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "शिष्यासोबत",
+      "gt": "शिष्यासोबत"
+    },
+    {
+      "image": "himalaya_indic/0000/00349.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पुरीची",
+      "gt": "पुरीची"
+    },
+    {
+      "image": "himalaya_indic/0000/00350.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पिक्वेरिंग",
+      "gt": "पिक्केरिंग"
+    },
+    {
+      "image": "himalaya_indic/0000/00351.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1429,
+        "cer": 0.1429,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कक्षेत",
+      "gt": "क़क्षेत"
+    },
+    {
+      "image": "himalaya_indic/0000/00352.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0741,
+        "cer": 0.0741,
+        "wer": 0.25,
+        "bleu": 0.0,
+        "f1": 0.75
+      },
+      "pred": "महाराष्ट्र में गतिरोध ख़्तम",
+      "gt": "महाराष्ट्र में गतिरोध ख़त्म"
+    },
+    {
+      "image": "himalaya_indic/0000/00353.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "विलियम्स बहनें ओलंपिक से बाहर हुईं",
+      "gt": "विलियम्स बहनें ओलंपिक से बाहर हुईं"
+    },
+    {
+      "image": "himalaya_indic/0000/00354.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "१९६४की",
+      "gt": "१९८१ची"
+    },
+    {
+      "image": "himalaya_indic/0000/00355.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "भारत-पाक दोस्ती अब भी दूर की कौड़ी?",
+      "gt": "भारत-पाक दोस्ती अब भी दूर की कौड़ी?"
+    },
+    {
+      "image": "himalaya_indic/0000/00356.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "थलनिवासी",
+      "gt": "थलनिवासी"
+    },
+    {
+      "image": "himalaya_indic/0000/00357.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आंनदराव",
+      "gt": "आंनदराव"
+    },
+    {
+      "image": "himalaya_indic/0000/00358.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सिद्धान्ताप्रमाणेच",
+      "gt": "सिद्धान्ताप्रमाणेच"
+    },
+    {
+      "image": "himalaya_indic/0000/00359.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "डेट्रॉएड",
+      "gt": "डेट्रॉएड"
+    },
+    {
+      "image": "himalaya_indic/0000/00360.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "देवळांन",
+      "gt": "देवळांन"
+    },
+    {
+      "image": "himalaya_indic/0000/00361.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1538,
+        "cer": 0.1538,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हजीमलेगपासून",
+      "gt": "हाजीमलंगपासून"
+    },
+    {
+      "image": "himalaya_indic/0000/00362.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पारिभाशिक",
+      "gt": "पारिभाशिक"
+    },
+    {
+      "image": "himalaya_indic/0000/00363.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6154,
+        "cer": 0.6154,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "श्रावाशासी",
+      "gt": "क्षात्रावासों"
+    },
+    {
+      "image": "himalaya_indic/0000/00364.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.7143,
+        "cer": 0.7143,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मन्नावणार्यांची",
+      "gt": "नव्ययथार्थवादी"
+    },
+    {
+      "image": "himalaya_indic/0000/00365.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मेरुजी",
+      "gt": "भेरुजी"
+    },
+    {
+      "image": "himalaya_indic/0000/00366.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पुष्पत्र",
+      "gt": "पुष्पत्र"
+    },
+    {
+      "image": "himalaya_indic/0000/00367.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "खानायक",
+      "gt": "खानायक"
+    },
+    {
+      "image": "himalaya_indic/0000/00368.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "किया।हावर्ड",
+      "gt": "किया।हावर्ड"
+    },
+    {
+      "image": "himalaya_indic/0000/00369.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "दिंडकरात",
+      "gt": "दिंडक्कल"
+    },
+    {
+      "image": "himalaya_indic/0000/00370.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मार्गिनलोंग",
+      "gt": "अधोजठरप्रदेश"
+    },
+    {
+      "image": "himalaya_indic/0000/00371.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "महाराजांचेसुद्धा",
+      "gt": "महाराजांचेसुद्धा"
+    },
+    {
+      "image": "himalaya_indic/0000/00372.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5625,
+        "cer": 0.5625,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कायोस्ट्रूटिक्स",
+      "gt": "फ़ार्मास्युटिक्स"
+    },
+    {
+      "image": "himalaya_indic/0000/00373.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इयोविन",
+      "gt": "इयोविन"
+    },
+    {
+      "image": "himalaya_indic/0000/00374.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अद्वृष्ट",
+      "gt": "अट्टूर"
+    },
+    {
+      "image": "himalaya_indic/0000/00375.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अधिभाष्य",
+      "gt": "अधिभाष्य"
+    },
+    {
+      "image": "himalaya_indic/0000/00376.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अल्फ४",
+      "gt": "अल्फ४"
+    },
+    {
+      "image": "himalaya_indic/0000/00377.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4545,
+        "cer": 0.4545,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "महानुग्राहाते",
+      "gt": "महानुभावावे"
+    },
+    {
+      "image": "himalaya_indic/0000/00378.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "भिनन्दन",
+      "gt": "भिनन्दन"
+    },
+    {
+      "image": "himalaya_indic/0000/00379.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "यात्रोपयोगी",
+      "gt": "यात्रोपयोगी"
+    },
+    {
+      "image": "himalaya_indic/0000/00380.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बढ़ताहै",
+      "gt": "बढ़ताहैं"
+    },
+    {
+      "image": "himalaya_indic/0000/00381.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.875,
+        "cer": 0.875,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लिस्टेंस",
+      "gt": "निपाणीचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00382.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "वर्डीस",
+      "gt": "वर्डीस"
+    },
+    {
+      "image": "himalaya_indic/0000/00383.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.375,
+        "cer": 0.375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वारईगाम",
+      "gt": "बाराईमाम"
+    },
+    {
+      "image": "himalaya_indic/0000/00384.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मुस्सो",
+      "gt": "मुस्सो"
+    },
+    {
+      "image": "himalaya_indic/0000/00385.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6667,
+        "cer": 0.6667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "वृत्तबती",
+      "gt": "धृतवती"
+    },
+    {
+      "image": "himalaya_indic/0000/00386.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.75,
+        "cer": 0.75,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "प्रकटनाम",
+      "gt": "पद्मनाभः"
+    },
+    {
+      "image": "himalaya_indic/0000/00387.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पेड्रोवा",
+      "gt": "पेड्रोचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00388.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एसकिलस",
+      "gt": "एसकिलस"
+    },
+    {
+      "image": "himalaya_indic/0000/00389.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "म्युकोसल",
+      "gt": "म्युकोसल"
+    },
+    {
+      "image": "himalaya_indic/0000/00390.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3077,
+        "cer": 0.3077,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हवर्थुलसच्या",
+      "gt": "हर्क्युलसच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00391.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.125,
+        "cer": 0.125,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "शोणाकडे",
+      "gt": "शोषणाकडे"
+    },
+    {
+      "image": "himalaya_indic/0000/00392.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4,
+        "cer": 0.4,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "थतन",
+      "gt": "थत्तन"
+    },
+    {
+      "image": "himalaya_indic/0000/00393.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "उत्सवासारखा",
+      "gt": "उत्सवासारखा"
+    },
+    {
+      "image": "himalaya_indic/0000/00394.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बग्रे",
+      "gt": "बग्ने"
+    },
+    {
+      "image": "himalaya_indic/0000/00395.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "विक्रयों",
+      "gt": "विक्रयों"
+    },
+    {
+      "image": "himalaya_indic/0000/00396.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2222,
+        "cer": 0.2222,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कन्यागतिस",
+      "gt": "कन्यागतची"
+    },
+    {
+      "image": "himalaya_indic/0000/00397.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मिस्सीसिप्पी",
+      "gt": "मिस्सीसिप्पी"
+    },
+    {
+      "image": "himalaya_indic/0000/00398.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आयलाइन",
+      "gt": "आयलाइन"
+    },
+    {
+      "image": "himalaya_indic/0000/00399.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4,
+        "cer": 0.4,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कपितुल",
+      "gt": "कपितय"
+    },
+    {
+      "image": "himalaya_indic/0000/00400.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जलफोन",
+      "gt": "जलफोन"
+    },
+    {
+      "image": "himalaya_indic/0000/00401.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4444,
+        "cer": 0.4444,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हैंफेएस्टर",
+      "gt": "हेफिएस्टस"
+    },
+    {
+      "image": "himalaya_indic/0000/00402.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बंगालीतला",
+      "gt": "बंगालीतला"
+    },
+    {
+      "image": "himalaya_indic/0000/00403.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मार्टीमर",
+      "gt": "मार्टीमर"
+    },
+    {
+      "image": "himalaya_indic/0000/00404.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "समावेशाबद्दल",
+      "gt": "समावेशाबद्दल"
+    },
+    {
+      "image": "himalaya_indic/0000/00405.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सिज़ोडॉन",
+      "gt": "सिज़ोडॉन"
+    },
+    {
+      "image": "himalaya_indic/0000/00406.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रिलिझ",
+      "gt": "रिलिझ"
+    },
+    {
+      "image": "himalaya_indic/0000/00407.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "समाधीअवस्था",
+      "gt": "समाधीअवस्था"
+    },
+    {
+      "image": "himalaya_indic/0000/00408.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कुल्तिसिडे",
+      "gt": "कुलिसिडे"
+    },
+    {
+      "image": "himalaya_indic/0000/00409.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6364,
+        "cer": 0.6364,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हार्फेल्ड्स",
+      "gt": "वुर्टेमवर्ग"
+    },
+    {
+      "image": "himalaya_indic/0000/00410.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आयोडोमीथे",
+      "gt": "आयोडोमीथेन"
+    },
+    {
+      "image": "himalaya_indic/0000/00411.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.0,
+        "cer": 1.0,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लैटेन्टा",
+      "gt": "मॉईनला"
+    },
+    {
+      "image": "himalaya_indic/0000/00412.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "परवान्याखली",
+      "gt": "परवान्याखली"
+    },
+    {
+      "image": "himalaya_indic/0000/00413.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "विक्रीटम्बिका",
+      "gt": "विक्रीटम्बिका"
+    },
+    {
+      "image": "himalaya_indic/0000/00414.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्वभावधर्मानुसार",
+      "gt": "स्वभावधर्मानुसार"
+    },
+    {
+      "image": "himalaya_indic/0000/00415.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5556,
+        "cer": 0.5556,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रादीण",
+      "gt": "राद्बौर्ण"
+    },
+    {
+      "image": "himalaya_indic/0000/00416.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "रंगपुरम",
+      "gt": "रंगपुरम"
+    },
+    {
+      "image": "himalaya_indic/0000/00417.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "इयोफ्",
+      "gt": "इयोफ़"
+    },
+    {
+      "image": "himalaya_indic/0000/00418.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2727,
+        "cer": 0.2727,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "इन्नुरियन",
+      "gt": "इन्द्युरियन"
+    },
+    {
+      "image": "himalaya_indic/0000/00419.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "अव्वम्मा",
+      "gt": "अच्चम्मा"
+    },
+    {
+      "image": "himalaya_indic/0000/00420.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कॉलनीमधील",
+      "gt": "कॉलनीमधील"
+    },
+    {
+      "image": "himalaya_indic/0000/00421.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "लोच्या",
+      "gt": "लोच्या"
+    },
+    {
+      "image": "himalaya_indic/0000/00422.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "संबंधचिंता",
+      "gt": "संबंधचिंता"
+    },
+    {
+      "image": "himalaya_indic/0000/00423.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जालपक्षों",
+      "gt": "जालपक्षों"
+    },
+    {
+      "image": "himalaya_indic/0000/00424.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कोपीजेन्ट",
+      "gt": "कोपीजेन्ट"
+    },
+    {
+      "image": "himalaya_indic/0000/00425.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बेलगा",
+      "gt": "बेलगा"
+    },
+    {
+      "image": "himalaya_indic/0000/00426.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सोविल",
+      "gt": "सोविल"
+    },
+    {
+      "image": "himalaya_indic/0000/00427.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1111,
+        "cer": 0.1111,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ग्लूटेशीन",
+      "gt": "ग्लूटेथीन"
+    },
+    {
+      "image": "himalaya_indic/0000/00428.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "थोर्नहिल",
+      "gt": "थोर्नहिल"
+    },
+    {
+      "image": "himalaya_indic/0000/00429.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "परिनिर्माणों",
+      "gt": "परिनिर्माणों"
+    },
+    {
+      "image": "himalaya_indic/0000/00430.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "क्या ध्यान लगाने से बदलती है आपकी ज़िंदगी?",
+      "gt": "क्या ध्यान लगाने से बदलती है आपकी ज़िंदगी?"
+    },
+    {
+      "image": "himalaya_indic/0000/00431.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "खोज़बीन",
+      "gt": "खोज़बीन"
+    },
+    {
+      "image": "himalaya_indic/0000/00432.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एरिनात",
+      "gt": "एरिनात"
+    },
+    {
+      "image": "himalaya_indic/0000/00433.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2927,
+        "cer": 0.2927,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आदौग्रामाद्वृहिगत्वास्थानंकुर्यांसंपेक्षे",
+      "gt": "आदौग्रामाद्वहिर्गत्वास्नानंकुर्यात्सचैलकं"
+    },
+    {
+      "image": "himalaya_indic/0000/00434.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "यज़िदी",
+      "gt": "यज़िदी"
+    },
+    {
+      "image": "himalaya_indic/0000/00435.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मारूँ।",
+      "gt": "मारूँ।"
+    },
+    {
+      "image": "himalaya_indic/0000/00436.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "काफीकम",
+      "gt": "काफीकम"
+    },
+    {
+      "image": "himalaya_indic/0000/00437.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "यूक्रेन संकट: पुतिन को ओबामा की चेतावनी",
+      "gt": "यूक्रेन संकट: पुतिन को ओबामा की चेतावनी"
+    },
+    {
+      "image": "himalaya_indic/0000/00438.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सोनारकी",
+      "gt": "सोनारकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00439.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "बाह्यावरणावर",
+      "gt": "बाह्यावरणावर"
+    },
+    {
+      "image": "himalaya_indic/0000/00440.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "सुखगंया",
+      "gt": "सुखगया"
+    },
+    {
+      "image": "himalaya_indic/0000/00441.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्पेसिफिकेशनज़",
+      "gt": "स्पेसिफिकेशनज़"
+    },
+    {
+      "image": "himalaya_indic/0000/00442.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अमराळे",
+      "gt": "अमराळे"
+    },
+    {
+      "image": "himalaya_indic/0000/00443.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "द्वगांत",
+      "gt": "ढगांत"
+    },
+    {
+      "image": "himalaya_indic/0000/00444.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कौशकी",
+      "gt": "कौशकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00445.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "इन्हेंसिंग",
+      "gt": "इन्हेंसिंग"
+    },
+    {
+      "image": "himalaya_indic/0000/00446.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6207,
+        "cer": 0.6207,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "द्वनिमुग्नीमुल्यवानसंदर्भात",
+      "gt": "ध्वनिगुणीभूतव्यंग्यसंकीर्णभेद"
+    },
+    {
+      "image": "himalaya_indic/0000/00447.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "काछार",
+      "gt": "काछार"
+    },
+    {
+      "image": "himalaya_indic/0000/00448.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5,
+        "cer": 0.5,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हूलंयाकरता",
+      "gt": "हलेयाकला"
+    },
+    {
+      "image": "himalaya_indic/0000/00449.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "२परदव्याचा",
+      "gt": "२परद्रव्याचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00450.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "भेडकी",
+      "gt": "भेडकी"
+    },
+    {
+      "image": "himalaya_indic/0000/00451.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2857,
+        "cer": 0.2857,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "बच्चीं",
+      "gt": "बच्चोंं"
+    },
+    {
+      "image": "himalaya_indic/0000/00452.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0769,
+        "cer": 0.0769,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "ओंतरजालाकरिता",
+      "gt": "आंतरजालाकरिता"
+    },
+    {
+      "image": "himalaya_indic/0000/00453.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5714,
+        "cer": 0.5714,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आँसवालु",
+      "gt": "ऑसवाल्ड"
+    },
+    {
+      "image": "himalaya_indic/0000/00454.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.625,
+        "cer": 0.625,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "नाटय़हृद्य",
+      "gt": "नाटय़रूप"
+    },
+    {
+      "image": "himalaya_indic/0000/00455.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कृष्णाकडे",
+      "gt": "कृष्णाकडे"
+    },
+    {
+      "image": "himalaya_indic/0000/00456.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पूर्वजाओं",
+      "gt": "पूर्वजाओं"
+    },
+    {
+      "image": "himalaya_indic/0000/00457.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "धायोसाइनेट",
+      "gt": "थायोसाइनेट"
+    },
+    {
+      "image": "himalaya_indic/0000/00458.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "डिसीवें",
+      "gt": "डिसीम्ब्रे"
+    },
+    {
+      "image": "himalaya_indic/0000/00459.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2222,
+        "cer": 0.2222,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कोड४९५३७१",
+      "gt": "कोड४१५३११"
+    },
+    {
+      "image": "himalaya_indic/0000/00460.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "हॉलीवुड को दमदार बनाते भारतीय",
+      "gt": "हॉलीवुड को दमदार बनाते भारतीय"
+    },
+    {
+      "image": "himalaya_indic/0000/00461.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "कारकीर्दीसोबतच",
+      "gt": "कारकीर्दीसोबतच"
+    },
+    {
+      "image": "himalaya_indic/0000/00462.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "क्लीवलैंड",
+      "gt": "क्‍लीवलैंड"
+    },
+    {
+      "image": "himalaya_indic/0000/00463.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "दुर्बोधतेची",
+      "gt": "दुर्बोधतेची"
+    },
+    {
+      "image": "himalaya_indic/0000/00464.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कालिक्स्तों",
+      "gt": "कालिक्स्तो"
+    },
+    {
+      "image": "himalaya_indic/0000/00465.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "जिले",
+      "gt": "जिले़"
+    },
+    {
+      "image": "himalaya_indic/0000/00466.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मालिकापुरत",
+      "gt": "मालिकापुरत्त"
+    },
+    {
+      "image": "himalaya_indic/0000/00467.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "१९४८नंतर",
+      "gt": "१९४८नंतर"
+    },
+    {
+      "image": "himalaya_indic/0000/00468.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "एफिशियन्सीहि",
+      "gt": "एफिशियन्सीहि"
+    },
+    {
+      "image": "himalaya_indic/0000/00469.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.3636,
+        "cer": 0.3636,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "हितशेषांवर",
+      "gt": "हितशत्रूंवर"
+    },
+    {
+      "image": "himalaya_indic/0000/00470.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4,
+        "cer": 0.4,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "आरम्हों",
+      "gt": "आरमों"
+    },
+    {
+      "image": "himalaya_indic/0000/00471.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "भण्डक",
+      "gt": "भण्डक"
+    },
+    {
+      "image": "himalaya_indic/0000/00472.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.4375,
+        "cer": 0.4375,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "परिसमाप्तिचे",
+      "gt": "परिस‍म्‍पत्तियों"
+    },
+    {
+      "image": "himalaya_indic/0000/00473.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "अलम्बुसा",
+      "gt": "अलम्बुसा"
+    },
+    {
+      "image": "himalaya_indic/0000/00474.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पीचिट्लीचा",
+      "gt": "पीचिह्लीचा"
+    },
+    {
+      "image": "himalaya_indic/0000/00475.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सुरवती",
+      "gt": "सुरवती"
+    },
+    {
+      "image": "himalaya_indic/0000/00476.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "जकड़नों",
+      "gt": "जकड़नों"
+    },
+    {
+      "image": "himalaya_indic/0000/00477.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1667,
+        "cer": 0.1667,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "पितरां",
+      "gt": "णितरां"
+    },
+    {
+      "image": "himalaya_indic/0000/00478.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सोंफ",
+      "gt": "सोंफ"
+    },
+    {
+      "image": "himalaya_indic/0000/00479.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मराठवाड्यातला",
+      "gt": "मराठवाड्यातला"
+    },
+    {
+      "image": "himalaya_indic/0000/00480.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1,
+        "cer": 0.1,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "संस्थांनी",
+      "gt": "संस्‍थांनी"
+    },
+    {
+      "image": "himalaya_indic/0000/00481.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "फ़रमाइशी",
+      "gt": "फ़रमाइशी"
+    },
+    {
+      "image": "himalaya_indic/0000/00482.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.6,
+        "cer": 0.6,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "मारपाचा",
+      "gt": "अधरप्रावार"
+    },
+    {
+      "image": "himalaya_indic/0000/00483.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.2,
+        "cer": 0.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "कैसी",
+      "gt": "कैस़ी"
+    },
+    {
+      "image": "himalaya_indic/0000/00484.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "पयमाने",
+      "gt": "पयमाने"
+    },
+    {
+      "image": "himalaya_indic/0000/00485.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मेस्तरा",
+      "gt": "मेस्तरा"
+    },
+    {
+      "image": "himalaya_indic/0000/00486.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आँकनेवाली",
+      "gt": "आँकनेवाली"
+    },
+    {
+      "image": "himalaya_indic/0000/00487.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.5882,
+        "cer": 0.5882,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "लिष्पांजिकोंपे",
+      "gt": "निष्कर्षांविषयीचे"
+    },
+    {
+      "image": "himalaya_indic/0000/00488.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "उअत्तरी",
+      "gt": "उअत्तरी"
+    },
+    {
+      "image": "himalaya_indic/0000/00489.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.25,
+        "cer": 0.25,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "शाज़हून",
+      "gt": "शारजाहून"
+    },
+    {
+      "image": "himalaya_indic/0000/00490.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "आलानिया",
+      "gt": "आलानिया"
+    },
+    {
+      "image": "himalaya_indic/0000/00491.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "माध्यमांमार्फत",
+      "gt": "माध्यमांमार्फत"
+    },
+    {
+      "image": "himalaya_indic/0000/00492.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "स्वयंपाकघरांमध्ये",
+      "gt": "स्वयंपाकघरांमध्ये"
+    },
+    {
+      "image": "himalaya_indic/0000/00493.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "मयक",
+      "gt": "मयक"
+    },
+    {
+      "image": "himalaya_indic/0000/00494.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 1.2,
+        "cer": 1.2,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "रत्नकारा",
+      "gt": "रूफास"
+    },
+    {
+      "image": "himalaya_indic/0000/00495.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "गरहानी",
+      "gt": "गरहानी"
+    },
+    {
+      "image": "himalaya_indic/0000/00496.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.1875,
+        "cer": 0.1875,
+        "wer": 1.0,
+        "bleu": 0.0,
+        "f1": 0.0
+      },
+      "pred": "उद्द्रवण्यापूर्वीच",
+      "gt": "उद्भवण्यापूर्वीच"
+    },
+    {
+      "image": "himalaya_indic/0000/00497.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "सिमुलाकारा",
+      "gt": "सिमुलाकारा"
+    },
+    {
+      "image": "himalaya_indic/0000/00498.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 0.0,
+        "f1": 1.0
+      },
+      "pred": "यशोदेने",
+      "gt": "यशोदेने"
+    },
+    {
+      "image": "himalaya_indic/0000/00499.jpg",
+      "category": "himalaya_indic",
+      "metrics": {
+        "ned": 0.0,
+        "cer": 0.0,
+        "wer": 0.0,
+        "bleu": 1.0,
+        "f1": 1.0
+      },
+      "pred": "जैक्सन परिवार के सामानों की नीलामी",
+      "gt": "जैक्सन परिवार के सामानों की नीलामी"
+    }
+  ]
+}
