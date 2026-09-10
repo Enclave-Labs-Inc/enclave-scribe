@@ -49,6 +49,9 @@ vllm = [
 sglang = [
     "sglang[all]>=0.3.0",
 ]
+label = [
+    "streamlit>=1.30",                # iter-6 pilot review UI (scripts/label/review.py)
+]
 
 [tool.setuptools.packages.find]
 include = ["scribe*", "api*"]
