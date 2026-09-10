@@ -6,6 +6,25 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 5 status — 32B scoped, blocked on AWS quota
+
+**LoRA fine-tune of [`allenai/olmOCR-2-32B-1025`](https://huggingface.co/allenai/olmOCR-2-32B-1025) on iter-4's corpus (793 pseudo-labeled pages + 500 word replay). Config + regression harness + launch runbook shipped; actual training paused waiting for AWS P- and G-instance quota to be granted (0 vCPU at time of writing).**
+
+Pre-training dry-run on g5.4xlarge measured a new number worth caring about:
+
+| Metric (Devanagari word, 500 samples) | iter-3 | iter-4 | Δ |
+|---|---:|---:|---:|
+| CER ↓ | **0.2151** | **0.2808** | +0.0657 ❌ regression |
+| F1  ↑ | 0.5609 | **0.5976** | +0.0367 ✅ better |
+
+Iter-4 shipped without measuring word-level regression. Turns out it lost **6.6 pp of word-level CER** vs iter-3 — the 500 word-replay samples at 5:1 with page pseudo-labels weren't enough anti-forgetting protection. Iter-5's ship gate is updated: `word CER ≤ 21.5%` on `data/benchmark/himalaya_500.jsonl` as a hard gate, do not publish if regressed further.
+
+- **📝 Full dry-run writeup**: [`reports/iter5/DRYRUN.md`](reports/iter5/DRYRUN.md)
+- **▶️ Launch runbook (once quota lands)**: [`reports/iter5_runbook.md`](reports/iter5_runbook.md)
+- **⚙️ Configs**: [`configs/train/iter5.yaml`](configs/train/iter5.yaml) (p4de.24xlarge) · [`configs/train/iter5_g5.yaml`](configs/train/iter5_g5.yaml) (g5.48xlarge fallback)
+- **🧪 Regression harness**: `python scripts/eval_regression.py --adapter iter3:outputs/iter3 --adapter iter4:outputs/iter4 --devanagari_jsonl data/benchmark/himalaya_500.jsonl ...`
+- **🌱 Iter-6 pilot in parallel**: [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md) — human-labels track for the *root cause* of iter-4's regression, independent of iter-5's compute wait
+
 ## Iteration 4 status — Page-level Devanagari shipped
 
 **LoRA fine-tune resuming from iter-3, on 793 pseudo-labeled Devanagari page images (ai4bharat/indicdlp) + 500 word replay samples. 1h37m on g5.xlarge, ~$3 training. Fixes iter-3's dead-loop failure mode on long dense pages.**
@@ -190,10 +209,9 @@ reports/          Per-iteration writeups with charts
 - **Iter-2 ✅** — 30k mixed English OCR (DocVQA, XFUND, TextOCR, OmniDocBench, IDL), held-out benchmark, prompt-per-sample. Reference eval JSONs archived in `s3://enclave-scribe-checkpoints/results/iter2/`.
 - **Iter-3 ✅** — 28,824 Devanagari samples on OLMoCR-2-7B, 93× CER improvement (see above).
 - **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
-- **Iter-5 (planned)**:
-  1. Real human-labeled Devanagari pages (300–500 samples) to break the iter-3 pseudo-label ceiling — OR bigger base model (`allenai/olmOCR-2-32B-1025`) for more LoRA capacity
-  2. Formal English regression benchmark against both iter-3 and iter-4
-  3. Every iteration runs against [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a regression gate
+- **Iter-5 🛠️ in-flight** — 32B base (`allenai/olmOCR-2-32B-1025`) on the same corpus. Scoping + config + regression harness + dry-run findings shipped. **Blocked on AWS P/G quota** at time of writing. Dry-run revealed iter-4 regressed word-level CER by 6.6pp vs iter-3 — updated success gate: word CER ≤ 21.5%. See "Iteration 5" above.
+- **Iter-6 📝 planned in parallel** — human-labeled Devanagari pages pilot (100–300 samples) to address the pseudo-label ceiling directly. Runs alongside iter-5's compute wait since the labels problem is orthogonal to the base-model-size problem. See [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md).
+- **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
 
