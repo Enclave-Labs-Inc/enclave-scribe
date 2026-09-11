@@ -82,6 +82,12 @@ training_args:
   dataloader_num_workers: 8
   report_to: "wandb"
   run_name: "enclave-scribe-iter5-32b-g5"
-  fsdp: "full_shard auto_wrap"
+  fsdp: "full_shard auto_wrap offload"
   fsdp_config:
     fsdp_transformer_layer_cls_to_wrap: "Qwen2_5_VLDecoderLayer"
+    fsdp_sync_module_states: true         # only rank0 loads full model to CPU
+    fsdp_cpu_ram_efficient_loading: true  # HF wires low_cpu_mem_usage on rank0 load
+    fsdp_offload_params: true             # params live on CPU; only active shard on GPU
+    fsdp_use_orig_params: true            # required for LoRA (peft) + FSDP compat
+    fsdp_state_dict_type: "SHARDED_STATE_DICT"
+    activation_checkpointing: true
