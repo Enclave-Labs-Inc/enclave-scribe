@@ -69,9 +69,9 @@ training_args:
   warmup_steps: 20
   weight_decay: 0.01
   bf16: true
-  gradient_checkpointing: true
-  gradient_checkpointing_kwargs:
-    use_reentrant: false
+  # gradient_checkpointing disabled here — FSDP's activation_checkpointing
+  # in fsdp_config takes over (HF errors if both are on).
+  gradient_checkpointing: false
   use_liger_kernel: true
   ddp_find_unused_parameters: false
   remove_unused_columns: false
