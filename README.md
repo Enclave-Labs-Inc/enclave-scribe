@@ -6,24 +6,28 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
-## Iteration 5 status — 32B scoped, blocked on AWS quota
+## Iteration 5 status — postmortem shipped, no adapter, iter-6 elevated
 
-**LoRA fine-tune of [`allenai/olmOCR-2-32B-1025`](https://huggingface.co/allenai/olmOCR-2-32B-1025) on iter-4's corpus (793 pseudo-labeled pages + 500 word replay). Config + regression harness + launch runbook shipped; actual training paused waiting for AWS P- and G-instance quota to be granted (0 vCPU at time of writing).**
+**Iter-5 hit three independent walls and no adapter was trained. Full postmortem: [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).**
 
-Pre-training dry-run on g5.4xlarge measured a new number worth caring about:
+Short version:
+1. **`allenai/olmOCR-2-32B-1025` doesn't exist.** AllenAI never published a 32B olmOCR. The 2026-09-10 plan referenced a phantom repo.
+2. **32B + FSDP + LoRA does not fit 4× A10G 24GB.** Substituting `Qwen/Qwen2.5-VL-32B-Instruct` on `g5.12xlarge` produced 6 crashes in 90 min (GPU OOM → CPU OOM). Design preserved at [`configs/train/attic/iter5_g5_32b_failed_2026-09-11.yaml`](configs/train/attic/iter5_g5_32b_failed_2026-09-11.yaml) for when P/g5.48xlarge quota lands.
+3. **7B fine-tuning environment drift.** On the *exact hardware iter-4 shipped on* (g5.4xlarge, 1× A10G), we couldn't reproduce iter-4's setup: `transformers==4.55.4` has a memory regression (OOM at 20 GB even at iter-4's exact hyperparameters), and every earlier version we tried has a Qwen2.5-VL-specific bug. Iter-4's exact `pip freeze` was never recorded — that's now a non-negotiable for iter-6.
+
+The still-open strategic question — is iter-4's ceiling **corpus quality** or **model capacity**? — remains unresolved. In the absence of evidence, iter-6 treats pseudo-labels as the working ceiling and moves to human labels.
+
+Pre-iter-5 dry-run measurements (still the load-bearing baseline for iter-6's ship gate):
 
 | Metric (Devanagari word, 500 samples) | iter-3 | iter-4 | Δ |
 |---|---:|---:|---:|
 | CER ↓ | **0.2151** | **0.2808** | +0.0657 ❌ regression |
 | F1  ↑ | 0.5609 | **0.5976** | +0.0367 ✅ better |
 
-Iter-4 shipped without measuring word-level regression. Turns out it lost **6.6 pp of word-level CER** vs iter-3 — the 500 word-replay samples at 5:1 with page pseudo-labels weren't enough anti-forgetting protection. Iter-5's ship gate is updated: `word CER ≤ 21.5%` on `data/benchmark/himalaya_500.jsonl` as a hard gate, do not publish if regressed further.
-
-- **📝 Full dry-run writeup**: [`reports/iter5/DRYRUN.md`](reports/iter5/DRYRUN.md)
-- **▶️ Launch runbook (once quota lands)**: [`reports/iter5_runbook.md`](reports/iter5_runbook.md)
-- **⚙️ Configs**: [`configs/train/iter5.yaml`](configs/train/iter5.yaml) (p4de.24xlarge) · [`configs/train/iter5_g5.yaml`](configs/train/iter5_g5.yaml) (g5.48xlarge fallback)
-- **🧪 Regression harness**: `python scripts/eval_regression.py --adapter iter3:outputs/iter3 --adapter iter4:outputs/iter4 --devanagari_jsonl data/benchmark/himalaya_500.jsonl ...`
-- **🌱 Iter-6 pilot in parallel**: [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md) — human-labels track for the *root cause* of iter-4's regression, independent of iter-5's compute wait
+- **📝 Postmortem**: [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md)
+- **📝 Original dry-run writeup**: [`reports/iter5/DRYRUN.md`](reports/iter5/DRYRUN.md)
+- **⚙️ Retired 32B config** (for future re-run when quota lands): [`configs/train/attic/iter5_g5_32b_failed_2026-09-11.yaml`](configs/train/attic/iter5_g5_32b_failed_2026-09-11.yaml)
+- **🌱 Iter-6 human-labels pilot (now critical path)**: [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md) · review tool at [`scripts/label/review.py`](scripts/label/review.py)
 
 ## Iteration 4 status — Page-level Devanagari shipped
 
@@ -209,8 +213,8 @@ reports/          Per-iteration writeups with charts
 - **Iter-2 ✅** — 30k mixed English OCR (DocVQA, XFUND, TextOCR, OmniDocBench, IDL), held-out benchmark, prompt-per-sample. Reference eval JSONs archived in `s3://enclave-scribe-checkpoints/results/iter2/`.
 - **Iter-3 ✅** — 28,824 Devanagari samples on OLMoCR-2-7B, 93× CER improvement (see above).
 - **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
-- **Iter-5 🛠️ in-flight** — 32B base (`allenai/olmOCR-2-32B-1025`) on the same corpus. Scoping + config + regression harness + dry-run findings shipped. **Blocked on AWS P/G quota** at time of writing. Dry-run revealed iter-4 regressed word-level CER by 6.6pp vs iter-3 — updated success gate: word CER ≤ 21.5%. See "Iteration 5" above.
-- **Iter-6 📝 planned in parallel** — human-labeled Devanagari pages pilot (100–300 samples) to address the pseudo-label ceiling directly. Runs alongside iter-5's compute wait since the labels problem is orthogonal to the base-model-size problem. See [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md).
+- **Iter-5 📄 postmortem shipped, no adapter** — target model `allenai/olmOCR-2-32B-1025` doesn't exist on HF; 32B substitute doesn't fit 4× A10G; 7B fine-tune blocked by env drift on the exact hardware iter-4 shipped on. Retired 32B config preserved for a future run when P/g5.48xlarge quota lands. See [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).
+- **Iter-6 🎯 critical path** — human-labeled Devanagari pages pilot (100–300 samples) to address the pseudo-label ceiling directly. Elevated from parallel-track to primary since iter-5 didn't produce evidence against the corpus-ceiling hypothesis. Streamlit review tool already committed. Waiting on labeler-track decision + budget approval to kick off. See [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md).
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
