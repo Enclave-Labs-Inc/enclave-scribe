@@ -6,6 +6,27 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 6 status — baseline measurement shipped, iter-7 = multilingual expansion
+
+**First-ever measurement of iter-3, iter-4, and base olmOCR-7B against VISION.md's actual benchmarks:**
+
+| OmniDocBench (250 pages) | NED ↓ | BLEU ↑ | F1 ↑ |
+|---|---:|---:|---:|
+| iter-3 (Devanagari word LoRA) | 1.137 | 0.012 | 0.016 |
+| iter-4 (Devanagari page LoRA) | 0.983 | 0.057 | 0.106 |
+| **base olmOCR-7B** (no LoRA) | 2.998 | **0.131** | **0.291** |
+| Interfaze target | 0.082 | — | — |
+
+**Key finding:** base olmOCR-7B has **2.7× better F1 than iter-4** on English page content. Our Devanagari-focused fine-tuning has actively degraded English/multilingual capability — the very benchmarks the vision cares about.
+
+**Iter-7 direction (decided by iter-6):** Branch 7A — expand training data toward VISION.md's 300k multilingual target. Prep scripts for DocVQA/TextOCR/HierText/XFUND/IDL-WDS already committed. Ship gate: F1 on OmniDocBench ≥ base olmOCR-7B's 0.291 while preserving Devanagari word CER ≤ iter-4's 28.1%.
+
+- **📊 Full measurement report:** [`reports/iter6/BASELINE_MEASUREMENT.md`](reports/iter6/BASELINE_MEASUREMENT.md)
+- **📁 Benchmark JSONLs:** `s3://enclave-scribe-checkpoints/data/benchmark/omnidocbench_test.jsonl` (1,645 samples) + `.../ocrbench_v2.jsonl` (10k samples)
+- **📁 Per-sample eval outputs:** `s3://enclave-scribe-checkpoints/results/iter6/` (6 JSONs)
+
+---
+
 ## Iteration 5 status — postmortem shipped, no adapter, iter-6 elevated
 
 **Iter-5 hit three independent walls and no adapter was trained. Full postmortem: [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).**
@@ -214,7 +235,8 @@ reports/          Per-iteration writeups with charts
 - **Iter-3 ✅** — 28,824 Devanagari samples on OLMoCR-2-7B, 93× CER improvement (see above).
 - **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
 - **Iter-5 📄 postmortem shipped, no adapter** — target model `allenai/olmOCR-2-32B-1025` doesn't exist on HF; 32B substitute doesn't fit 4× A10G; 7B fine-tune blocked by env drift on the exact hardware iter-4 shipped on. Retired 32B config preserved for a future run when P/g5.48xlarge quota lands. See [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).
-- **Iter-6 🎯 critical path** — human-labeled Devanagari pages pilot (100–300 samples) to address the pseudo-label ceiling directly. Elevated from parallel-track to primary since iter-5 didn't produce evidence against the corpus-ceiling hypothesis. Streamlit review tool already committed. Waiting on labeler-track decision + budget approval to kick off. See [`reports/iter6/PILOT.md`](reports/iter6/PILOT.md).
+- **Iter-6 📊 baseline measurement shipped** — first-ever measurement of our adapters against VISION.md's actual benchmarks (OmniDocBench + OCRBench V2). Finding: **base olmOCR-7B has 2.7× better F1 recall on English pages than iter-4** — our Devanagari-focused fine-tuning actively degraded English/multilingual capability. See [`reports/iter6/BASELINE_MEASUREMENT.md`](reports/iter6/BASELINE_MEASUREMENT.md).
+- **Iter-7 🎯 = 7A (multilingual data expansion)** — critical path per iter-6's decision paragraph. Expand real training corpus toward VISION.md's 300k target using already-committed prep scripts (DocVQA/TextOCR/HierText/XFUND/IDL-WDS). Fresh LoRA r=32 on olmOCR-7B, 2 epochs, ~$25 estimated. Full branch design in the session plan file. iter-6's `reports/iter6/PILOT.md` Devanagari human-labels pilot becomes iter-8 if 7A's multilingual expansion doesn't also close the Devanagari gap.
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
