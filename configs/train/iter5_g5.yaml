@@ -1,50 +1,49 @@
-# EnclaveScribe iter-5 — 32B LoRA, g5.48xlarge fallback (8x A10G 24GB)
+# EnclaveScribe iter-5 — 32B LoRA on g5.12xlarge (4x A10G 24GB, spot)
 #
-# Same experiment as configs/train/iter5.yaml but tuned for A10G's tighter
-# VRAM budget. Use this when P-instance quota is unavailable and G quota
-# lands first, or as the cost-optimized path (g5.48xlarge on-demand ~$16.29/hr
-# vs p4de.24xlarge on-demand ~$32.77/hr).
+# Same experiment as configs/train/iter5.yaml. Retuned 2026-09-11 for
+# g5.12xlarge after AWS partially approved only 64 vCPU of G spot quota,
+# which fits g5.12xlarge (48 vCPU) but not g5.48xlarge (192 vCPU).
 #
-# TARGETED HARDWARE: 8x A10G 24GB (192GB total VRAM). Bandwidth per-GPU is
-# 600 GB/s vs A100's 2 TB/s, so per-step wallclock is ~3-5x slower than
-# p4de. Wallclock roughly matches p4de's cost because per-hour is cheaper.
+# TARGETED HARDWARE: 4x A10G 24GB (96GB total VRAM). Per-GPU weight shard
+# with FSDP full_shard = 64GB/4 = 16GB, leaving ~6-8GB for activations+
+# LoRA+grad buckets on each 24GB card. Tight but workable.
 #
-# CHANGES vs configs/train/iter5.yaml (p4de baseline):
-#   - max_pixels    1280*28*28 -> 640*28*28
-#       32B weights sharded across 8 GPUs = 8GB/GPU. LoRA optim ~1GB.
-#       Activations at max_pixels=1280 + 8192 seq are ~10-15GB per GPU on
-#       A10G, blowing the 24GB budget. Drop to 640 (matches iter-4 A10G
-#       proven config) to keep activations ~5-8GB.
-#   - LoRA r        64 -> 32   (alpha 128 -> 64)
-#       Halves LoRA trainable params + optimizer state; saves ~1-2GB per
-#       GPU. Iter-3 shipped on r=32 successfully — proven config, less
-#       capacity than 64 but the base model still has more room to
-#       absorb than a 7B.
-#   - grad_accum    8 -> 4
-#       iter5.yaml assumes 4 GPUs (eff batch 32 = 1*8*4). g5.48xlarge has
-#       8 GPUs, so 4*8*1 also gives eff batch 32.
+# CHANGES vs iter5.yaml (p4de baseline):
+#   - max_pixels    1280*28*28 -> 512*28*28   (401,408)
+#       Weight shard is 16GB/GPU vs iter5.yaml's 8GB/GPU (4 GPUs vs 8),
+#       so activations must be smaller. 512 pixels is the safe floor.
+#   - LoRA r        64 -> 16   (alpha 128 -> 32)
+#       Quartered vs p4de config; iter-3 shipped on r=32, 32B has more
+#       base capacity to absorb even at r=16. Keeps optimizer state
+#       small enough to fit alongside the 16GB weight shard.
+#   - grad_accum    8 -> 8     (kept at 8 for 4 GPUs -> eff batch 32)
+#   - save_steps    200 -> 50
+#       Spot resilience: max ~1h lost work on preempt, given ~2min/step
+#       wallclock estimate on A10G.
 #
 # UNCHANGED vs iter5.yaml:
 #   - base model, LR, epochs, warmup, FSDP config, attention backend
 #
 # LAUNCH:
-#   torchrun --nproc_per_node=8 scripts/train.py --config configs/train/iter5_g5.yaml
+#   torchrun --nproc_per_node=4 scripts/train.py --config configs/train/iter5_g5.yaml
 #
 # ROLLBACK PATH: if LoRA+FSDP crashes at step 0 (untested combo on A10G),
 # fall back to plain DDP by removing the fsdp/fsdp_config keys below.
+# If OOM at step 0, drop max_pixels 512 -> 448 (351,232) first.
 
 use_unsloth: false
 
 model:
   path: allenai/olmOCR-2-32B-1025
   flash_attn: false
-  # Lower than p4de's 1280 — A10G VRAM budget for 32B activations.
+  # Tightened for 4x A10G (16GB weight shard/GPU); iter-4 ran at 640, but
+  # 4-GPU sharding leaves less activation headroom than 8-GPU would.
   min_pixels: 200704                # 256 * 28 * 28
-  max_pixels: 501760                # 640 * 28 * 28
+  max_pixels: 401408                # 512 * 28 * 28
 
 lora:
-  r: 32                             # halved vs p4de config; iter-3 shipped on r=32
-  alpha: 64                         # 2 * r
+  r: 16                             # quartered vs p4de config for 24GB budget
+  alpha: 32                         # 2 * r
   dropout: 0.05
 
 dataset:
@@ -60,7 +59,7 @@ training_args:
   output_dir: outputs/iter5
   num_train_epochs: 4
   per_device_train_batch_size: 1
-  gradient_accumulation_steps: 4    # eff batch = 4 * 8 GPUs = 32 (match iter5.yaml)
+  gradient_accumulation_steps: 8    # eff batch = 8 * 4 GPUs = 32 (match iter5.yaml)
   learning_rate: 1.0e-4             # FLOAT — never write as 1e-4 (YAML 1.1 -> str)
   lr_scheduler_type: cosine
   warmup_steps: 20
@@ -73,8 +72,8 @@ training_args:
   ddp_find_unused_parameters: false
   remove_unused_columns: false
   logging_steps: 5
-  save_steps: 200
-  eval_steps: 200
+  save_steps: 50                    # tight for spot preempt resilience
+  eval_steps: 100
   save_total_limit: 3
   dataloader_num_workers: 8
   report_to: "wandb"
