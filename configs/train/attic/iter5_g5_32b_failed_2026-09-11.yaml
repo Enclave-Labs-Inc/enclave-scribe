@@ -1,3 +1,20 @@
+# RETIRED 2026-09-11 — do not use. See configs/train/iter5a_qwen7b.yaml
+# and configs/train/iter5b_olmocr7b_bigger_lora.yaml for the current
+# iter-5 experiments.
+#
+# This config was drafted for a 32B Qwen2.5-VL LoRA on g5.12xlarge
+# (4x A10G 24GB). Six crashes in ~90 min of live testing proved the
+# hardware is too tight: model weights load fully on each rank before
+# FSDP shards (GPU OOM), and rank0-only CPU init needs >186GB CPU RAM
+# with cpu_ram_efficient_loading (CPU OOM). Full history: today's
+# session logs. FSDP+CPU-offload workaround would triple wallclock
+# past the $50 budget cap.
+#
+# When P-instance or g5.48xlarge quota lands, revisit a 32B run using
+# the pre-retirement version of this file as a starting point.
+#
+# ---------- original header follows, for reference only ----------
+#
 # EnclaveScribe iter-5 — 32B LoRA on g5.12xlarge (4x A10G 24GB, spot)
 #
 # Same experiment as configs/train/iter5.yaml. Retuned 2026-09-11 for

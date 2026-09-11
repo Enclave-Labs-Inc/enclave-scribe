@@ -1,0 +1,66 @@
+# EnclaveScribe iter-5b — olmOCR-2-7B-1025 + 4x LoRA capacity vs iter-3
+#
+# 2026-09-11 pivot from the retired 32B scope (see
+# configs/train/attic/iter5_g5_32b_failed_2026-09-11.yaml). This run
+# isolates one variable: was iter-4's flat-loss ceiling actually a
+# LoRA capacity limit rather than a pseudo-label ceiling?
+#
+# Same base as iter-3 and iter-4 (allenai/olmOCR-2-7B-1025). Fresh
+# LoRA (NOT resumed from iter-3) with r=64/alpha=128 — 4x iter-3's
+# r=16 (which is what iter-3 actually shipped, and what iter-4
+# inherited). Explicitly fresh because r=64 cannot load onto iter-3's
+# r=16 adapter state dict.
+#
+# Success gate: word CER on data/benchmark/himalaya_500.jsonl
+#   <= 21.5%  → matches iter-3, ships.
+#   < 25%     → capacity was helping but pseudo-labels still cap it.
+#   >= 28%    → matches iter-4 → corpus is definitively the ceiling.
+# Companion is iter5a (Qwen2.5-VL-7B, no OCR distillation) — see plan.
+#
+# TARGETED HARDWARE: 1x A10G 24GB (g5.4xlarge spot). Same as iter-4.
+
+use_unsloth: false
+
+model:
+  path: allenai/olmOCR-2-7B-1025
+  flash_attn: false
+  min_pixels: 200704                # 256 * 28 * 28
+  max_pixels: 501760                # 640 * 28 * 28
+
+lora:
+  r: 64                             # 4x iter-3's r=16
+  alpha: 128                        # 2 * r
+  dropout: 0.05
+
+dataset:
+  train_jsonl: data/processed/train.jsonl
+  val_jsonl:   data/processed/val.jsonl
+  image_root:  data/raw
+
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
+max_length: 8192
+augment: true
+
+training_args:
+  output_dir: outputs/iter5b
+  num_train_epochs: 4
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8    # eff batch = 8 * 1 GPU = 8
+  learning_rate: 1.0e-4             # FLOAT — never 1e-4 (YAML-1.1 str)
+  lr_scheduler_type: cosine
+  warmup_steps: 20
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 10
+  save_steps: 200
+  eval_steps: 200
+  save_total_limit: 3
+  dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter5b-olmocr7b-r64"
