@@ -34,7 +34,11 @@
 use_unsloth: false
 
 model:
-  path: allenai/olmOCR-2-32B-1025
+  # 2026-09-11: pivoted from allenai/olmOCR-2-32B-1025 (does not exist on HF)
+  # to Qwen2.5-VL-32B-Instruct, the base olmOCR-7B was distilled from.
+  # Same arch family, same 5120 hidden dim, ~64 layers, bf16 weights ~64GB.
+  # Caveat: not OCR-pretrained — starts from general VL instruct capabilities.
+  path: Qwen/Qwen2.5-VL-32B-Instruct
   flash_attn: false
   # Tightened for 4x A10G (16GB weight shard/GPU); iter-4 ran at 640, but
   # 4-GPU sharding leaves less activation headroom than 8-GPU would.
@@ -80,4 +84,4 @@ training_args:
   run_name: "enclave-scribe-iter5-32b-g5"
   fsdp: "full_shard auto_wrap"
   fsdp_config:
-    fsdp_transformer_layer_cls_to_wrap: "Qwen2VLDecoderLayer"
+    fsdp_transformer_layer_cls_to_wrap: "Qwen2_5_VLDecoderLayer"
