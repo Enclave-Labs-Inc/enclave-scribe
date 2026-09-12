@@ -1,0 +1,83 @@
+# EnclaveScribe iter-7a — multilingual data expansion (Branch A per iter-6 decision)
+#
+# Iter-6 discovered that base olmOCR-2-7B-1025 has 2.7× better F1 recall on
+# English pages than our iter-4 adapter (OmniDocBench F1: 0.291 base vs
+# 0.106 iter-4). Iter-3 and iter-4 were Devanagari-focused pseudo-label
+# runs; they traded away English content recall. VISION.md targets
+# (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082) are English/multilingual-
+# heavy, so iter-7a undoes that regression by expanding real training data
+# toward VISION.md's 300k target.
+#
+# CORPUS (~107k, 3.5× iter-2's 30k). Built by scripts/prepare/build_iter7a_corpus.py:
+#   - DocVQA           ~40k  (HuggingFaceM4/DocumentVQA)
+#   - TextOCR          ~25k
+#   - HierText         ~12k
+#   - XFUND 7 langs    ~10k  (zh/ja/es/fr/it/de/pt)
+#   - IDL-WDS          ~20k  (sampled from 250k)
+#   - iter-4 replay    ~500  (Devanagari word crops — anti-forgetting)
+#
+# APPROACH: fresh LoRA r=32/α=64 on olmOCR-2-7B-1025. Explicitly does NOT
+# resume from iter-4 (iter-4's adapter is Devanagari-tuned; layering more
+# training on top would extend the very regression we're undoing).
+#
+# HARDWARE: g5.4xlarge on-demand (1× A10G 24GB). ~10-12h wallclock at
+# ~1.5s/step, ~$25 training. Under $50 iter budget.
+#
+# YAML 1.1 GOTCHA: `1e-4` parses as string. Always `1.0e-4` with the
+# decimal (see configs/train/iter5.yaml:28 for the incident).
+#
+# SHIP GATES (per plan file):
+#   1. OmniDocBench F1 ≥ 0.291 (matches or beats base — undoes regression)
+#   2. himalaya_500 word CER ≤ 28.1% (no further Devanagari regression)
+#   3. OCRBench V2 F1 ≥ 0.025 (directional soft gate)
+# Gates 1 and 2 are hard. Miss either → postmortem, no HF publish.
+
+use_unsloth: false                  # HF Trainer, single GPU
+
+model:
+  path: allenai/olmOCR-2-7B-1025    # proven base, same as iter-3/iter-4
+  flash_attn: false                 # AMI's /opt/pytorch may not have it built; sdpa is fine
+  # Match iter-4's image-token budget (fits 7B on 1× A10G 24GB comfortably)
+  min_pixels: 200704                # 256 * 28 * 28
+  max_pixels: 501760                # 640 * 28 * 28
+
+# No resume_adapter — fresh LoRA, not layered on iter-4.
+lora:
+  r: 32                             # same as iter-3/iter-4
+  alpha: 64                         # 2 * r
+  dropout: 0.05
+
+dataset:
+  train_jsonl: data/processed/iter7a_train.jsonl
+  val_jsonl:   data/processed/iter7a_val.jsonl
+  image_root:  data/raw
+
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
+max_length: 8192                    # pages ~2-5k text tokens + ~640 image tokens
+augment: true
+
+training_args:
+  output_dir: outputs/iter7a
+  num_train_epochs: 2               # 107k samples × 2 epochs is a lot; kill early if converged
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8    # effective batch = 8 (single GPU)
+  learning_rate: 1.0e-4             # FLOAT — never write as 1e-4 (YAML 1.1 → str)
+                                    # Halfway between iter-3's 1.5e-4 (fresh) and iter-4's
+                                    # 5.0e-5 (resume). Fresh LoRA warrants iter-3-ish LR.
+  lr_scheduler_type: cosine
+  warmup_steps: 100                 # larger corpus warrants longer warmup
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 25
+  save_steps: 1000
+  eval_steps: 1000
+  save_total_limit: 3
+  dataloader_num_workers: 4
+  report_to: "wandb"
+  run_name: "enclave-scribe-iter7a-multilingual"
