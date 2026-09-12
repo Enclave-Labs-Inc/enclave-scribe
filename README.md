@@ -6,6 +6,28 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 7a status — multilingual expansion, tooling PR merged, training pending
+
+**Tooling for iter-7a is in place. Training run has not started yet.**
+
+Per iter-6's decision paragraph, iter-7a expands the training corpus toward VISION.md's 300k multilingual target using already-committed prep scripts (DocVQA/TextOCR/HierText/XFUND/IDL-WDS). Target corpus size: ~107k samples (3.5× iter-2's 30k) + ~500 Devanagari word replay for anti-forgetting. Fresh LoRA r=32/α=64 on `allenai/olmOCR-2-7B-1025`, 2 epochs, single g5.4xlarge on-demand.
+
+**Ship gates (all three, evaluated against iter-6's subsampled benchmarks):**
+
+| Gate | Target | Baseline it must beat |
+|---|---|---|
+| OmniDocBench F1 (250 pages) | ≥ 0.291 | Base olmOCR-7B (iter-6) — undoes iter-4's English regression |
+| `himalaya_500` word CER | ≤ 28.1% | Iter-4's already-regressed level — no further Devanagari regression |
+| OCRBench V2 F1 (300 samples) | ≥ 0.025 | Base olmOCR-7B (iter-6) — directional soft gate |
+
+Gates 1 and 2 are hard. Miss either → postmortem ships, no HF adapter publish.
+
+- **⚙️ Config**: [`configs/train/iter7a_multilingual.yaml`](configs/train/iter7a_multilingual.yaml)
+- **🏗️ Corpus builder**: [`scripts/prepare/build_iter7a_corpus.py`](scripts/prepare/build_iter7a_corpus.py)
+- **🔧 Standard env bootstrap**: [`scripts/setup_env.sh`](scripts/setup_env.sh) (used from iter-7a onward)
+
+---
+
 ## Iteration 6 status — baseline measurement shipped, iter-7 = multilingual expansion
 
 **First-ever measurement of iter-3, iter-4, and base olmOCR-7B against VISION.md's actual benchmarks:**
@@ -236,7 +258,7 @@ reports/          Per-iteration writeups with charts
 - **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
 - **Iter-5 📄 postmortem shipped, no adapter** — target model `allenai/olmOCR-2-32B-1025` doesn't exist on HF; 32B substitute doesn't fit 4× A10G; 7B fine-tune blocked by env drift on the exact hardware iter-4 shipped on. Retired 32B config preserved for a future run when P/g5.48xlarge quota lands. See [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).
 - **Iter-6 📊 baseline measurement shipped** — first-ever measurement of our adapters against VISION.md's actual benchmarks (OmniDocBench + OCRBench V2). Finding: **base olmOCR-7B has 2.7× better F1 recall on English pages than iter-4** — our Devanagari-focused fine-tuning actively degraded English/multilingual capability. See [`reports/iter6/BASELINE_MEASUREMENT.md`](reports/iter6/BASELINE_MEASUREMENT.md).
-- **Iter-7 🎯 = 7A (multilingual data expansion)** — critical path per iter-6's decision paragraph. Expand real training corpus toward VISION.md's 300k target using already-committed prep scripts (DocVQA/TextOCR/HierText/XFUND/IDL-WDS). Fresh LoRA r=32 on olmOCR-7B, 2 epochs, ~$25 estimated. Full branch design in the session plan file. iter-6's `reports/iter6/PILOT.md` Devanagari human-labels pilot becomes iter-8 if 7A's multilingual expansion doesn't also close the Devanagari gap.
+- **Iter-7a 🏗️ tooling merged, training pending** — config, corpus builder, and standard env bootstrap in place ([`configs/train/iter7a_multilingual.yaml`](configs/train/iter7a_multilingual.yaml), [`scripts/prepare/build_iter7a_corpus.py`](scripts/prepare/build_iter7a_corpus.py), [`scripts/setup_env.sh`](scripts/setup_env.sh)). Corpus: ~107k mixed English+multilingual (DocVQA/TextOCR/HierText/XFUND/IDL-WDS) + 500 Devanagari replay. Fresh LoRA r=32/α=64 on olmOCR-7B, 2 epochs, ~$30 estimated on g5.4xlarge. Ship gates: OmniDocBench F1 ≥ 0.291 (undoes iter-4's English regression) AND himalaya_500 CER ≤ 28.1% (no further Devanagari regression). iter-6's `reports/iter6/PILOT.md` Devanagari human-labels pilot becomes iter-8 if 7a doesn't close the Devanagari gap.
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
