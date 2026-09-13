@@ -37,9 +37,11 @@ use_unsloth: false                  # HF Trainer, single GPU
 model:
   path: allenai/olmOCR-2-7B-1025    # proven base, same as iter-3/iter-4
   flash_attn: false                 # AMI's /opt/pytorch may not have it built; sdpa is fine
-  # Match iter-4's image-token budget (fits 7B on 1× A10G 24GB comfortably)
+  # 448² pixels — reduced from 640² during iter-7a training to prevent CUDA OOM on
+  # large DocVQA/IDL samples (VRAM peaked at 21.95 GB / 22.06 GB at 640²; 448² leaves
+  # a safe 3+ GB headroom). Restore to 640² only if you also add collator-time truncation.
   min_pixels: 200704                # 256 * 28 * 28
-  max_pixels: 501760                # 640 * 28 * 28
+  max_pixels: 200704                # 448 * 28 * 28 (iter-7a as-shipped)
 
 # No resume_adapter — fresh LoRA, not layered on iter-4.
 lora:
@@ -48,12 +50,18 @@ lora:
   dropout: 0.05
 
 dataset:
-  train_jsonl: data/processed/iter7a_train.jsonl
-  val_jsonl:   data/processed/iter7a_val.jsonl
+  # Filtered subset used for iter-7a as-shipped: 9,852 train + 197 val.
+  # 148 samples with text > 3000 chars were dropped pre-training to prevent OOM
+  # on the collator (which doesn't truncate to max_length). Fix at collator level
+  # in iter-8 and drop the pre-filter.
+  train_jsonl: data/processed/iter7a_train_10k_filt.jsonl
+  val_jsonl:   data/processed/iter7a_val_10k_filt.jsonl
   image_root:  data/raw
 
 prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
-max_length: 8192                    # pages ~2-5k text tokens + ~640 image tokens
+# 4096 (was 8192) — halved during iter-7a to fit VRAM; collator doesn't truncate so this
+# is aspirational rather than enforced. See "Deviations" in reports/iter7a/README.md.
+max_length: 4096
 augment: true
 
 training_args:
@@ -79,5 +87,5 @@ training_args:
   eval_steps: 1000
   save_total_limit: 3
   dataloader_num_workers: 4
-  report_to: "wandb"
+  report_to: "none"                 # iter-7a shipped w/o wandb (no API key on instance)
   run_name: "enclave-scribe-iter7a-multilingual"

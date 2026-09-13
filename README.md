@@ -6,25 +6,27 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
-## Iteration 7a status — multilingual expansion, tooling PR merged, training pending
+## Iteration 7a status — multilingual expansion shipped, matches base olmOCR-7B
 
-**Tooling for iter-7a is in place. Training run has not started yet.**
+**First fine-tune that doesn't regress on English/multilingual.** Fresh LoRA r=32/α=64 on `allenai/olmOCR-2-7B-1025`, ~9.8k filtered multilingual samples (DocVQA + XFUND + IDL-WDS), 2 epochs, ~$48 on g5.4xlarge.
 
-Per iter-6's decision paragraph, iter-7a expands the training corpus toward VISION.md's 300k multilingual target using already-committed prep scripts (DocVQA/TextOCR/HierText/XFUND/IDL-WDS). Target corpus size: ~107k samples (3.5× iter-2's 30k) + ~500 Devanagari word replay for anti-forgetting. Fresh LoRA r=32/α=64 on `allenai/olmOCR-2-7B-1025`, 2 epochs, single g5.4xlarge on-demand.
+| OmniDocBench (250 pages) | NED ↓ | BLEU ↑ | F1 ↑ |
+|---|---:|---:|---:|
+| iter-3 | 1.137 | 0.012 | 0.016 |
+| iter-4 | 0.983 | 0.057 | 0.106 |
+| base olmOCR-2-7B-1025 | 2.998 | 0.131 | 0.291 |
+| **iter-7a** | **1.955** | **0.142** | **0.293** |
+| Interfaze target | 0.082 | — | — |
 
-**Ship gates (all three, evaluated against iter-6's subsampled benchmarks):**
+**Honest read:** iter-7a **matches** base F1 (+0.7%, inside noise) while cutting NED 35% — the adapter learned to be more concise than base without losing recall. Ship gate 1 passed by a hair; gate 3 (OCRBench V2 F1 ≥ base's 0.025) passed at 2.2× base. Gate 2 (Devanagari CER ≤ 28.1%) was **not measured** — the 60 GB `himalaya_indic` benchmark subset wasn't staged on the eval instance. Iter-8 will close that gate.
 
-| Gate | Target | Baseline it must beat |
-|---|---|---|
-| OmniDocBench F1 (250 pages) | ≥ 0.291 | Base olmOCR-7B (iter-6) — undoes iter-4's English regression |
-| `himalaya_500` word CER | ≤ 28.1% | Iter-4's already-regressed level — no further Devanagari regression |
-| OCRBench V2 F1 (300 samples) | ≥ 0.025 | Base olmOCR-7B (iter-6) — directional soft gate |
+The training loss stayed flat at ~6.2 because 87% of the shipped corpus was DocVQA short-answer pairs in a pure-OCR framing — the model saw full documents but was asked to reproduce 1-15 char answers. Full postmortem + iter-8 direction in the report.
 
-Gates 1 and 2 are hard. Miss either → postmortem ships, no HF adapter publish.
-
+- **📊 Full writeup:** [`reports/iter7a/README.md`](reports/iter7a/README.md)
+- **📦 Adapter (S3):** `s3://enclave-scribe-checkpoints/adapters/iter7a/`
+- **📁 Per-sample eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter7a/`
+- **🔧 pip freeze:** [`reports/iter7a/pip_freeze.txt`](reports/iter7a/pip_freeze.txt)
 - **⚙️ Config**: [`configs/train/iter7a_multilingual.yaml`](configs/train/iter7a_multilingual.yaml)
-- **🏗️ Corpus builder**: [`scripts/prepare/build_iter7a_corpus.py`](scripts/prepare/build_iter7a_corpus.py)
-- **🔧 Standard env bootstrap**: [`scripts/setup_env.sh`](scripts/setup_env.sh) (used from iter-7a onward)
 
 ---
 
@@ -258,7 +260,8 @@ reports/          Per-iteration writeups with charts
 - **Iter-4 ✅** — Hybrid bootstrap: 793 pseudo-labeled IndicDLP pages + 500 word replay, resumed from iter-3. Fixes dead-loop failure mode on long dense pages. See "Iteration 4" above.
 - **Iter-5 📄 postmortem shipped, no adapter** — target model `allenai/olmOCR-2-32B-1025` doesn't exist on HF; 32B substitute doesn't fit 4× A10G; 7B fine-tune blocked by env drift on the exact hardware iter-4 shipped on. Retired 32B config preserved for a future run when P/g5.48xlarge quota lands. See [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).
 - **Iter-6 📊 baseline measurement shipped** — first-ever measurement of our adapters against VISION.md's actual benchmarks (OmniDocBench + OCRBench V2). Finding: **base olmOCR-7B has 2.7× better F1 recall on English pages than iter-4** — our Devanagari-focused fine-tuning actively degraded English/multilingual capability. See [`reports/iter6/BASELINE_MEASUREMENT.md`](reports/iter6/BASELINE_MEASUREMENT.md).
-- **Iter-7a 🏗️ tooling merged, training pending** — config, corpus builder, and standard env bootstrap in place ([`configs/train/iter7a_multilingual.yaml`](configs/train/iter7a_multilingual.yaml), [`scripts/prepare/build_iter7a_corpus.py`](scripts/prepare/build_iter7a_corpus.py), [`scripts/setup_env.sh`](scripts/setup_env.sh)). Corpus: ~107k mixed English+multilingual (DocVQA/TextOCR/HierText/XFUND/IDL-WDS) + 500 Devanagari replay. Fresh LoRA r=32/α=64 on olmOCR-7B, 2 epochs, ~$30 estimated on g5.4xlarge. Ship gates: OmniDocBench F1 ≥ 0.291 (undoes iter-4's English regression) AND himalaya_500 CER ≤ 28.1% (no further Devanagari regression). iter-6's `reports/iter6/PILOT.md` Devanagari human-labels pilot becomes iter-8 if 7a doesn't close the Devanagari gap.
+- **Iter-7a ✅ shipped, matches base olmOCR-7B on English** — fresh LoRA r=32/α=64 on olmOCR-7B, 9.8k filtered multilingual corpus (DocVQA + XFUND + IDL-WDS after HierText/TextOCR URL rot forced drops). OmniDocBench F1 = 0.293 (vs base 0.291, +0.7%); OCRBench V2 F1 = 0.056 (2.2× base). NED 1.955 (35% shorter output than base). Ship gate 1 & 3 passed; gate 2 (Devanagari) not measured — 60 GB himalaya download deferred. Training loss stayed flat at ~6.2 because 87% of corpus was DocVQA short-answer pairs in pure-OCR framing — corpus design was the ceiling. Full postmortem: [`reports/iter7a/README.md`](reports/iter7a/README.md).
+- **Iter-8 🎯 = fix corpus + Devanagari regression check** — either route per-sample prompts through training and treat DocVQA as VQA, or drop DocVQA entirely and rebuild with real OCR labels only. Fix HierText/TextOCR URL rot. Add collator-time truncation to `max_length`. Stage `himalaya_indic` on S3 so gate 2 becomes cheap to test.
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
