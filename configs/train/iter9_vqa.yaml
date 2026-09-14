@@ -1,0 +1,101 @@
+# EnclaveScribe iter-9 — VQA specialization (Path A per 2026-09-14 plan)
+#
+# Iter-8 revealed iter-7a lands at OCRBench V2 F1 = 0.499 (70.6% of Interfaze's
+# 0.707 target, 78% of Gemini-3.5-Flash's 0.639). The gap from iter-7a to
+# Interfaze is 0.21 F1 — one focused iteration can plausibly close it.
+#
+# APPROACH: WARM-START from iter-7a's adapter with more VQA-shaped data.
+# Not fresh LoRA. Keep iter-7a's short-answer VQA behavior; extend with
+# real VQA / OCR-VQA sources. LR halved to 5.0e-5 to avoid catastrophic
+# forgetting of iter-7a's tuning; only 1 epoch because we're extending
+# not full retraining.
+#
+# CORPUS (~120k, 12× iter-7a's post-filter 10k). Built by
+# scripts/prepare/build_iter9_corpus.py:
+#   - docvqa           ~10k  (iter-7a baseline reuse)
+#   - xfund            ~5k   (iter-7a baseline reuse)
+#   - idl              ~10k  (iter-7a baseline reuse)
+#   - ocrvqa           ~40k  (howard-hou/OCR-VQA — the highest-signal add)
+#   - chartqa          ~25k  (ahmed-masry/ChartQA)
+#   - textvqa          ~30k  (lmms-lab/textvqa — audit swap)
+#   - infographicvqa   ~5k   (HuggingFaceM4/InfographicVQA — audit swap;
+#                              drops to 0 if load fails)
+#   - himalaya replay  ~500  (Devanagari anti-forgetting)
+#
+# HARDWARE: g5.4xlarge on-demand (1× A10G 24GB). Same as iter-7a/8.
+# ~10h wallclock at ~1.5s/step, ~$25 training. Under $60 iter budget.
+#
+# YAML 1.1 GOTCHA: `1e-4` parses as string. Always `1.0e-4` (decimal).
+# See configs/train/iter5.yaml:28 for the incident.
+#
+# SHIP GATES (per plan file):
+#   1. OCRBench V2 F1 ≥ 0.60 (85% of Interfaze — hard gate)
+#   2. OmniDocBench F1 ≥ 0.291 (matches base — hard gate)
+#   3. himalaya_500 CER ≤ iter-7a's 4.463 (soft gate — don't get worse)
+# Bonus: F1 ≥ 0.707 triggers "beats Interfaze" narrative.
+# Miss gate 1 or 2 → postmortem, no HF publish.
+
+use_unsloth: false                  # HF Trainer, single GPU
+
+model:
+  path: allenai/olmOCR-2-7B-1025    # same base as iter-3/iter-4/iter-7a
+  flash_attn: false                 # AMI's /opt/pytorch may not have it; sdpa is fine
+  # 448² pixels — same as iter-7a as-shipped. Empirically the safe
+  # ceiling for our LoRA layers on 24 GB A10G. Do NOT bump without
+  # collator-time truncation in place.
+  min_pixels: 200704                # 256 * 28 * 28
+  max_pixels: 200704                # 448 * 28 * 28
+
+# WARM-START: layer new training on iter-7a's adapter instead of starting
+# fresh. `scripts/train.py:86-94` reads this top-level key and calls
+# `PeftModel.from_pretrained(model, resume_adapter, is_trainable=True)`.
+# Pattern verified from configs/train/iter4.yaml:36 (iter-4 shipped with
+# `resume_adapter: outputs/iter3`).
+resume_adapter: outputs/iter7a
+
+# lora: not used when resume_adapter is set — the adapter config is
+# read from outputs/iter7a/adapter_config.json (r=32, alpha=64).
+
+dataset:
+  # NOT the iter-7a filtered subset. These are iter-9's own train/val
+  # produced by scripts/prepare/build_iter9_corpus.py (~120k VQA-heavy).
+  train_jsonl: data/processed/iter9_train.jsonl
+  val_jsonl:   data/processed/iter9_val.jsonl
+  image_root:  data/raw
+
+# Default prompt is only used for samples that don't carry per-sample
+# `prompt` (i.e. the ~10k IDL + XFUND baseline reuse). All VQA sources
+# override this per-sample via `sample["prompt"]`.
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
+# 4096 same as iter-7a as-shipped. Collator doesn't truncate so this is
+# aspirational; VQA short-answer samples don't need more.
+max_length: 4096
+augment: true
+
+training_args:
+  output_dir: outputs/iter9
+  # 1 epoch — extension not retrain. iter-7a's adapter already learned
+  # the recipe; 1 pass over the expanded 120k corpus is the point.
+  num_train_epochs: 1
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8    # effective batch = 8 (single GPU)
+  # LR halved from iter-7a's 1.0e-4 to protect the warm-start. Iter-4
+  # used 5.0e-5 for the same reason when warm-starting from iter-3.
+  learning_rate: 5.0e-5             # FLOAT — never 5e-5 (YAML 1.1 → str)
+  lr_scheduler_type: cosine
+  warmup_steps: 50                  # short warmup — adapter already reasonable
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 25
+  save_steps: 1000
+  eval_steps: 1000
+  save_total_limit: 3
+  dataloader_num_workers: 4
+  report_to: "none"                 # wandb only if API key present on instance
+  run_name: "enclave-scribe-iter9-vqa"
