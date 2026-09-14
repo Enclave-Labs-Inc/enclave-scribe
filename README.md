@@ -6,11 +6,42 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
-## Iteration 7a status — multilingual expansion shipped, matches base olmOCR-7B
+## Iteration 8 status — corrected measurements shipped, iter-7a reframed as VQA specialist
 
-**First fine-tune that doesn't regress on English/multilingual.** Fresh LoRA r=32/α=64 on `allenai/olmOCR-2-7B-1025`, ~9.8k filtered multilingual samples (DocVQA + XFUND + IDL-WDS), 2 epochs, ~$48 on g5.4xlarge.
+**Iter-8 fixed two long-standing eval bugs and re-measured all four models.** The results reshuffle everything we thought we knew about iter-7a.
 
-| OmniDocBench (250 pages) | NED ↓ | BLEU ↑ | F1 ↑ |
+**Headline: iter-7a is at 70.6% of Interfaze on OCRBench V2** (0.499 F1 vs Interfaze 0.707 target). Iter-6/7a's original 0.056 F1 was hidden by an eval bug — `scripts/eval.py` hardcoded `"document parsing."` as the prompt and silently dropped OCRBench V2's per-sample VQA questions. Fixed prompt routing (PR #62) exposed iter-7a's real strength: it's Enclave's best short-answer/VQA model by a wide margin.
+
+| Benchmark (corrected) | base | iter-3 | iter-4 | **iter-7a** | Interfaze target |
+|---|---:|---:|---:|---:|---:|
+| OCRBench V2 F1 (300) | 0.093 | 0.099 | 0.115 | **0.499** | 0.707 |
+| OmniDocBench F1 (250) | 0.291 | 0.016 | 0.106 | **0.293** | — |
+| himalaya_500 CER (500 Devanagari word crops) | 14.32 | **0.175** | 0.231 | 4.463 | ≤ iter-4's 0.281 |
+
+**Ship gate 2 (himalaya CER ≤ 28.1%) FAILED 15.9× for iter-7a.** The adapter catastrophically regressed Devanagari — DocVQA-heavy training killed most of what iter-3/iter-4 taught the model about Devanagari script.
+
+**Strategic reframe — "choose your adapter" not "iter-7a replaces iter-4":**
+
+| Use case | Recommended adapter |
+|---|---|
+| Devanagari word/page OCR | iter-3 or iter-4 |
+| English document VQA / short-answer | **iter-7a** |
+| English long-form page OCR | base olmOCR-7B (Enclave has nothing better yet) |
+
+Iter-7a shipped to HF as a scoped VQA specialist (`Enclave-Labs-Inc/olmocr-2-iter7a-vqa` when published) with an explicit warning about Devanagari.
+
+- **📊 Full writeup:** [`reports/iter8/CORRECTED_MEASUREMENTS.md`](reports/iter8/CORRECTED_MEASUREMENTS.md)
+- **📁 Per-sample eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter8/` (9 files)
+- **📁 Devanagari benchmark (permanent):** `s3://enclave-scribe-checkpoints/data/benchmark/himalaya_500/` — 500 images, staged once, cheap to eval every iter now
+- **🔧 pip freeze:** [`reports/iter8/pip_freeze.txt`](reports/iter8/pip_freeze.txt)
+
+---
+
+## Iteration 7a status — multilingual expansion shipped
+
+**First fine-tune that doesn't regress base olmOCR-7B on English.** Fresh LoRA r=32/α=64 on `allenai/olmOCR-2-7B-1025`, ~9.8k filtered multilingual samples (DocVQA + XFUND + IDL-WDS), 2 epochs, ~$48 on g5.4xlarge. **Iter-8's corrected measurements above supersede the numbers originally reported here.**
+
+| OmniDocBench (250 pages, unchanged in iter-8) | NED ↓ | BLEU ↑ | F1 ↑ |
 |---|---:|---:|---:|
 | iter-3 | 1.137 | 0.012 | 0.016 |
 | iter-4 | 0.983 | 0.057 | 0.106 |
@@ -18,14 +49,11 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 | **iter-7a** | **1.955** | **0.142** | **0.293** |
 | Interfaze target | 0.082 | — | — |
 
-**Honest read:** iter-7a **matches** base F1 (+0.7%, inside noise) while cutting NED 35% — the adapter learned to be more concise than base without losing recall. Ship gate 1 passed by a hair; gate 3 (OCRBench V2 F1 ≥ base's 0.025) passed at 2.2× base. Gate 2 (Devanagari CER ≤ 28.1%) was **not measured** — the 60 GB `himalaya_indic` benchmark subset wasn't staged on the eval instance. Iter-8 will close that gate.
+**Original read (superseded):** "matches base F1 (+0.7%, inside noise); training loss stayed flat at ~6.2 because 87% of corpus was DocVQA." **Iter-8 reframe:** matching base on OmniDocBench was a red herring. DocVQA training produced a specialist VQA model whose real value hid behind OCRBench V2 (0.499 F1, 5.4× base) — invisible until the per-sample-prompt eval bug was fixed.
 
-The training loss stayed flat at ~6.2 because 87% of the shipped corpus was DocVQA short-answer pairs in a pure-OCR framing — the model saw full documents but was asked to reproduce 1-15 char answers. Full postmortem + iter-8 direction in the report.
-
-- **📊 Full writeup:** [`reports/iter7a/README.md`](reports/iter7a/README.md)
+- **📊 Iter-7a original writeup:** [`reports/iter7a/README.md`](reports/iter7a/README.md)
+- **📊 Corrected numbers:** [`reports/iter8/CORRECTED_MEASUREMENTS.md`](reports/iter8/CORRECTED_MEASUREMENTS.md)
 - **📦 Adapter (S3):** `s3://enclave-scribe-checkpoints/adapters/iter7a/`
-- **📁 Per-sample eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter7a/`
-- **🔧 pip freeze:** [`reports/iter7a/pip_freeze.txt`](reports/iter7a/pip_freeze.txt)
 - **⚙️ Config**: [`configs/train/iter7a_multilingual.yaml`](configs/train/iter7a_multilingual.yaml)
 
 ---
@@ -261,7 +289,9 @@ reports/          Per-iteration writeups with charts
 - **Iter-5 📄 postmortem shipped, no adapter** — target model `allenai/olmOCR-2-32B-1025` doesn't exist on HF; 32B substitute doesn't fit 4× A10G; 7B fine-tune blocked by env drift on the exact hardware iter-4 shipped on. Retired 32B config preserved for a future run when P/g5.48xlarge quota lands. See [`reports/iter5/POSTMORTEM.md`](reports/iter5/POSTMORTEM.md).
 - **Iter-6 📊 baseline measurement shipped** — first-ever measurement of our adapters against VISION.md's actual benchmarks (OmniDocBench + OCRBench V2). Finding: **base olmOCR-7B has 2.7× better F1 recall on English pages than iter-4** — our Devanagari-focused fine-tuning actively degraded English/multilingual capability. See [`reports/iter6/BASELINE_MEASUREMENT.md`](reports/iter6/BASELINE_MEASUREMENT.md).
 - **Iter-7a ✅ shipped, matches base olmOCR-7B on English** — fresh LoRA r=32/α=64 on olmOCR-7B, 9.8k filtered multilingual corpus (DocVQA + XFUND + IDL-WDS after HierText/TextOCR URL rot forced drops). OmniDocBench F1 = 0.293 (vs base 0.291, +0.7%); OCRBench V2 F1 = 0.056 (2.2× base). NED 1.955 (35% shorter output than base). Ship gate 1 & 3 passed; gate 2 (Devanagari) not measured — 60 GB himalaya download deferred. Training loss stayed flat at ~6.2 because 87% of corpus was DocVQA short-answer pairs in pure-OCR framing — corpus design was the ceiling. Full postmortem: [`reports/iter7a/README.md`](reports/iter7a/README.md).
-- **Iter-8 🎯 = fix corpus + Devanagari regression check** — either route per-sample prompts through training and treat DocVQA as VQA, or drop DocVQA entirely and rebuild with real OCR labels only. Fix HierText/TextOCR URL rot. Add collator-time truncation to `max_length`. Stage `himalaya_indic` on S3 so gate 2 becomes cheap to test.
+- **Iter-7a ✅ RESULT UPDATE (see iter-8):** OmniDocBench F1 numbers above are correct. OCRBench V2 F1 was actually **0.499** (not the 0.056 originally reported — eval bug). himalaya_500 CER = **4.463 (446%) — ship gate 2 hard-failed 15.9×**. Iter-7a reframed as VQA specialist, not general-OCR replacement.
+- **Iter-8 ✅ eval-infrastructure shipped** — fixed the per-sample-prompt bug in `scripts/eval.py` (PR #62), staged the 500-image Devanagari benchmark on S3 permanently, re-measured all 4 adapters × 3 benchmarks. Reveals iter-7a at **70.6% of Interfaze's OCRBench V2 target** (0.499 / 0.707) — was invisible until eval fix. See [`reports/iter8/CORRECTED_MEASUREMENTS.md`](reports/iter8/CORRECTED_MEASUREMENTS.md).
+- **Iter-9 🎯 = 9A (VQA specialization — push OCRBench V2 F1 from 0.50 to ≥ 0.60)** — double down on iter-7a's accidental VQA lead. Expanded VQA corpus (more DocVQA + OCRBench-style + OCR-VQA hybrid), fresh LoRA on olmOCR-7B, ~$30-40. Ship gate: OCRBench V2 F1 ≥ 0.60 (85% of Interfaze) AND OmniDocBench F1 ≥ 0.291. Path B (Devanagari rehab) and Path C (real page-OCR corpus) documented in iter-8 report as fallbacks if iter-9A doesn't clear its gate.
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
