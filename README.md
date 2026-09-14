@@ -28,7 +28,18 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 | English document VQA / short-answer | **iter-7a** |
 | English long-form page OCR | base olmOCR-7B (Enclave has nothing better yet) |
 
-Iter-7a shipped to HF as a scoped VQA specialist (`Enclave-Labs-Inc/olmocr-2-iter7a-vqa` when published) with an explicit warning about Devanagari.
+Iter-7a shipped to HF as a scoped VQA specialist ([`enclavelabs/olmocr-2-iter7a-vqa`](https://huggingface.co/enclavelabs/olmocr-2-iter7a-vqa)) with an explicit warning about Devanagari.
+
+## Available models
+
+Publicly available on HuggingFace:
+
+| Model | Best for | Do NOT use for | Measured |
+|---|---|---|---:|
+| [`enclavelabs/enclave-scribe-devanagari`](https://huggingface.co/enclavelabs/enclave-scribe-devanagari) (iter-3) | Devanagari word/page OCR | non-Devanagari OCR | himalaya_500 CER **0.175** |
+| [`enclavelabs/olmocr-2-iter7a-vqa`](https://huggingface.co/enclavelabs/olmocr-2-iter7a-vqa) (iter-7a) | English document VQA / short-answer | Devanagari (regressed 19× vs iter-4), long-form page OCR | OCRBench V2 F1 **0.499** |
+
+Both adapters are LoRA on top of [`allenai/olmOCR-2-7B-1025`](https://huggingface.co/allenai/olmOCR-2-7B-1025) (Qwen2.5-VL-7B). MIT-licensed, fully sovereign, no API required at inference.
 
 - **📊 Full writeup:** [`reports/iter8/CORRECTED_MEASUREMENTS.md`](reports/iter8/CORRECTED_MEASUREMENTS.md)
 - **📁 Per-sample eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter8/` (9 files)
@@ -291,7 +302,7 @@ reports/          Per-iteration writeups with charts
 - **Iter-7a ✅ shipped, matches base olmOCR-7B on English** — fresh LoRA r=32/α=64 on olmOCR-7B, 9.8k filtered multilingual corpus (DocVQA + XFUND + IDL-WDS after HierText/TextOCR URL rot forced drops). OmniDocBench F1 = 0.293 (vs base 0.291, +0.7%); OCRBench V2 F1 = 0.056 (2.2× base). NED 1.955 (35% shorter output than base). Ship gate 1 & 3 passed; gate 2 (Devanagari) not measured — 60 GB himalaya download deferred. Training loss stayed flat at ~6.2 because 87% of corpus was DocVQA short-answer pairs in pure-OCR framing — corpus design was the ceiling. Full postmortem: [`reports/iter7a/README.md`](reports/iter7a/README.md).
 - **Iter-7a ✅ RESULT UPDATE (see iter-8):** OmniDocBench F1 numbers above are correct. OCRBench V2 F1 was actually **0.499** (not the 0.056 originally reported — eval bug). himalaya_500 CER = **4.463 (446%) — ship gate 2 hard-failed 15.9×**. Iter-7a reframed as VQA specialist, not general-OCR replacement.
 - **Iter-8 ✅ eval-infrastructure shipped** — fixed the per-sample-prompt bug in `scripts/eval.py` (PR #62), staged the 500-image Devanagari benchmark on S3 permanently, re-measured all 4 adapters × 3 benchmarks. Reveals iter-7a at **70.6% of Interfaze's OCRBench V2 target** (0.499 / 0.707) — was invisible until eval fix. See [`reports/iter8/CORRECTED_MEASUREMENTS.md`](reports/iter8/CORRECTED_MEASUREMENTS.md).
-- **Iter-9 🎯 = 9A (VQA specialization — push OCRBench V2 F1 from 0.50 to ≥ 0.60)** — double down on iter-7a's accidental VQA lead. Expanded VQA corpus (more DocVQA + OCRBench-style + OCR-VQA hybrid), fresh LoRA on olmOCR-7B, ~$30-40. Ship gate: OCRBench V2 F1 ≥ 0.60 (85% of Interfaze) AND OmniDocBench F1 ≥ 0.291. Path B (Devanagari rehab) and Path C (real page-OCR corpus) documented in iter-8 report as fallbacks if iter-9A doesn't clear its gate.
+- **Iter-9 🎯 = 9A (VQA specialization — push OCRBench V2 F1 from 0.50 to ≥ 0.60)** — double down on iter-7a's accidental VQA lead. Expanded VQA corpus (~120k: OCR-VQA + ChartQA + TextVQA + InfographicVQA + DocVQA-extra + iter-7a-baseline), **warm-started from iter-7a** (LR 5e-5, 1 epoch — extension not full retrain), ~$25-40. Ship gate: OCRBench V2 F1 ≥ 0.60 (85% of Interfaze) AND OmniDocBench F1 ≥ 0.291. Path B (Devanagari rehab) and Path C (real page-OCR corpus) documented in iter-8 report as fallbacks if iter-9A doesn't clear its gate.
 - **Standing gate for all future iterations**: [`tests/fixtures/pdfs/gazette_moef_2024_06_07.pdf`](tests/fixtures/pdfs/) as a canonical failure case; `data/benchmark/himalaya_500.jsonl` (on S3) as the Devanagari word-level regression gate.
 
 See [VISION.md](VISION.md) for the long-term benchmark targets (OCRBench V2 > 70.7%, OmniDocBench NED < 0.082).
