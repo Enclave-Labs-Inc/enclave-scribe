@@ -53,16 +53,29 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 # (source name, prep script relative to repo root, interim jsonl, target sample cap)
 SOURCES: list[tuple[str, str | None, str, int]] = [
     ("docvqa",   "scripts/prepare/prep_docvqa.py",   "data/interim/docvqa.jsonl",         40_000),
-    ("textocr",  "scripts/prepare/prep_textocr.py",  "data/interim/textocr.jsonl",        25_000),
-    ("hiertext", "scripts/prepare/prep_hiertext.py", "data/interim/hiertext.jsonl",       12_000),
+    # ("textocr", ...) DROPPED 2026-09-12: Open Images bucket returns 404 on per-image URLs
+    #                   (dl.fbaipublicfiles.com JSON downloads fine, but image fetches fail silently
+    #                   and the prep emits 0 samples with no error). Reinstate when TextOCR images
+    #                   are relocated to a working host, or vendor them.
+    # ("hiertext", ...) DROPPED 2026-09-12: https://storage.googleapis.com/hiertext/hiertext/*.jsonl.gz
+    #                   returns 404 (Google moved the bucket). Reinstate when we point at gs://gresearch/hiertext/.
     ("xfund",    "scripts/prepare/prep_xfund.py",    "data/interim/xfund.jsonl",          10_000),
-    ("idl",      "scripts/prepare/prep_idl.py",      "data/interim/idl.jsonl",            20_000),
+    # IDL bumped 20k → 40k on 2026-09-12 to partially compensate for dropped textocr (25k) + hiertext (12k)
+    ("idl",      "scripts/prepare/prep_idl.py",      "data/interim/idl.jsonl",            40_000),
     ("replay",   None,                                "data/interim/himalaya_indic.jsonl",   500),
 ]
 
 
-def _run_prep(script: str) -> None:
-    """Run a prep script from the repo root; propagate its exit code."""
+def _run_prep(script: str, interim: Path) -> None:
+    """Run a prep script from the repo root; propagate its exit code.
+
+    Skip when the interim JSONL already has content (idempotent re-runs after a
+    partial failure — don't re-download DocVQA's 40k images just because HierText
+    404'd afterwards).
+    """
+    if interim.exists() and interim.stat().st_size > 0:
+        print(f"\n=== SKIP {script}: {interim} already populated ({interim.stat().st_size} bytes) ===", flush=True)
+        return
     print(f"\n=== Running {script} ===", flush=True)
     result = subprocess.run(
         [sys.executable, script],
@@ -132,10 +145,10 @@ def run(
     rng = random.Random(seed)
 
     if not skip_prep and not dry_run:
-        for _, script, _, _ in SOURCES:
+        for _, script, jsonl, _ in SOURCES:
             if script is None:
                 continue
-            _run_prep(script)
+            _run_prep(script, REPO_ROOT / jsonl)
 
     # Load + subsample per source
     per_source_counts: dict[str, int] = {}
