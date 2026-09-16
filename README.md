@@ -6,6 +6,34 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 9 status — POSTMORTEM shipped, no HF publish, iter-10 direction locked
+
+**Iter-9 aimed to push OCRBench V2 F1 from iter-7a's 0.499 → ≥ 0.60 (85% of Interfaze's 0.707). Missed hard.** Warm-started from iter-7a and trained on a docvqa-heavy 41k corpus. Both English ship gates FAILED. Devanagari gate PASSED thanks to a 500-sample replay.
+
+| Benchmark | iter-7a | **iter-9** | Ship gate | Verdict |
+|---|---:|---:|---:|---|
+| OCRBench V2 F1 (300) | 0.499 | **0.484** (−3%) | ≥ 0.60 | ❌ **HARD FAIL** by 0.116 |
+| OmniDocBench F1 (250) | 0.293 | **0.250** (−15%) | ≥ 0.291 | ❌ **HARD FAIL** by 0.041 |
+| himalaya_500 CER ↓ | 4.463 | **0.442** (10× better) | ≤ 4.463 | ✅ PASS |
+
+**Root cause — data mix, not the recipe.** The plan called for a 120k VQA-heavy corpus (OCR-VQA + ChartQA + TextVQA + InfographicVQA + DocVQA-extra). HF hub rate-limited every new source; only DocVQA + XFUND + IDL survived. After dropping IDL for time-budget reasons, the trained corpus was 87% DocVQA — the same distribution iter-7a already saturated on. Warm-starting on same-distribution data produced modest drift, not lift.
+
+**Devanagari 10× improvement is the one bright spot.** 500 himalaya word crops as replay (1.2% of corpus) took CER from 446% (iter-7a) to 44% (iter-9). Confirms iter-8's diagnosis that iter-7a's Devanagari regression was underexposure, not architectural — and cheap to fix in any future iter.
+
+**No adapter published to HF.** Iter-9 adapter kept on S3 at `s3://enclave-scribe-checkpoints/adapters/iter9/` for iter-10 diagnostic use. `enclavelabs/olmocr-2-iter7a-vqa` (iter-7a) remains the English VQA recommendation. `enclavelabs/enclave-scribe-devanagari` (iter-3) remains the Devanagari recommendation.
+
+**Iter-10 direction (locked):** *rebuild the VQA corpus properly with a rate-limit-tolerant download strategy, then train fresh LoRA on base olmOCR-7B* (not warm-start). Pre-mirror OCR-VQA/ChartQA/TextVQA/InfographicVQA to S3 once, cap IDL at 20k, keep 1-2k himalaya replay. Ship gate relaxed to OCRBench V2 F1 ≥ 0.55. Cost budget $50-60.
+
+- **📊 Full postmortem:** [`reports/iter9/POSTMORTEM.md`](reports/iter9/POSTMORTEM.md)
+- **📁 Per-sample eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter9/` (3 files)
+- **📦 Adapter (S3-only, not on HF):** `s3://enclave-scribe-checkpoints/adapters/iter9/`
+- **🔧 pip freeze:** [`reports/iter9/pip_freeze.txt`](reports/iter9/pip_freeze.txt)
+- **⚙️ Config as-shipped:** [`configs/train/iter9_vqa.yaml`](configs/train/iter9_vqa.yaml)
+
+**Cost: ~$42** (25.9h on g5.4xlarge on-demand us-east-1c). Under the $60 hard ceiling. Staging `i-073a0fe419ceb9f49` untouched throughout.
+
+---
+
 ## Iteration 8 status — corrected measurements shipped, iter-7a reframed as VQA specialist
 
 **Iter-8 fixed two long-standing eval bugs and re-measured all four models.** The results reshuffle everything we thought we knew about iter-7a.
