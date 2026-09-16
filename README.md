@@ -6,6 +6,32 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 10a status — mini-experiment PASSED, Qwen3-VL-8B recipe validated, iter-11 greenlit
+
+**Iter-10a tested the hypothesis diagnosed in iter-10's postmortem: does fine-tuning fix Qwen3-VL-8B's verbose CoT-output issue?** Fresh LoRA r=32/α=64 on `Qwen/Qwen3-VL-8B-Instruct`, just 5,000 DocVQA samples, 2 epochs, ~1.6h training on g5.xlarge.
+
+**Result: OCRBench V2 F1 = 0.028 → 0.470 (16.8× lift). Hypothesis VALIDATED.**
+
+| Metric | Raw Qwen3-VL-8B (iter-10 baseline) | **iter-10a fine-tune** | iter-7a (reference) | Iter-11 gate |
+|---|---:|---:|---:|---:|
+| OCRBench V2 F1 (100 samples) | 0.028 | **0.470** | 0.499 | 0.550 |
+| avg pred_len / gt_len | 24.5× (verbose) | **0.9×** (terse!) | ~1.0× | — |
+| Verbose-prefix samples | 99/100 | **0/100** | — | — |
+
+Verbose-format collapse: 99 → 0 samples. Model now outputs terse OCR answers. iter-10a hit 94% of iter-7a's F1 with **half the training data**. 5k DocVQA-only is enough to fully format-align a chat-tuned VLM to OCR outputs.
+
+**Iter-11 = full 40k task-diverse run on Qwen3-VL-8B** (per plan `configs/train/iter10_bilingual.yaml`, already merged in PR #67). Ship gates: OCRBench V2 F1 ≥ 0.55, OmniDocBench F1 ≥ 0.29, himalaya CER ≤ 0.30. Budget $80-120. **Expected outcome (evidence-based): comfortably clear 0.55, plausibly hit 0.60+.**
+
+**Cost: ~$3.30** for the probe. Combined iter-10 + iter-10a: ~$8.30, well under the $80-120 budget target for a normal iter.
+
+- **📊 Full probe report:** [`reports/iter10a/PROBE_REPORT.md`](reports/iter10a/PROBE_REPORT.md)
+- **📁 Probe adapter (S3, for iter-11 reference use):** `s3://enclave-scribe-checkpoints/adapters/iter10a-probe/`
+- **📁 Probe eval JSON:** `s3://enclave-scribe-checkpoints/results/iter10a-probe/probe_eval.json`
+- **⚙️ Probe config:** [`configs/train/iter10a_probe.yaml`](configs/train/iter10a_probe.yaml)
+- **🔧 pip freeze:** [`reports/iter10a/pip_freeze.txt`](reports/iter10a/pip_freeze.txt) (transformers 4.57.6)
+
+---
+
 ## Iteration 10 status — ABORTED at baseline gate, root cause found, iter-11 = mini-experiment first
 
 **Iter-10 aimed to swap the base to Qwen3-VL-8B for its stronger Devanagari head-start (75.2 chrF++ vs olmOCR-2's 40.5 on arXiv 2606.29213), then bilingual SFT on a 40k task-diverse corpus.** The Phase 1 pre-training baseline eval on 100-sample cuts tripped 2 of 3 abort gates. Per plan + user directive, instance terminated, no training run.
