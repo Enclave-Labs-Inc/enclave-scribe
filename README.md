@@ -6,6 +6,32 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 10 status — ABORTED at baseline gate, root cause found, iter-11 = mini-experiment first
+
+**Iter-10 aimed to swap the base to Qwen3-VL-8B for its stronger Devanagari head-start (75.2 chrF++ vs olmOCR-2's 40.5 on arXiv 2606.29213), then bilingual SFT on a 40k task-diverse corpus.** The Phase 1 pre-training baseline eval on 100-sample cuts tripped 2 of 3 abort gates. Per plan + user directive, instance terminated, no training run.
+
+| Baseline (100 samples, raw Qwen3-VL-8B, no LoRA) | Metric | Actual | Gate | Status |
+|---|---|---:|---:|---|
+| OCRBench V2 | F1 | **0.028** | ≥ 0.30 | ❌ TRIPPED |
+| OmniDocBench | F1 | **0.268** | ≥ 0.20 | ✅ PASS |
+| himalaya_500 | CER | **7.25** | ≤ 1.0 | ❌ TRIPPED |
+
+**Root cause (definitive):** Qwen3-VL-8B is a chat-tuned VLM that outputs verbose CoT responses (avg 24.5× longer than expected on OCRBench V2). All three metrics measured *verbose-format penalty*, not reading capability. Per-sample inspection shows the model reads correctly on 43% of OCRBench V2 samples (GT string embedded in verbose output) and 78% of himalaya_500 samples (CER ≤ 1.0, 19 perfect). It just doesn't know it should output terse OCR answers.
+
+This is the same problem iter-7a solved for olmOCR-2-7B (F1 0.093 → 0.499 = 5.4× lift from DocVQA fine-tuning). **Whether the same fix works on Qwen3-VL-8B is an untested hypothesis.** iter-11 tests it before committing full budget.
+
+**Cost: ~$4.90** (3h wallclock on g5.4xlarge). Staging `i-073a0fe419ceb9f49` untouched. **No adapter trained, no HF publish.** Recommendations unchanged: English VQA → iter-7a (`enclavelabs/olmocr-2-iter7a-vqa`), Devanagari → iter-3 (`enclavelabs/enclave-scribe-devanagari`).
+
+**Iter-11 = mini-experiment first, then full run:**
+- **Step A ($5-8, 2-3h):** fine-tune Qwen3-VL-8B on 5k DocVQA samples only, eval on 100 OCRBench V2. Success if F1 > 0.30.
+- **Step B ($80-120):** If A succeeds, execute the full iter-10 plan on Qwen3-VL-8B (40k task-diverse corpus). If A fails, revert to olmOCR-2-7B with the same corpus.
+
+- **📊 Full postmortem:** [`reports/iter10/POSTMORTEM.md`](reports/iter10/POSTMORTEM.md)
+- **📁 Baseline eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter10-baseline/` (3 files)
+- **🔧 pip freeze:** [`reports/iter10/pip_freeze.txt`](reports/iter10/pip_freeze.txt) (transformers 4.57.6 upgrade recorded)
+
+---
+
 ## Iteration 9 status — POSTMORTEM shipped, no HF publish, iter-10 direction locked
 
 **Iter-9 aimed to push OCRBench V2 F1 from iter-7a's 0.499 → ≥ 0.60 (85% of Interfaze's 0.707). Missed hard.** Warm-started from iter-7a and trained on a docvqa-heavy 41k corpus. Both English ship gates FAILED. Devanagari gate PASSED thanks to a 500-sample replay.
