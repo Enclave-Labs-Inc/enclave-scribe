@@ -1,0 +1,100 @@
+# EnclaveScribe iter-10 — Bilingual (English + Indic) OCR VLM on Qwen3-VL-8B.
+#
+# BASE MODEL SWAP DECISION (2026-09-16, user-confirmed):
+#   Iter-9 shipped POSTMORTEM after regressing on both English benchmarks
+#   (reports/iter9/POSTMORTEM.md). Root cause: `allenai/olmOCR-2-7B-1025` was
+#   trained on 94-99% English pages per subset (olmOCR-mix-1025, 270k pages)
+#   with English-only RLVR unit tests. Every Indic fine-tune fights that
+#   baseline. On the Devanagari real-scan stress test (arXiv 2606.29213),
+#   raw olmOCR-2-7B lands at 40.5 chrF++; Qwen3-VL-8B hits 75.2 chrF++.
+#   Iter-10 accepts the risk of losing olmOCR-2's English page-OCR pretraining
+#   in exchange for a base with multilingual instruction data intact.
+#
+# CORPUS (~40k, task-shape matched to OCRBench V2's 4 families):
+#   - olmocr_mix         15,000  (allenai/olmOCR-mix-1025, full-page English OCR)
+#   - pubtabnet           5,000  (tables — element parsing)
+#   - chartqa             5,000  (charts — element parsing)
+#   - math_formula        3,000  (LaTeX — element parsing)
+#   - docvqa              8,000  (short-answer VQA — retain iter-7a's strength)
+#   - xfund               1,400  (multilingual forms)
+#   - devanagari_synthetic  2,000  (full-page synthetic Hindi — matches olmOCR-mix shape)
+#   - himalaya_replay       500  (word-level Devanagari, iter-4 replay)
+#
+# APPROACH: fresh LoRA r=32/α=64 on Qwen3-VL-8B-Instruct. NO warm-start
+# (iter-9 proved warm-starting on same-distribution data is null-negative,
+# arXiv 2402.18865).
+#
+# HARDWARE: g5.4xlarge on-demand (1× A10G 24GB). Qwen3-VL-8B needs ~18GB
+# for inference (Spheron), leaving ~5GB headroom for LoRA activations at
+# max_pixels=200704 (448²). Iter-7a's OOM-safe values kept.
+#
+# TRANSFORMERS VERSION REQUIREMENT (Phase 1 gate):
+#   Qwen3-VL model_type = "qwen3_vl", architectures = ["Qwen3VLForConditionalGeneration"].
+#   Local verification (2026-09-16) confirmed transformers 5.16.1 loads the
+#   config. Our stack currently pins transformers==4.55.4 which predates
+#   Qwen3-VL. Phase 1 bootstrap MUST upgrade to transformers>=4.57 (verify
+#   4.57 supports qwen3_vl; if not, jump to latest 5.x). Capture the new
+#   pip_freeze BEFORE training starts.
+#
+# YAML 1.1 GOTCHA: `1e-4` parses as string. Always `1.0e-4` with the decimal.
+#
+# SHIP GATES (per plan file):
+#   1. OCRBench V2 F1 ≥ 0.55  (hard, primary — +0.05 over iter-7a's 0.499)
+#   2. OmniDocBench F1 ≥ 0.29 (hard — match iter-7a; must not regress with base swap)
+#   3. himalaya_500 CER ≤ 0.30 (hard — return to iter-3/4 territory)
+# Miss any → POSTMORTEM, no HF publish.
+
+use_unsloth: false                  # HF Trainer, single GPU
+
+model:
+  path: Qwen/Qwen3-VL-8B-Instruct   # NEW: swap from allenai/olmOCR-2-7B-1025
+  flash_attn: false                 # sdpa fine on A10G
+  # 448² pixels — iter-7a's empirical A10G safe floor for Qwen2.5-VL-7B.
+  # Qwen3-VL-8B may need lower (150528 = ~388²) if OOM after step 500 — see
+  # plan's rollback conditions. Start at 448² and back off if needed.
+  min_pixels: 200704                # 256 * 28 * 28
+  max_pixels: 200704                # 448 * 28 * 28
+
+# No resume_adapter — fresh LoRA (iter-9 proved warm-start on same-distribution
+# data is null-negative). Iter-10 is a clean-slate fine-tune on Qwen3-VL-8B.
+
+lora:
+  r: 32                             # same as iter-3/4/7a; VLM LoRA rank saturates ~32 per ARD-LoRA paper
+  alpha: 64                         # 2 * r
+  dropout: 0.05
+
+dataset:
+  train_jsonl: data/processed/iter10_train.jsonl
+  val_jsonl:   data/processed/iter10_val.jsonl
+  image_root:  data/raw
+
+prompt: "Extract this document page as clean markdown. Preserve the original script exactly."
+max_length: 4096                    # iter-7a as-shipped; collator doesn't truncate hard
+augment: true
+
+training_args:
+  output_dir: outputs/iter10
+  num_train_epochs: 2               # iter-7a's proven value
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8    # effective batch = 8 (single GPU)
+  learning_rate: 1.0e-4             # FLOAT — never 1e-4 (YAML 1.1 → str).
+                                    # iter-7a's proven value. iter-9's 5.0e-5
+                                    # was a warm-start artifact that produced
+                                    # a stagnant loss curve.
+  lr_scheduler_type: cosine
+  warmup_steps: 100                 # larger corpus warrants longer warmup
+  weight_decay: 0.01
+  bf16: true
+  gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
+  use_liger_kernel: true            # verify liger_kernel supports qwen3_vl in Phase 1
+  ddp_find_unused_parameters: false
+  remove_unused_columns: false
+  logging_steps: 25
+  save_steps: 1000
+  eval_steps: 1000
+  save_total_limit: 3
+  dataloader_num_workers: 4
+  report_to: "none"                 # no wandb (iter-7a pattern)
+  run_name: "enclave-scribe-iter10-bilingual"
