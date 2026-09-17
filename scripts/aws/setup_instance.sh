@@ -65,6 +65,7 @@ tmux new-session -d -s training -x 220 -y 50
 
 tmux send-keys -t training "cd $REPO_DIR && source .venv/bin/activate" Enter
 tmux send-keys -t training "echo '=== Data prep started ===' && bash scripts/prepare/run_all.sh" Enter
+tmux send-keys -t training "echo '=== Rehydrating himalaya replay ===' && bash scripts/prepare/rehydrate_himalaya_replay.sh" Enter
 tmux send-keys -t training "echo '=== Training started ===' && torchrun --nproc_per_node=4 scripts/train.py --config configs/train/unsloth_aws.yaml" Enter
 
 echo "Pipeline running in tmux session 'training'."

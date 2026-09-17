@@ -52,8 +52,7 @@ def run(raw_dir: Path, out_jsonl: Path, limit: int) -> int:
             if ds is not None:
                 break
     if ds is None:
-        print("ERROR: no LaTeX-OCR source reachable; skipping", file=sys.stderr)
-        return 0
+        raise RuntimeError("math_formula produced 0 samples")
 
     kept = 0
     with open(out_jsonl, "w", encoding="utf-8") as f:
@@ -90,6 +89,8 @@ def run(raw_dir: Path, out_jsonl: Path, limit: int) -> int:
             kept += 1
 
     print(f"math_formula: {kept:,} samples → {out_jsonl}")
+    if kept == 0:
+        raise RuntimeError("math_formula produced 0 samples")
     return kept
 
 
