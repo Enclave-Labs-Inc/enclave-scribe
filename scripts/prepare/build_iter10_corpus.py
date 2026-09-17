@@ -70,6 +70,42 @@ SOURCES: list[tuple[str, str | None, str, int]] = [
 
 MAX_TEXT_LEN = 3000  # iter-7a OOM lesson — drop samples above this
 
+# Hard floor for total corpus size. Below this, refuse to write output —
+# iter-11 shipped a 28k corpus that missed its 40k target due to silent-fail
+# preps and 3 gates slipped as a result. This gate would have caught it.
+MIN_TOTAL_CORPUS = 30_000
+
+# Per-source floors expressed as fractions of the target sample cap.
+SOURCE_WARN_FRACTION = 0.50   # < 50% of target → WARN
+SOURCE_FAIL_FRACTION = 0.10   # < 10% of target → FAILED
+
+
+def _source_status(actual: int, target: int) -> str:
+    if target <= 0:
+        return "OK"
+    frac = actual / target
+    if frac < SOURCE_FAIL_FRACTION:
+        return "FAILED"
+    if frac < SOURCE_WARN_FRACTION:
+        return "WARN"
+    return "OK"
+
+
+def _print_breakdown(per_source: dict[str, int], targets: dict[str, int]) -> None:
+    print("\nCorpus breakdown:")
+    print(f"  {'source':<24} {'target':>8}  {'actual':>8}  {'pct':>7}  {'status':<8}")
+    total_actual = 0
+    total_target = 0
+    for name, target in targets.items():
+        actual = per_source.get(name, 0)
+        total_actual += actual
+        total_target += target
+        pct = f"{(actual / target * 100):.1f}%" if target > 0 else "n/a"
+        print(f"  {name:<24} {target:>8,}  {actual:>8,}  {pct:>7}  {_source_status(actual, target):<8}")
+    total_pct = f"{(total_actual / total_target * 100):.1f}%" if total_target > 0 else "n/a"
+    total_status = "OK" if total_actual >= MIN_TOTAL_CORPUS else "FAILED"
+    print(f"  {'TOTAL':<24} {total_target:>8,}  {total_actual:>8,}  {total_pct:>7}  {total_status:<8}")
+
 
 def _run_prep(script: str, interim: Path) -> None:
     """Run a prep script from repo root; skip if interim already populated.
@@ -166,6 +202,7 @@ def run(
             _run_prep(script, REPO_ROOT / jsonl)
 
     per_source_counts: dict[str, int] = {}
+    source_targets: dict[str, int] = {name: cap for name, _, _, cap in SOURCES}
     all_samples: list[dict] = []
     for name, _, jsonl, cap in SOURCES:
         path = REPO_ROOT / jsonl
@@ -183,10 +220,31 @@ def run(
 
     print(f"\nRaw total: {len(all_samples):,} samples")
 
+    # Per-source floor accounting — surface silent-fail regressions early.
+    for name, target in source_targets.items():
+        actual = per_source_counts.get(name, 0)
+        status = _source_status(actual, target)
+        if status == "FAILED":
+            print(f"WARN: {name} FAILED below 10% floor ({actual}/{target})",
+                  file=sys.stderr, flush=True)
+        elif status == "WARN":
+            print(f"WARN: {name} below 50% floor ({actual}/{target})",
+                  file=sys.stderr, flush=True)
+
     all_samples = _dedup_by_image(all_samples)
     print(f"After dedup by image path: {len(all_samples):,}")
     all_samples = _drop_empty_and_long(all_samples)
     print(f"After drop empty + len > {MAX_TEXT_LEN}: {len(all_samples):,}")
+
+    # Total-corpus hard floor — the gate that would have stopped iter-11.
+    # Checked on the post-dedup/post-filter count because that is what ships.
+    total_shipped = len(all_samples)
+    if total_shipped < MIN_TOTAL_CORPUS:
+        breakdown = ", ".join(f"{n}={c}" for n, c in per_source_counts.items())
+        raise RuntimeError(
+            f"corpus too small: {total_shipped} < {MIN_TOTAL_CORPUS} hard floor. "
+            f"Per-source: {breakdown}"
+        )
 
     rng.shuffle(all_samples)
 
@@ -194,12 +252,10 @@ def run(
     val = all_samples[:n_val]
     train = all_samples[n_val:]
 
+    _print_breakdown(per_source_counts, source_targets)
+
     if dry_run:
-        print("\n[dry-run] no files written. Summary:")
-        for name, count in per_source_counts.items():
-            print(f"  {name:<24} {count:>8,}")
-        print(f"  train                    {len(train):>8,}")
-        print(f"  val                      {len(val):>8,}")
+        print(f"\n[dry-run] no files written. train={len(train):,}  val={len(val):,}")
         return
 
     train_out.parent.mkdir(parents=True, exist_ok=True)
@@ -211,9 +267,6 @@ def run(
     print("\nWrote:")
     print(f"  train : {len(train):>8,} → {train_out}")
     print(f"  val   : {len(val):>8,} → {val_out}")
-    print("\nPer-source (before dedup+filter):")
-    for name, count in per_source_counts.items():
-        print(f"  {name:<24} {count:>8,}")
 
 
 def main() -> None:
