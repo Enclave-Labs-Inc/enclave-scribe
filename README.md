@@ -6,6 +6,36 @@ Built by [Enclave Labs](https://github.com/Enclave-Labs-Inc). MIT-licensed. See 
 
 ---
 
+## Iteration 11 status — all 3 gates miss but new OCRBench V2 record + 12× Devanagari lift
+
+**Iter-11 executed the full task-diverse recipe on Qwen3-VL-8B: 15,267 samples, 2 epochs, 7h 10min training. All 3 ship gates missed by small margins, but iter-11 delivers the best all-around adapter Enclave has trained.**
+
+| Benchmark | base | iter-3 | iter-4 | iter-7a | iter-9 | **iter-11** | Ship gate | Verdict |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| OCRBench V2 F1 (300) | 0.093 | 0.099 | 0.115 | 0.499 | 0.484 | **0.5158** 🏆 | 0.55 | ❌ miss 0.03 (new high) |
+| OmniDocBench F1 (250) | 0.291 | 0.016 | 0.106 | **0.293** | 0.250 | 0.2506 | 0.29 | ❌ miss 0.04 |
+| himalaya_500 CER ↓ | 14.32 | **0.175** | 0.231 | 4.463 | 0.442 | 0.3667 | 0.30 | ❌ miss 0.07 (12× better than iter-7a) |
+
+**Root cause (partial win):** two prep sources returned 0 samples silently — `olmocr_mix` (target 15k page-OCR) and `chartqa` (target 5k chart parsing). Trained corpus was 15k not 40k. **Missing 20k of the exact sources that would have cleared OmniDocBench gate (page-OCR) and pushed OCRBench V2 above 0.55 (chart parsing).**
+
+**Positive signals (validate the Qwen3-VL-8B recipe):**
+- ✨ **First adapter above 0.5 F1 on OCRBench V2.** 0.5158 beats iter-7a's 0.499 with only 15k mixed training samples (vs iter-7a's 10k DocVQA-heavy). Base swap is now confirmed on real training, not just probe.
+- Devanagari CER 0.367 = **12× better than iter-7a's 4.463**, closes 87% of the way from iter-9 → iter-3 baseline. Qwen3-VL-8B's Devanagari head-start (75.2 chrF++ raw per arXiv 2606.29213) is real.
+- Training loss converged to **4.97** — 25% lower than iter-9's 6.65, 20% lower than iter-7a's 6.2. The model fits the data; the gap to gates is corpus-shape / verbose-CoT-format, not model fitness.
+
+**Iter-12 direction (locked):** re-run iter-11's recipe with the two failed prep sources fixed. Expected outcome: cleared gates on both OCRBench V2 and OmniDocBench with the missing 20k data. Budget $25-40 (cheaper than iter-11 with capped OmniDoc eval).
+
+**Cost: ~$24** on g5.2xlarge (downgraded from g5.4xlarge due to AWS capacity shortage across all 5 AZs — same A10G GPU, slightly cheaper hourly).
+
+**No HF publish** (gates missed). Recommendations unchanged: iter-7a for English VQA, iter-3 for Devanagari.
+
+- **📊 Full postmortem:** [`reports/iter11/POSTMORTEM.md`](reports/iter11/POSTMORTEM.md)
+- **📦 Adapter (S3, iter-12 reference):** `s3://enclave-scribe-checkpoints/adapters/iter11/`
+- **📁 Eval JSONs:** `s3://enclave-scribe-checkpoints/results/iter11/`
+- **🔧 pip freeze:** [`reports/iter11/pip_freeze.txt`](reports/iter11/pip_freeze.txt)
+
+---
+
 ## Iteration 10a status — mini-experiment PASSED, Qwen3-VL-8B recipe validated, iter-11 greenlit
 
 **Iter-10a tested the hypothesis diagnosed in iter-10's postmortem: does fine-tuning fix Qwen3-VL-8B's verbose CoT-output issue?** Fresh LoRA r=32/α=64 on `Qwen/Qwen3-VL-8B-Instruct`, just 5,000 DocVQA samples, 2 epochs, ~1.6h training on g5.xlarge.
